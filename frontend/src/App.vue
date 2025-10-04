@@ -9,7 +9,6 @@
 <style>
 body {
   margin: 0;
-  background-color: #f5f7fa;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 </style>

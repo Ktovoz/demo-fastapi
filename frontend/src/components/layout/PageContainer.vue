@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <PageSurface :padded="padded" :full-height="fullHeight" class="page-container">
     <template v-if="$slots.background" #background>
       <slot name="background" />
@@ -113,12 +113,30 @@ const bodyStyle = computed(() => ({
 <style scoped>
 .page-container {
   position: relative;
-  min-height: calc(100vh - var(--header-height, 64px));
-  background: linear-gradient(180deg, #f7f9fc 0%, #eef2ff 60%, #f8fafc 100%);
+  min-height: calc(100vh - var(--header-height, 82px));
+  background: var(--surface-card);
   border-radius: clamp(18px, 3vw, 28px);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: var(--shadow-soft);
+}
+
+.page-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 12%, rgba(59, 130, 246, 0.12), transparent 58%);
+  opacity: 0.7;
+  pointer-events: none;
+  mix-blend-mode: lighten;
 }
 
 .page-container__body--bleed {
   margin: 0 calc(-1 * clamp(20px, 3vw, 40px));
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    border-radius: 20px;
+  }
 }
 </style>

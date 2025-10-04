@@ -80,7 +80,7 @@ const props = defineProps({
   },
   bodyPadding: {
     type: String,
-    default: '20px'
+    default: 'clamp(22px, 3vw, 32px)'
   }
 })
 
@@ -129,55 +129,35 @@ const toggle = () => {
 <style scoped>
 .card-container {
   position: relative;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(248, 250, 252, 0.94));
-  border: 1px solid rgba(226, 232, 240, 0.7);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: clamp(18px, 2.6vw, 22px);
+  background: var(--surface-card);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: var(--shadow-soft);
   overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card-container--borderless {
-  border-color: transparent;
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+.card-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 12%, rgba(59, 130, 246, 0.18), transparent 65%);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .card-container:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
-}
-
-.card-container::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.12), transparent 60%);
-  pointer-events: none;
-  opacity: 0.55;
+  box-shadow: var(--shadow-medium);
 }
 
 .card-container--collapsed {
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow-soft);
 }
 
 .card-container :deep(.ant-card) {
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.card-container :deep(.ant-card-head) {
-  padding: 16px 20px 0;
-  border-bottom: none;
+  border-radius: inherit;
   background: transparent;
-  min-height: auto;
-}
-
-.card-container :deep(.ant-card-head-title) {
-  padding: 0;
-}
-
-.card-container :deep(.ant-card-extra) {
-  padding: 0;
 }
 
 .card-container :deep(.ant-card-body) {
@@ -186,71 +166,79 @@ const toggle = () => {
   z-index: 1;
 }
 
+.card-container :deep(.ant-card-head) {
+  padding: clamp(16px, 2.6vw, 24px) clamp(18px, 2.8vw, 28px) 0;
+  border: none;
+  background: transparent;
+}
+
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .card-header__main {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .card-header__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(59, 130, 246, 0.12);
-  color: #1d4ed8;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--brand-primary);
 }
 
 .card-header__text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .card-header__title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
+  margin: 0;
 }
 
 .card-header__description {
   margin: 0;
-  font-size: 12px;
-  color: #64748b;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
 .card-header__actions {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .collapse-button {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  color: #1d4ed8;
-}
-
-.collapse-button :deep(.anticon) {
-  font-size: 12px;
+  gap: 6px;
+  color: var(--brand-primary);
 }
 
 .card-actions {
-  padding: 0 20px 12px;
+  padding: 0 clamp(18px, 2.6vw, 28px) clamp(12px, 2vw, 18px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .card-body {
   position: relative;
   z-index: 1;
+  padding: 0 clamp(18px, 2.6vw, 28px) clamp(22px, 3vw, 32px);
 }
 
 .fade-enter-active,
@@ -265,15 +253,11 @@ const toggle = () => {
 
 @media (max-width: 768px) {
   .card-container {
-    border-radius: 14px;
+    border-radius: 16px;
   }
 
-  .card-container :deep(.ant-card-head) {
-    padding: 14px 16px 0;
-  }
-
-  .card-actions {
-    padding: 0 16px 12px;
+  .card-body {
+    padding: 0 18px 24px;
   }
 }
 </style>

@@ -122,10 +122,12 @@ const clearNotifications = () => {
   position: sticky;
   top: 0;
   z-index: 90;
-  padding: 18px 42px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(16px);
+  padding: 18px 42px 28px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(18px);
+  border-radius: 0 0 clamp(28px, 4vw, 40px) clamp(28px, 4vw, 40px);
+  overflow: hidden;
   transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -162,6 +164,7 @@ const clearNotifications = () => {
   max-width: 1320px;
   margin: 0 auto;
   min-height: 58px;
+  padding-inline: clamp(12px, 4vw, 36px);
 }
 
 .header-left,
@@ -177,13 +180,20 @@ const clearNotifications = () => {
 
 .trigger {
   color: inherit;
-  border-radius: 12px;
-  transition: background 0.2s ease, color 0.2s ease;
+  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .trigger:hover {
   color: #2563eb;
-  background: rgba(37, 99, 235, 0.12);
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(37, 99, 235, 0.25);
 }
 
 .trigger :deep(.anticon) {

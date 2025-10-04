@@ -53,49 +53,48 @@ const shellClasses = computed(() => ({
 </script>
 
 <style scoped>
+:global(:root) {
+  --brand-primary: #2563eb;
+  --brand-secondary: #0ea5e9;
+  --brand-accent: #9333ea;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --surface-background: #f4f7fb;
+  --surface-muted: #eef2ff;
+  --surface-card: rgba(255, 255, 255, 0.92);
+  --surface-elevated: rgba(255, 255, 255, 0.88);
+  --border-soft: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.12);
+  --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
+  --shadow-medium: 0 18px 42px rgba(15, 23, 42, 0.12);
+  --app-sidebar-width: 256px;
+  --app-sidebar-width-collapsed: 84px;
+  --header-height: 82px;
+}
+
+:global(body) {
+  margin: 0;
+  background: linear-gradient(180deg, var(--surface-background) 0%, #ffffff 65%, var(--surface-background) 100%);
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--text-primary);
+}
+
 .app-shell {
   min-height: 100vh;
   display: grid;
   grid-template-columns: auto 1fr;
-  background: var(--app-shell-bg, linear-gradient(140deg, #eef2ff 0%, #f8fafc 45%, #e2e8f0 100%));
-}
-
-.app-shell::before,
-.app-shell::after {
-  content: '';
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.app-shell::before {
-  width: 420px;
-  height: 420px;
-  top: -160px;
-  left: -140px;
-  background: rgba(59, 130, 246, 0.35);
-}
-
-.app-shell::after {
-  width: 360px;
-  height: 360px;
-  right: -140px;
-  bottom: -160px;
-  background: rgba(236, 72, 153, 0.28);
+  background: transparent;
 }
 
 .app-shell__sidebar {
   position: relative;
   z-index: 2;
-  width: var(--app-sidebar-width, 240px);
-  transition: width 0.2s ease;
-  background: transparent;
+  width: var(--app-sidebar-width);
+  transition: width 0.25s ease;
 }
 
 .app-shell__sidebar--collapsed {
-  width: var(--app-sidebar-width-collapsed, 88px);
+  width: var(--app-sidebar-width-collapsed);
 }
 
 .app-shell__main {
@@ -117,15 +116,25 @@ const shellClasses = computed(() => ({
   position: relative;
   z-index: 1;
   min-height: 100%;
+  padding: calc(var(--header-height) * 0.65) clamp(20px, 4vw, 36px) clamp(40px, 6vw, 72px);
+  box-sizing: border-box;
 }
 
 .app-shell__footer {
   position: relative;
   z-index: 10;
+  padding: 16px 32px;
+  color: var(--text-secondary);
 }
 
 .app-shell--no-sidebar {
   grid-template-columns: 1fr;
+}
+
+@media (max-width: 1200px) {
+  :global(:root) {
+    --app-sidebar-width: 232px;
+  }
 }
 
 @media (max-width: 992px) {

@@ -89,68 +89,69 @@ const gridStyle = computed(() => ({
 .page-section {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: clamp(16px, 2vw, 24px);
 }
 
 .page-section__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
+  gap: clamp(14px, 2vw, 20px);
 }
 
 .page-section__heading {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(10px, 1.6vw, 16px);
 }
 
 .page-section__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 12px;
   background: rgba(37, 99, 235, 0.12);
-  color: #2563eb;
+  color: var(--brand-primary);
 }
 
 .page-section__title {
   margin: 0;
-  font-size: 18px;
+  font-size: clamp(18px, 3vw, 22px);
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .page-section__description {
   margin: 4px 0 0;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
 .page-section__actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .page-section__split {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 20px;
+  gap: clamp(18px, 3vw, 28px);
 }
 
 .page-section__split-aside {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .page-section__grid {
   display: grid;
   grid-template-columns: repeat(var(--page-section-grid-columns, 3), minmax(0, 1fr));
-  gap: var(--page-section-grid-gap, 16px);
+  gap: var(--page-section-grid-gap, clamp(16px, 2vw, 24px));
 }
 
 @media (max-width: 1200px) {
@@ -165,4 +166,3 @@ const gridStyle = computed(() => ({
   }
 }
 </style>
-

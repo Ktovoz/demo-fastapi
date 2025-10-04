@@ -145,6 +145,9 @@ const handleCollapse = (value) => {
 <style scoped>
 .layout-sider {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   min-height: 100vh;
   padding: 20px 16px 24px;
   transition: background 0.3s ease, box-shadow 0.3s ease, width 0.2s ease;

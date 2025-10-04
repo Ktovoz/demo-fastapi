@@ -27,7 +27,7 @@ const bodyClasses = computed(() => ({
 .page-body {
   display: flex;
   flex-direction: column;
-  gap: var(--page-body-gap, 24px);
+  gap: var(--page-body-gap, clamp(20px, 3vw, 32px));
 }
 
 .page-body--bleed {
