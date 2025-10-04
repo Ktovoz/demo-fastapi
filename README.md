@@ -9,7 +9,7 @@
 
 > ✨ **一个现代化的前后端分离后台管理系统**
 > 采用 **FastAPI + Vue 3 + Ant Design Vue** 技术栈，提供完整的用户认证、权限管理和系统监控功能。
-> 🚀 **在线演示**: [https://demo-fast.ktovoz.com](https://demo-fast.ktovoz.com) | 账号: `admin` / `admin123`
+> 🚀 **在线演示**: [https://demo-fast.ktovoz.com](https://demo-fast.ktovoz.com) | 账号: `admin@example.com` / `admin123`
 
 ---
 
@@ -63,7 +63,7 @@
 
 ### 🚀 在线演示
 - **演示地址**: [https://demo-fast.ktovoz.com](https://demo-fast.ktovoz.com)
-- **演示账号**: `admin` / `admin123`
+- **演示账号**: `admin@example.com` / `admin123`
 
 ### 💻 本地开发
 - **前端界面**: http://localhost:3000
