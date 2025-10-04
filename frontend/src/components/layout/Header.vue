@@ -2,7 +2,7 @@
   <a-layout-header class="layout-header">
     <div class="header-left">
       <a-button type="text" class="trigger" @click="toggleMenu">
-        <component :is="menuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined" />
+        <component :is="menuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined"/>
       </a-button>
       <div class="brand">
         <slot name="logo">
@@ -14,11 +14,12 @@
     </div>
     <div class="header-right">
       <a-input-search
-        v-model:value="search"
-        placeholder="搜索功能或页面"
-        allow-clear
-        class="header-search"
-        @search="handleSearch"
+          v-model:value="search"
+        placeholder="Search features or pages"
+          allow-clear
+          class=" header-search
+      "
+          @search="handleSearch"
       />
       <a-popover placement="bottomRight" trigger="click">
         <template #title>
@@ -29,10 +30,10 @@
             <div v-if="notifications.length === 0" class="empty">All caught up!</div>
             <template v-else>
               <div
-                v-for="item in notifications"
-                :key="item.id"
-                class="notification-item"
-                :class="{ unread: !item.read }"
+                  v-for="item in notifications"
+                  :key="item.id"
+                  class="notification-item"
+                  :class="{ unread: !item.read }"
               >
                 <div class="notification-title">{{ item.title }}</div>
                 <div class="notification-time">{{ item.time }}</div>
@@ -42,7 +43,9 @@
           </div>
         </template>
         <a-badge :count="unreadCount" :offset="[ -2, 4 ]">
-          <a-button type="text" class="icon-button"><BellOutlined /></a-button>
+          <a-button type="text" class="icon-button">
+            <BellOutlined/>
+          </a-button>
         </a-badge>
       </a-popover>
       <a-dropdown trigger="click">
@@ -53,7 +56,9 @@
           </a-menu>
         </template>
         <div class="user-info">
-          <a-avatar size="small" class="user-avatar"><UserOutlined /></a-avatar>
+          <a-avatar size="small" class="user-avatar">
+            <UserOutlined/>
+          </a-avatar>
           <span class="user-name">{{ userName }}</span>
         </div>
       </a-dropdown>
@@ -62,11 +67,11 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { MenuFoldOutlined, MenuUnfoldOutlined, BellOutlined, UserOutlined } from "@ant-design/icons-vue"
-import { useSystemStore } from "../../store/system"
-import { useAuthStore } from "../../store/auth"
+import {computed, ref} from "vue"
+import {useRoute, useRouter} from "vue-router"
+import {BellOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined} from "@ant-design/icons-vue"
+import {useSystemStore} from "../../store/system"
+import {useAuthStore} from "../../store/auth"
 
 const systemStore = useSystemStore()
 const authStore = useAuthStore()
@@ -85,13 +90,13 @@ const toggleMenu = () => {
   systemStore.toggleMenu()
 }
 
-const handleMenuClick = ({ key }) => {
+const handleMenuClick = ({key}) => {
   if (key === "logout") {
     authStore.logout()
-    router.push({ path: "/auth/login" })
+    router.push({path: "/auth/login"})
   }
   if (key === "profile") {
-    router.push({ path: "/profile" })
+    router.push({path: "/profile"})
   }
 }
 
@@ -114,7 +119,7 @@ const clearNotifications = () => {
   align-items: center;
   justify-content: space-between;
   padding: 0 22px;
-  background: rgba(255, 255, 255, 0.92);
+  background: #ffffff;
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.65);
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
@@ -311,3 +316,6 @@ const clearNotifications = () => {
   }
 }
 </style>
+
+
+
