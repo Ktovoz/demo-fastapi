@@ -232,3 +232,5 @@ backend/*.pyc
 backend/app.db
 backend/app.db-journal
 backend/logs/
+/frontend/package-lock.json
+/frontend/yarn.lock
