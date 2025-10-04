@@ -48,9 +48,9 @@ const routes = [
         name: "Dashboard",
         component: loadView("../views/dashboard/Index.vue"),
         meta: {
-          title: "Dashboard",
-          description: "Key performance indicators and recent activity",
-          breadcrumb: [{ label: "Dashboard" }],
+          title: "仪表盘",
+          description: "关键指标与近期活动",
+          breadcrumb: [{ label: "仪表盘" }],
           menuKey: "dashboard",
           permission: "dashboard:view"
         }

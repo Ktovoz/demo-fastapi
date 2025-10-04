@@ -3,9 +3,15 @@
     :class="sidebarClasses"
     :collapsed="menuCollapsed"
     collapsible
+    :trigger="null"
     @collapse="handleCollapse"
   >
-    <div class="logo">Demo</div>
+    <div class="logo">
+      <span class="logo__text">Demo</span>
+      <a-button type="text" class="logo__toggle" @click="toggleSidebar">
+        <component :is="menuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined" />
+      </a-button>
+    </div>
     <a-menu
       class="sidebar-menu"
       :theme="menuTheme"
@@ -28,7 +34,9 @@ import {
   SafetyOutlined,
   SettingOutlined,
   ProfileOutlined,
-  FileSearchOutlined
+  FileSearchOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined
 } from '@ant-design/icons-vue'
 import { useSystemStore } from '../../store/system'
 import { useAuthStore } from '../../store/auth'
@@ -121,6 +129,15 @@ watch(menuCollapsed, (collapsed) => {
   openKeys.value = collapsed ? [] : derivedOpenKeys.value
 })
 
+const toggleSidebar = () => {
+  const next = !menuCollapsed.value
+  if (typeof systemStore.setMenuCollapsed === 'function') {
+    systemStore.setMenuCollapsed(next)
+  } else {
+    systemStore.menuCollapsed = next
+  }
+}
+
 const handleSelect = ({ key }) => {
   const node = findNavigationNode((item) => item.key === key, navigationTree)
   const path = node?.item?.path
@@ -149,7 +166,8 @@ const handleCollapse = (value) => {
   flex-direction: column;
   height: 100%;
   min-height: 100vh;
-  padding: 20px 16px 24px;
+  padding: 28px 22px 32px;
+  gap: 20px;
   transition: background 0.3s ease, box-shadow 0.3s ease, width 0.2s ease;
   border-right: 1px solid rgba(148, 163, 184, 0.18);
   backdrop-filter: blur(22px);
@@ -184,25 +202,27 @@ const handleCollapse = (value) => {
 }
 
 .layout-sider--collapsed {
-  padding-inline: 12px;
+  padding-inline: 16px;
 }
 
 .logo {
   position: relative;
   z-index: 1;
-  height: 48px;
+  height: 52px;
   margin-bottom: 20px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 10px;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #0f172a;
-  background: rgba(255, 255, 255, 0.72);
-  border-radius: 14px;
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
 }
 
 .layout-sider--dark .logo {
@@ -228,7 +248,10 @@ const handleCollapse = (value) => {
   border-radius: 12px;
   margin-inline: 4px;
   margin-block: 2px;
-  padding-inline: 12px !important;
+  padding-inline: 16px !important;
+  padding-block: 10px !important;
+  margin-inline: 6px;
+  margin-block: 4px;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -269,7 +292,58 @@ const handleCollapse = (value) => {
   border-inline-end: none !important;
 }
 
-.sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-item) {
-  padding-inline: 16px !important;
+.sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-item),
+.sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-submenu-title) {
+  padding-inline: 0 !important;
+  padding-block: 14px !important;
+  margin: 10px 12px;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
 }
+
+
+.logo__toggle {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #1d4ed8;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  background: rgba(59, 130, 246, 0.08);
+  transition: all 0.2s ease;
+}
+
+.logo__toggle :deep(.anticon) {
+  font-size: 18px;
+}
+
+.logo__toggle:hover {
+  color: #2563eb;
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.layout-sider--collapsed .logo {
+  justify-content: center;
+  padding: 6px;
+}
+
+.layout-sider--collapsed .logo__text {
+  display: none;
+}
+
+.layout-sider--collapsed .logo__toggle {
+  width: 36px;
+  height: 36px;
+}
+
+.sidebar-menu {
+  width: 100%;
+  flex: 1;
+}
+
+
 </style>

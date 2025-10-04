@@ -2,9 +2,6 @@
   <a-layout-header :class="headerClasses">
     <div class="header-inner">
       <div class="header-left">
-        <a-button type="text" class="trigger" @click="toggleMenu">
-          <component :is="menuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined" />
-        </a-button>
         <div class="brand">
           <slot name="logo">
             <span class="brand-name">Demo FastAPI Admin</span>
@@ -70,7 +67,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { BellOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { BellOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { useSystemStore } from '../../store/system'
 import { useAuthStore } from '../../store/auth'
 
@@ -87,15 +84,10 @@ const headerClasses = computed(() => [
   headerTheme.value === 'dark' ? 'layout-header--dark' : 'layout-header--light'
 ])
 
-const menuCollapsed = computed(() => systemStore.menuCollapsed)
 const notifications = computed(() => systemStore.notifications)
 const unreadCount = computed(() => notifications.value.filter((item) => !item.read).length)
 const userName = computed(() => authStore.user?.name ?? 'User')
 const pageTitle = computed(() => route.meta?.title || 'Dashboard')
-
-const toggleMenu = () => {
-  systemStore.toggleMenu()
-}
 
 const handleMenuClick = ({ key }) => {
   if (key === 'logout') {
@@ -161,17 +153,16 @@ const clearNotifications = () => {
   justify-content: space-between;
   gap: 24px;
   width: 100%;
-  max-width: 1320px;
-  margin: 0 auto;
+  margin: 0;
   min-height: 58px;
-  padding-inline: clamp(12px, 4vw, 36px);
+  padding-inline: clamp(20px, 4vw, 48px);
 }
 
 .header-left,
 .header-right {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
 }
 
 .header-right {
