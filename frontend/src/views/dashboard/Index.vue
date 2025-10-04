@@ -7,6 +7,7 @@
           <span>{{ greetingText }}，{{ greetingName }}</span>
         </div>
         <h2 class="hero-title">监控全局运行态势，及时掌握后台风向</h2>
+        <p class="hero-credit">由 ktovoz 倾情奉献</p>
         <p class="hero-subtitle">
           最近 7 天共处理 <strong>{{ trafficHighlights.totalRequestsDisplay }}</strong> 次 API 请求，平均活跃用户
           <strong>{{ trafficHighlights.avgUsersDisplay }}</strong> 人。快速复盘重点指标，为下一步决策做好准备。
@@ -460,6 +461,13 @@ onMounted(loadMetrics)
   font-size: clamp(24px, 3.8vw, 30px);
   font-weight: 600;
   color: #0f172a;
+}
+
+.hero-credit {
+  margin: 6px 0 12px;
+  font-size: 12px;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
 }
 
 .hero-subtitle {
