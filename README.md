@@ -7,8 +7,9 @@
 [![Author](https://img.shields.io/badge/author-@ktovoz-orange.svg)](https://ktovoz.com)
 [![Website](https://img.shields.io/badge/website-ktovoz.com-blue.svg)](https://ktovoz.com)
 
-> ✨ **一个现代化的前后端分离后台管理系统**  
+> ✨ **一个现代化的前后端分离后台管理系统**
 > 采用 **FastAPI + Vue 3 + Ant Design Vue** 技术栈，提供完整的用户认证、权限管理和系统监控功能。
+> 🚀 **在线演示**: [https://demo-fast.ktovoz.com](https://demo-fast.ktovoz.com) | 账号: `admin` / `admin123`
 
 ---
 
@@ -59,8 +60,14 @@
 ---
 
 ## 🌐 访问应用
+
+### 🚀 在线演示
+- **演示地址**: [https://demo-fast.ktovoz.com](https://demo-fast.ktovoz.com)
+- **演示账号**: `admin` / `admin123`
+
+### 💻 本地开发
 - **前端界面**: http://localhost:3000
-- **API文档**: http://localhost:8000/docs  
+- **API文档**: http://localhost:8000/docs
 - **备用API**: http://localhost:8000/redoc
 
 ---
@@ -404,17 +411,27 @@ apiLogger.request('GET', '/api/users')
 ### 🎨 登录页面
 *现代化的登录界面，支持记住密码和自动登录*
 
+![登录页面](src/登录页面1.png)
+
 ### 📊 仪表板
 *数据可视化面板，实时展示系统状态和用户统计*
+
+![仪表板](src/仪表板.png)
 
 ### 👥 用户管理
 *完整的用户CRUD操作，支持批量处理和高级搜索*
 
-### 🔑 权限管理  
+![用户管理](src/用户管理.png)
+
+### 🔑 权限管理
 *基于角色的权限控制系统，灵活的权限分配*
+
+![权限管理](src/权限管理.png)
 
 ### 📋 系统日志
 *详细的操作日志记录，支持分类查看和搜索过滤*
+
+![系统日志](src/系统日志.png)
 
 </div>
 
