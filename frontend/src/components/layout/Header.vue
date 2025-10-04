@@ -1,11 +1,14 @@
-﻿<template>
+<template>
   <a-layout-header class="layout-header">
     <div class="header-left">
       <a-button type="text" class="trigger" @click="toggleMenu">
         <component :is="menuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined" />
       </a-button>
       <div class="brand">
-        <slot name="logo">Demo FastAPI Admin</slot>
+        <slot name="logo">
+          <span class="brand-name">Demo FastAPI Admin</span>
+        </slot>
+        <span class="brand-divider"></span>
         <span class="page-title">{{ pageTitle }}</span>
       </div>
     </div>
@@ -14,7 +17,7 @@
         v-model:value="search"
         placeholder="Quick search"
         allow-clear
-        style="width: 220px"
+        class="header-search"
         @search="handleSearch"
       />
       <a-popover placement="bottomRight" trigger="click">
@@ -39,7 +42,7 @@
           </div>
         </template>
         <a-badge :count="unreadCount" :offset="[ -2, 4 ]">
-          <a-button type="text"><BellOutlined /></a-button>
+          <a-button type="text" class="icon-button"><BellOutlined /></a-button>
         </a-badge>
       </a-popover>
       <a-dropdown trigger="click">
@@ -50,7 +53,7 @@
           </a-menu>
         </template>
         <div class="user-info">
-          <a-avatar size="small"><UserOutlined /></a-avatar>
+          <a-avatar size="small" class="user-avatar"><UserOutlined /></a-avatar>
           <span class="user-name">{{ userName }}</span>
         </div>
       </a-dropdown>
@@ -105,23 +108,48 @@ const clearNotifications = () => {
 
 <style scoped>
 .layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 90;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  background: #001529;
-  color: #fff;
+  padding: 0 28px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(226, 232, 240, 0.78));
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  color: #0f172a;
   gap: 16px;
 }
 
-.header-left {
+.layout-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.18), transparent 55%);
+  opacity: 0.8;
+}
+
+.header-left,
+.header-right {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .trigger {
-  color: inherit;
+  color: #0f172a;
+  border-radius: 12px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.trigger:hover {
+  color: #1d4ed8;
+  background: rgba(59, 130, 246, 0.08);
 }
 
 .trigger :deep(.anticon) {
@@ -129,31 +157,97 @@ const clearNotifications = () => {
 }
 
 .brand {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #0f172a;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(15, 23, 42, 0.12);
 }
 
 .page-title {
   font-size: 14px;
-  opacity: 0.75;
+  font-weight: 500;
+  color: #1e3a8a;
 }
 
 .header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  gap: 20px;
+}
+
+.header-search {
+  width: clamp(200px, 18vw, 260px);
+}
+
+.header-search :deep(.ant-input-affix-wrapper) {
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.header-search :deep(.ant-input-affix-wrapper:hover),
+.header-search :deep(.ant-input-affix-wrapper-focused) {
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.icon-button {
+  color: #0f172a;
+  border-radius: 12px;
+}
+
+.icon-button:hover {
+  background: rgba(59, 130, 246, 0.08);
+  color: #1d4ed8;
+}
+
+.layout-header :deep(.ant-btn-text) {
+  color: inherit;
+}
+
+.layout-header :deep(.ant-btn-text:hover) {
+  color: #1d4ed8;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #fff;
+  gap: 10px;
+  color: #0f172a;
   cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.7);
+  transition: background 0.2s ease;
+}
+
+.user-info:hover {
+  background: rgba(219, 234, 254, 0.7);
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #fff;
 }
 
 .user-name {
   font-size: 14px;
+  font-weight: 500;
 }
 
 .notification-list {
@@ -163,7 +257,7 @@ const clearNotifications = () => {
 }
 
 .notification-item {
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -172,21 +266,63 @@ const clearNotifications = () => {
 }
 
 .notification-title {
-  color: #1f1f1f;
+  color: #1f2937;
 }
 
 .notification-time {
   font-size: 12px;
-  color: #8c8c8c;
+  color: #6b7280;
 }
 
 .popover-title {
   font-weight: 600;
+  color: #1f2937;
 }
 
 .empty {
   padding: 16px 0;
   text-align: center;
-  color: #8c8c8c;
+  color: #94a3b8;
+}
+
+@media (max-width: 992px) {
+  .layout-header {
+    padding: 0 18px;
+    gap: 12px;
+  }
+
+  .header-right {
+    gap: 14px;
+  }
+
+  .header-search {
+    width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-header {
+    padding: 0 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .brand {
+    padding: 4px 10px;
+  }
+
+  .header-search {
+    width: 100%;
+  }
 }
 </style>
