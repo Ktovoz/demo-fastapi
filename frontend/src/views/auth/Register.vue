@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <AuthPage
-    theme="pink"
+    theme="blue"
     :config="pageConfig"
     :form-model="form"
     :loading="loading"
@@ -240,58 +240,58 @@ const goLogin = () => {
   align-items: start;
   padding: 14px 16px;
   border-radius: 16px;
-  background: rgba(131, 24, 67, 0.45);
-  border: 1px solid rgba(248, 113, 166, 0.2);
-  backdrop-filter: blur(4px);
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  backdrop-filter: blur(6px);
   transition: all 0.3s ease;
 }
 
 .timeline-item:hover {
-  background: rgba(131, 24, 67, 0.55);
-  border-color: rgba(248, 113, 166, 0.35);
-  transform: translateX(4px);
+  background: rgba(14, 165, 233, 0.18);
+  border-color: rgba(59, 130, 246, 0.32);
+  transform: translateX(6px);
 }
 
 .timeline-index {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
-  background: rgba(244, 114, 182, 0.35);
-  color: #fff7fb;
+  background: rgba(37, 99, 235, 0.28);
+  color: rgba(224, 242, 254, 0.95);
   transition: all 0.3s ease;
 }
 
 .timeline-item:hover .timeline-index {
-  background: rgba(244, 114, 182, 0.45);
+  background: rgba(14, 165, 233, 0.32);
   transform: scale(1.05);
 }
 
 .timeline-content strong {
   display: block;
-  font-size: 15px;
-  color: #fdf2f8;
+  font-size: 16px;
+  color: #e0f2fe;
   margin-bottom: 4px;
 }
 
 .timeline-content p {
   margin: 0;
   font-size: 13px;
-  color: rgba(255, 241, 242, 0.78);
+  color: rgba(224, 242, 254, 0.85);
 }
 
 .form-alert {
   border-radius: 16px;
-  background: rgba(255, 240, 246, 0.8);
-  border: 1px solid rgba(236, 72, 153, 0.25);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.32);
 }
 
 .input-icon {
-  color: #c084fc;
+  color: #60a5fa;
 }
 
   .form-tips-container {
@@ -300,8 +300,8 @@ const goLogin = () => {
     gap: 12px;
     padding: 16px;
     border-radius: 16px;
-    background: linear-gradient(135deg, rgba(254, 243, 199, 0.7), rgba(253, 230, 138, 0.5));
-    border: 1.5px solid rgba(252, 211, 77, 0.4);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(14, 165, 233, 0.12));
+    border: 1.5px solid rgba(148, 163, 184, 0.28);
     margin: 8px 0;
     backdrop-filter: blur(8px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -309,8 +309,8 @@ const goLogin = () => {
 
   .form-tips-container:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15);
-    border-color: rgba(252, 211, 77, 0.6);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.18);
+    border-color: rgba(59, 130, 246, 0.26);
   }
 
   .tips-icon {
@@ -320,8 +320,8 @@ const goLogin = () => {
     width: 28px;
     height: 28px;
     border-radius: 10px;
-    background: rgba(245, 158, 11, 0.2);
-    color: #d97706;
+    background: rgba(59, 130, 246, 0.18);
+    color: #1d4ed8;
     flex-shrink: 0;
     margin-top: 1px;
     transition: all 0.3s ease;
@@ -339,7 +339,7 @@ const goLogin = () => {
     flex-direction: column;
     gap: 6px;
     font-size: 13px;
-    color: #92400e;
+    color: #1e3a8a;
   }
 
   .form-tips li {
@@ -356,7 +356,7 @@ const goLogin = () => {
   .form-tips li::before {
     content: "•";
     margin-right: 6px;
-    color: #f59e0b;
+    color: #2563eb;
     font-weight: bold;
   }
 
@@ -370,7 +370,7 @@ const goLogin = () => {
 
   .terms-label {
     font-size: 13px;
-    color: #64748b;
+    color: #334155;
     opacity: 0.8;
   }
 
@@ -400,7 +400,7 @@ const goLogin = () => {
   .submit-btn {
     border-radius: 10px;
     height: 48px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -408,16 +408,16 @@ const goLogin = () => {
   .back-btn {
     border-radius: 10px;
     height: 48px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
-    border: 1px solid #e2e8f0;
-    color: #64748b;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    color: #334155;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .back-btn:hover {
     border-color: #cbd5e1;
-    background: #f8fafc;
+    background: rgba(148, 163, 184, 0.12);
     color: #334155;
     transform: translateY(-1px);
   }
@@ -429,30 +429,30 @@ const goLogin = () => {
 /* 输入框聚焦效果 */
 :deep(.ant-input:focus),
 :deep(.ant-input-focused) {
-  border-color: #ec4899;
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
   transform: translateY(-1px);
 }
 
 :deep(.ant-input-password:focus),
 :deep(.ant-input-password-focused) {
-  border-color: #ec4899;
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
   transform: translateY(-1px);
 }
 
 /* 按钮悬停效果 */
 :deep(.ant-btn-primary) {
-  background: linear-gradient(135deg, #ec4899, #db2777);
+  background: linear-gradient(135deg, #2563eb, #0ea5e9);
   border: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 }
 
 :deep(.ant-btn-primary:hover) {
-  background: linear-gradient(135deg, #db2777, #be185d);
+  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.35);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.28);
 }
 
 @media (max-width: 992px) {

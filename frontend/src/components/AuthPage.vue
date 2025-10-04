@@ -143,55 +143,63 @@ const handleSubmit = () => {
 }
 
 /* 主题 - 蓝色 */
+.auth-card--blue {
+  --auth-primary: #2563eb;
+  --auth-secondary: #0ea5e9;
+  --auth-deep: #1d4ed8;
+  --auth-soft-text: rgba(224, 242, 254, 0.82);
+  background: linear-gradient(140deg, rgba(37, 99, 235, 0.16), rgba(14, 165, 233, 0.12));
+}
+
 .auth-card--blue .auth-card__intro {
-  background: radial-gradient(circle at 20% 16%, rgba(59, 130, 246, 0.35), transparent 60%),
-    radial-gradient(circle at 80% 75%, rgba(37, 99, 235, 0.25), transparent 58%),
-    linear-gradient(210deg, #1e3a8a 0%, #3b82f6 48%, #1e3a8a 100%);
-  color: #e0e7ff;
+  background: radial-gradient(circle at 22% 18%, rgba(37, 99, 235, 0.38), transparent 60%),
+    radial-gradient(circle at 78% 82%, rgba(14, 165, 233, 0.28), transparent 58%),
+    linear-gradient(210deg, #1d4ed8 0%, #1e3a8a 48%, #0f172a 100%);
+  color: #e0f2fe;
 }
 
 .auth-card--blue .intro-text {
-  color: rgba(224, 231, 255, 0.88);
+  color: var(--auth-soft-text);
 }
 
 .auth-card--blue .intro-footer {
-  color: rgba(224, 231, 255, 0.78);
+  color: rgba(224, 242, 254, 0.78);
 }
 
 .auth-card--blue .intro-pattern--one {
-  background: rgba(96, 165, 250, 0.55);
+  background: rgba(14, 165, 233, 0.38);
 }
 
 .auth-card--blue .intro-pattern--two {
-  background: rgba(37, 99, 235, 0.45);
+  background: rgba(37, 99, 235, 0.32);
 }
 
 .auth-card--blue .intro-badge {
-  background: rgba(30, 58, 138, 0.28);
-  border: 1px solid rgba(224, 231, 255, 0.25);
-  color: rgba(224, 231, 255, 0.88);
+  background: rgba(30, 64, 175, 0.35);
+  border: 1px solid rgba(191, 219, 254, 0.4);
+  color: rgba(224, 242, 254, 0.9);
 }
 
 .auth-card--blue .badge-dot {
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
 }
 
 .auth-card--blue .step-icon {
-  background: rgba(59, 130, 246, 0.25);
-  color: #93c5fd;
+  background: rgba(37, 99, 235, 0.22);
+  color: rgba(224, 242, 254, 0.92);
 }
 
 .auth-card--blue .intro-support .anticon {
-  color: #93c5fd;
+  color: rgba(191, 219, 254, 0.9);
 }
 
 .auth-card--blue .auth-card__form {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(240, 249, 255, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(236, 245, 255, 0.92) 100%);
 }
 
 .auth-card--blue .form-header h3 {
-  color: #1e3a8a;
+  color: var(--auth-deep);
 }
 
 /* 主题 - 粉色 */
@@ -313,13 +321,13 @@ const handleSubmit = () => {
 
 .form-input:hover {
   border-color: #cbd5e1;
-  background-color: #f8fafc;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.08);
+  background-color: rgba(240, 249, 255, 0.85);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.1);
 }
 
 .form-input:focus,
 .form-input-focused {
-  border-color: #3b82f6;
+  border-color: var(--auth-primary);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
   background-color: #ffffff;
   transform: translateY(-1px);
@@ -341,14 +349,14 @@ const handleSubmit = () => {
   font-size: 15px;
   font-weight: 500;
   border: 1px solid #e2e8f0;
-  color: #64748b;
+  color: var(--text-secondary, #64748b);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .back-btn:hover {
   border-color: #cbd5e1;
   background: #f8fafc;
-  color: #334155;
+  color: var(--text-primary, #334155);
   transform: translateY(-1px);
 }
 
@@ -476,7 +484,7 @@ const handleSubmit = () => {
 
 .form-header p {
   margin: 6px 0 0;
-  color: #64748b;
+  color: var(--text-secondary, #64748b);
   line-height: 1.6;
 }
 
