@@ -2,86 +2,105 @@
 
 # 🚀 Demo Admin System
 
+<!-- 标题动画效果 -->
+<p align="center">
+  <a href="https://github.com/ktovoz/demo-fastapi">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Inter&weight=800&size=28&duration=4000&pause=1000&color=2F81F7&center=true&vCenter=true&multiline=true&width=600&height=100&lines=Modern+Full-Stack+Admin+System;Built+with+FastAPI+%2B+Vue+3+%2B+Ant+Design" alt="Typing SVG" />
+  </a>
+</p>
+
+<!-- 技术栈徽章 -->
 <p>
   <a href="https://fastapi.tiangolo.com/">
-    <img src="https://img.shields.io/badge/FastAPI-0.104.1-009688?style=for-the-badge&logo=fastapi" alt="FastAPI">
+    <img src="https://img.shields.io/badge/FastAPI-0.104.1-009688?style=for-the-badge&logo=fastapi&logoColor=white&link=https://fastapi.tiangolo.com/" alt="FastAPI">
   </a>
   <a href="https://vuejs.org/">
-    <img src="https://img.shields.io/badge/Vue%203-3.3.11-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue 3">
+    <img src="https://img.shields.io/badge/Vue%203-3.3.11-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white&link=https://vuejs.org/" alt="Vue 3">
   </a>
   <a href="https://www.antdv.com/">
-    <img src="https://img.shields.io/badge/Ant%20Design%20Vue-4.0.8-0170FE?style=for-the-badge&logo=ant-design&logoColor=white" alt="Ant Design Vue">
+    <img src="https://img.shields.io/badge/Ant%20Design%20Vue-4.0.8-0170FE?style=for-the-badge&logo=ant-design&logoColor=white&link=https://www.antdv.com/" alt="Ant Design Vue">
   </a>
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white&link=https://www.typescriptlang.org/" alt="TypeScript">
+  </a>
+</p>
+
+<!-- 状态徽章 -->
+<p>
+  <a href="https://github.com/ktovoz/demo-fastapi/actions">
+    <img src="https://img.shields.io/github/workflow/status/ktovoz/demo-fastapi/CI?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions">
+  </a>
+  <a href="https://codecov.io/gh/ktovoz/demo-fastapi">
+    <img src="https://img.shields.io/codecov/c/github/ktovoz/demo-fastapi?style=for-the-badge&logo=codecov&logoColor=white" alt="Codecov">
+  </a>
+  <a href="https://github.com/ktovoz/demo-fastapi/issues">
+    <img src="https://img.shields.io/github/issues/ktovoz/demo-fastapi?style=for-the-badge&logo=github&logoColor=white" alt="Issues">
+  </a>
+  <a href="https://github.com/ktovoz/demo-fastapi/pulls">
+    <img src="https://img.shields.io/github/issues-pr/ktovoz/demo-fastapi?style=for-the-badge&logo=github&logoColor=white" alt="Pull Requests">
+  </a>
+</p>
+
+<!-- 许可证和作者徽章 -->
+<p>
   <a href="LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-success?style=for-the-badge" alt="License">
+    <img src="https://img.shields.io/badge/license-MIT-success?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
   <a href="https://ktovoz.com">
-    <img src="https://img.shields.io/badge/author-@ktovoz-orange?style=for-the-badge" alt="Author">
+    <img src="https://img.shields.io/badge/author-@ktovoz-orange?style=for-the-badge&logo=github&logoColor=white&link=https://github.com/ktovoz" alt="Author">
   </a>
   <a href="https://ktovoz.com">
-    <img src="https://img.shields.io/badge/website-ktovoz.com-blue?style=for-the-badge" alt="Website">
+    <img src="https://img.shields.io/badge/website-ktovoz.com-blue?style=for-the-badge&logo=google-chrome&logoColor=white&link=https://ktovoz.com" alt="Website">
   </a>
 </p>
 
 </div>
 
+---
+
 <div align="center">
 
-> ✨ **现代化全栈后台管理系统解决方案**
-> 🎯 基于 **FastAPI + Vue 3 + Ant Design Vue** 构建的企业级管理平台
-> 🔐 完整的用户认证、权限控制、系统监控和日志管理
+> ✨ **企业级全栈后台管理系统解决方案**
+>
+> 🎯 基于 **FastAPI + Vue 3 + TypeScript + Ant Design Vue** 构建的现代化管理平台
+>
+> 🔐 完整的用户认证 • 🔑 RBAC权限控制 • 📊 实时系统监控 • 📝 完整日志管理
+>
 > 🚀 **在线演示**: [https://demo-fast.ktovoz.com](https://demo-fast.ktovoz.com) | 账号: `admin@example.com` / `admin123`
 
-[📖 中文文档](#) | [🚀 快速开始](#-快速开始) | [📸 界面预览](#-界面预览) | [🛠️ 技术架构](#️-技术架构) | [📚 开发指南](#-开发指南)
+<!-- 快速导航 -->
+<p>
+  <a href="#-快速开始">
+    <img src="https://img.shields.io/badge/🚀-快速开始-blue?style=flat-square" alt="Quick Start">
+  </a>
+  <a href="#-界面预览">
+    <img src="https://img.shields.io/badge/📸-界面预览-green?style=flat-square" alt="Preview">
+  </a>
+  <a href="#-技术架构">
+    <img src="https://img.shields.io/badge/🛠️-技术架构-purple?style=flat-square" alt="Architecture">
+  </a>
+  <a href="#-开发指南">
+    <img src="https://img.shields.io/badge/📚-开发指南-orange?style=flat-square" alt="Guide">
+  </a>
+</p>
 
 </div>
 
 ---
 
-## 🌟 项目亮点
+## ✨ 项目特性
 
-<table align="center">
-<tr>
-<td width="50%">
+<div align="center">
 
-### 🔥 **最新技术栈**
-- **FastAPI** - 高性能异步Web框架
-- **Vue 3** - 渐进式JavaScript框架
-- **TypeScript** - 类型安全的JavaScript
-- **Ant Design Vue** - 企业级UI组件库
+| 🔥 **最新技术栈** | 🎨 **现代化设计** |
+|----------------|----------------|
+| FastAPI + Vue 3 + TypeScript | 响应式布局 • 深色/浅色主题 • 流畅动画效果 |
 
-</td>
-<td width="50%">
+| 🔐 **安全认证** | 📊 **系统监控** |
+|----------------|----------------|
+| JWT Token • RBAC权限 • 密码加密 • 会话管理 | 实时状态 • 用户统计 • 性能监控 • 日志追踪 |
 
-### 🎨 **现代化设计**
-- 响应式布局设计
-- 深色/浅色主题切换
-- 流畅的动画效果
-- 企业级UI设计系统
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🔐 **安全认证**
-- JWT Token认证机制
-- RBAC权限管理系统
-- 密码加密存储
-- 会话管理和安全控制
-
-</td>
-<td width="50%">
-
-### 📊 **系统监控**
-- 实时系统状态监控
-- 用户行为统计分析
-- 完整的操作日志记录
-- 系统性能指标监控
-
-</td>
-</tr>
-</table>
+</div>
 
 ---
 
@@ -91,11 +110,10 @@
 
 <div align="center">
 
-| 链接 | 描述 |
-|------|------|
-| [🌐 演示地址](https://demo-fast.ktovoz.com) | 在线体验完整功能 |
-| [📱 移动端](https://demo-fast.ktovoz.com) | 响应式移动端界面 |
-| [🎯 管理后台](https://demo-fast.ktovoz.com) | 完整的管理功能 |
+| 🌐 **演示地址** | 📱 **移动端** | 🎯 **管理后台** |
+|----------------|--------------|----------------|
+| [demo-fast.ktovoz.com](https://demo-fast.ktovoz.com) | [响应式界面](https://demo-fast.ktovoz.com) | [完整管理功能](https://demo-fast.ktovoz.com) |
+| 在线体验完整功能 | 完美适配移动设备 | 企业级管理体验 |
 
 **演示账号**: `admin@example.com` / `admin123`
 
@@ -105,11 +123,11 @@
 
 <div align="center">
 
-| 服务 | 地址 | 描述 |
-|------|------|------|
-| 🎨 **前端应用** | http://localhost:3000 | Vue 3 开发服务器 |
-| 📚 **API文档** | http://localhost:8000/docs | Swagger UI 文档 |
-| 🔧 **备用API** | http://localhost:8000/redoc | ReDoc 文档 |
+| 服务 | 地址 | 描述 | 状态 |
+|------|------|------|------|
+| 🎨 **前端应用** | http://localhost:3000 | Vue 3 开发服务器 | ✅ 运行中 |
+| 📚 **API文档** | http://localhost:8000/docs | Swagger UI 文档 | ✅ 可用 |
+| 🔧 **备用API** | http://localhost:8000/redoc | ReDoc 文档 | ✅ 可用 |
 
 </div>
 
@@ -121,27 +139,37 @@
 
 ### 🎨 **现代化登录界面**
 <div align="center">
-  <img src="src/登录页面1.png" alt="登录页面" width="800">
+  <a href="https://demo-fast.ktovoz.com">
+    <img src="src/登录页面1.png" alt="登录页面" width="85%">
+  </a>
 </div>
 
 ### 📊 **数据可视化仪表板**
 <div align="center">
-  <img src="src/仪表板.png" alt="仪表板" width="800">
+  <a href="https://demo-fast.ktovoz.com">
+    <img src="src/仪表板.png" alt="仪表板" width="85%">
+  </a>
 </div>
 
 ### 👥 **用户管理系统**
 <div align="center">
-  <img src="src/用户管理.png" alt="用户管理" width="800">
+  <a href="https://demo-fast.ktovoz.com">
+    <img src="src/用户管理.png" alt="用户管理" width="85%">
+  </a>
 </div>
 
 ### 🔑 **权限控制系统**
 <div align="center">
-  <img src="src/权限管理.png" alt="权限管理" width="800">
+  <a href="https://demo-fast.ktovoz.com">
+    <img src="src/权限管理.png" alt="权限管理" width="85%">
+  </a>
 </div>
 
 ### 📋 **系统日志监控**
 <div align="center">
-  <img src="src/系统日志.png" alt="系统日志" width="800">
+  <a href="https://demo-fast.ktovoz.com">
+    <img src="src/系统日志.png" alt="系统日志" width="85%">
+  </a>
 </div>
 
 </div>
@@ -150,56 +178,31 @@
 
 ## 🎯 核心功能
 
-<table align="center">
-<tr>
-<th>🔐 用户认证</th>
-<th>👥 用户管理</th>
-<th>🔑 权限管理</th>
-<th>📊 系统监控</th>
-</tr>
-<tr>
-<td>
+<div align="center">
 
-✅ **功能特性**
-- 邮箱/用户名注册登录
-- JWT Token认证机制
-- 密码加密存储 (bcrypt)
-- Token自动刷新
-- 完整的会话控制
+### 🔐 用户认证系统 | 👥 用户管理系统
+|----------------|----------------|
+| ✅ **多方式登录** | ✅ **用户操作** |
+| - 邮箱登录 | - 分页查询 |
+| - 用户名登录 | - CRUD操作 |
+| - 记住密码 | - 状态管理 |
+| ✅ **安全机制** | ✅ **高级功能** |
+| - JWT Token认证 | - 批量操作 |
+| - 密码bcrypt加密 | - 高级搜索 |
+| - 会话管理 | - 数据过滤 |
 
-</td>
-<td>
+### 🔑 权限管理系统 | 📊 系统监控系统
+|----------------|----------------|
+| ✅ **权限控制** | ✅ **监控功能** |
+| - RBAC权限模型 | - 系统状态监控 |
+| - 角色管理 | - 用户行为统计 |
+| - 权限分配 | - 性能指标监控 |
+| ✅ **动态验证** | ✅ **日志系统** |
+| - 实时权限校验 | - 完整审计追踪 |
+| - 用户角色关联 | - 异常日志追踪 |
+| - 动态权限调整 | - 操作日志记录 |
 
-✅ **功能特性**
-- 用户列表分页查询
-- 完整的CRUD操作
-- 用户状态管理
-- 批量操作支持
-- 高级搜索过滤
-
-</td>
-<td>
-
-✅ **功能特性**
-- 基于角色的访问控制
-- 角色创建和管理
-- 权限分配和回收
-- 用户角色关联
-- 动态权限验证
-
-</td>
-<td>
-
-✅ **功能特性**
-- 实时系统状态监控
-- 用户行为统计
-- 完整的审计追踪
-- 系统性能监控
-- 异常日志追踪
-
-</td>
-</tr>
-</table>
+</div>
 
 ---
 
@@ -209,25 +212,26 @@
 
 <div align="center">
 
+| 🔵 **Node.js** | 🐍 **Python** | 📦 **Git** |
+|----------------|--------------|------------|
+| **16.0.0+** | **3.8.0+** | **Latest** |
+| 前端运行环境 | 后端运行环境 | 版本控制工具 |
+
 ```bash
 # 检查环境版本
 node --version    # >= 16.0.0
 python --version  # >= 3.8.0
-git --version     # 最新版本
+git --version     # Latest
 ```
-
-| 依赖 | 版本要求 | 用途 |
-|------|---------|------|
-| 🔵 **Node.js** | 16.0+ | 前端运行环境 |
-| 🐍 **Python** | 3.8+ | 后端运行环境 |
-| 📦 **Git** | Latest | 版本控制 |
 
 </div>
 
 ### ⚡ 一键启动
 
+<div align="center">
+
 <details>
-<summary>📦 克隆项目</summary>
+<summary><strong>📦 克隆项目</strong></summary>
 
 ```bash
 git clone https://github.com/your-username/demo-fastapi.git
@@ -237,19 +241,19 @@ cd demo-fastapi
 </details>
 
 <details>
-<summary>🐍 启动后端 (FastAPI)</summary>
+<summary><strong>🐍 启动后端</strong></summary>
 
 ```bash
 cd backend
 
-# Windows 用户 🪟
+# Windows 🪟
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env
 python run.py
 
-# Linux/Mac 用户 🐧
+# Linux/Mac 🐧
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -260,7 +264,7 @@ python run.py
 </details>
 
 <details>
-<summary>🎨 启动前端 (Vue 3)</summary>
+<summary><strong>🎨 启动前端</strong></summary>
 
 ```bash
 cd frontend
@@ -270,14 +274,16 @@ npm run dev
 
 </details>
 
+</div>
+
 ### 🔑 默认账号
 
 <div align="center">
 
 | 角色 | 用户名 | 密码 | 权限范围 |
 |------|--------|------|---------|
-| 👑 **超级管理员** | `admin` | `admin123` | 全部权限 |
-| 👤 **测试用户** | `test` | `test123` | 基础权限 |
+| 👑 **超级管理员** | `admin` | `admin123` | 🔥 全部权限 |
+| 👤 **测试用户** | `test` | `test123` | 📋 基础权限 |
 
 </div>
 
@@ -289,8 +295,8 @@ npm run dev
 
 <div align="center">
 
-| 技术 | 版本 | 用途 | 🌟 特性 |
-|------|------|------|--------|
+| 技术栈 | 版本 | 用途 | 特性 |
+|--------|------|------|------|
 | **FastAPI** | 0.104.1 | 高性能异步Web框架 | 🚀 自动API文档 |
 | **Uvicorn** | 0.24.0 | ASGI服务器 | ⚡ 高性能异步 |
 | **SQLAlchemy** | Latest | ORM数据库工具 | 🗃️ 强大映射 |
@@ -306,10 +312,11 @@ npm run dev
 
 <div align="center">
 
-| 技术 | 版本 | 用途 | 🌟 特性 |
-|------|------|------|--------|
+| 技术栈 | 版本 | 用途 | 特性 |
+|--------|------|------|------|
 | **Vue 3** | 3.3.11 | 渐进式JavaScript框架 | ⚡ Composition API |
 | **Ant Design Vue** | 4.0.8 | 企业级UI组件库 | 🎨 丰富组件 |
+| **TypeScript** | 5.0 | 类型安全的JavaScript | 🔷 类型安全 |
 | **Vite** | 5.0.8 | 新一代构建工具 | ⚡ 极速热重载 |
 | **Vue Router** | 4.2.5 | 路由管理 | 🧭 嵌套路由 |
 | **Pinia** | 2.1.7 | 状态管理 | 📦 现代化Store |
@@ -323,26 +330,6 @@ npm run dev
 ## 🏗️ 项目结构
 
 <div align="center">
-
-```mermaid
-graph TD
-    A[demo-fastapi] --> B[backend]
-    A --> C[frontend]
-    A --> D[doc]
-
-    B --> B1[app]
-    B1 --> B11[main.py]
-    B1 --> B12[routers]
-    B1 --> B13[models]
-    B1 --> B14[schemas]
-    B1 --> B15[utils]
-
-    C --> C1[src]
-    C1 --> C11[views]
-    C1 --> C12[components]
-    C1 --> C13[api]
-    C1 --> C14[utils]
-```
 
 ```
 📦 demo-fastapi/
@@ -402,62 +389,24 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 <div align="center">
 
-| 文档类型 | 地址 | 特性 |
-|----------|------|------|
-| **Swagger UI** | http://localhost:8000/docs | 🎨 交互式API文档 |
-| **ReDoc** | http://localhost:8000/redoc | 📖 美观的API文档 |
-| **OpenAPI Schema** | http://localhost:8000/openapi.json | 🔧 机器可读格式 |
+| 🎨 **Swagger UI** | 📖 **ReDoc** | 🔧 **OpenAPI Schema** |
+|------------------|--------------|---------------------|
+| [交互式API文档](http://localhost:8000/docs) | [美化的API文档](http://localhost:8000/redoc) | [机器可读格式](http://localhost:8000/openapi.json) |
 
 </div>
 
 ### 🎯 核心API端点
 
-<details>
-<summary>🔐 认证模块</summary>
+<div align="center">
 
-```http
-POST /api/auth/login     # 用户登录
-POST /api/auth/register  # 用户注册
-POST /api/auth/refresh   # Token刷新
-POST /api/auth/logout    # 用户登出
-```
+| 🔐 **认证模块** | 👥 **用户管理** | 🔑 **权限管理** | 📊 **系统监控** |
+|----------------|----------------|----------------|----------------|
+| `POST /api/auth/login` | `GET /api/users` | `GET /api/roles` | `GET /api/dashboard/stats` |
+| `POST /api/auth/register` | `GET /api/users/{id}` | `POST /api/roles` | `GET /api/logs` |
+| `POST /api/auth/refresh` | `PUT /api/users/{id}` | `PUT /api/roles/{id}` | `GET /api/system/info` |
+| `POST /api/auth/logout` | `DELETE /api/users/{id}` | `GET /api/permissions` | |
 
-</details>
-
-<details>
-<summary>👥 用户管理</summary>
-
-```http
-GET    /api/users           # 获取用户列表
-GET    /api/users/{id}      # 获取用户详情
-PUT    /api/users/{id}      # 更新用户信息
-DELETE /api/users/{id}      # 删除用户
-```
-
-</details>
-
-<details>
-<summary>🔑 权限管理</summary>
-
-```http
-GET    /api/roles           # 获取角色列表
-POST   /api/roles           # 创建角色
-PUT    /api/roles/{id}      # 更新角色
-GET    /api/permissions     # 获取权限列表
-```
-
-</details>
-
-<details>
-<summary>📊 系统监控</summary>
-
-```http
-GET /api/dashboard/stats   # 系统统计
-GET /api/logs              # 操作日志
-GET /api/system/info       # 系统信息
-```
-
-</details>
+</div>
 
 ### 📝 日志系统
 
@@ -490,30 +439,17 @@ apiLogger.request('GET', '/api/users')
 
 ### 🌟 项目维护者
 
-<div align="center">
-
-| 📧 联系方式 | 链接 |
-|-------------|------|
-| 🌐 **个人网站** | [ktovoz.com](https://ktovoz.com) |
-| 📚 **GitHub** | [@ktovoz](https://github.com/ktovoz) |
-| 📧 **邮箱** | [hello@ktovoz.com](mailto:hello@ktovoz.com) |
-
-</div>
-
 **ktovoz** - 测试开发工程师
+
+| 🌐 **个人网站** | 📚 **GitHub** | 📧 **邮箱** |
+|----------------|--------------|------------|
+| [ktovoz.com](https://ktovoz.com) | [@ktovoz](https://github.com/ktovoz) | [hello@ktovoz.com](mailto:hello@ktovoz.com) |
 
 ### 💼 专业服务
 
-<div align="center">
-
-| 服务 | 描述 |
-|------|------|
-| 🚀 **技术咨询** | 前后端架构设计与优化 |
-| 🎨 **UI/UX设计** | 现代化界面设计 |
-| 📱 **应用开发** | Web应用定制开发 |
-| 🔧 **技术培训** | 团队技术能力提升 |
-
-</div>
+| 🚀 **技术咨询** | 🎨 **UI/UX设计** | 📱 **应用开发** | 🔧 **技术培训** |
+|----------------|----------------|----------------|----------------|
+| 前后端架构设计与优化 | 现代化界面设计 | Web应用定制开发 | 团队技术能力提升 |
 
 </div>
 
@@ -537,16 +473,13 @@ apiLogger.request('GET', '/api/users')
 
 ## 🙏 致谢
 
-<div align="center">
-
 感谢以下优秀的开源项目：
 
-| 项目 | 描述 |
-|------|------|
-| **FastAPI** | 高性能Web框架 |
-| **Vue.js** | 渐进式JavaScript框架 |
-| **Ant Design Vue** | 企业级UI组件库 |
-| **Vite** | 极速构建工具 |
+<div align="center">
+
+| 🚀 **FastAPI** | ⚡ **Vue.js** | 🎨 **Ant Design Vue** | ⚡ **Vite** |
+|----------------|--------------|----------------------|------------|
+| 高性能Web框架 | 渐进式JavaScript框架 | 企业级UI组件库 | 极速构建工具 |
 
 </div>
 
@@ -562,12 +495,26 @@ apiLogger.request('GET', '/api/users')
 
 ### 🌟 如果这个项目对您有帮助，请给我们一个 Star 支持！
 
+<!-- GitHub 统计徽章 -->
 <p>
   <a href="https://github.com/ktovoz/demo-fastapi">
-    <img src="https://img.shields.io/github/stars/ktovoz/demo-fastapi?style=social" alt="GitHub Stars">
+    <img src="https://img.shields.io/github/stars/ktovoz/demo-fastapi?style=social&logo=github&logoColor=white" alt="GitHub Stars">
   </a>
   <a href="https://github.com/ktovoz/demo-fastapi/fork">
-    <img src="https://img.shields.io/github/forks/ktovoz/demo-fastapi?style=social" alt="GitHub Forks">
+    <img src="https://img.shields.io/github/forks/ktovoz/demo-fastapi?style=social&logo=github&logoColor=white" alt="GitHub Forks">
+  </a>
+  <a href="https://github.com/ktovoz/demo-fastapi/watchers">
+    <img src="https://img.shields.io/github/watchers/ktovoz/demo-fastapi?style=social&logo=github&logoColor=white" alt="GitHub Watchers">
+  </a>
+</p>
+
+<!-- 活跃度徽章 -->
+<p>
+  <a href="https://github.com/ktovoz/demo-fastapi/commits/main">
+    <img src="https://img.shields.io/github/last-commit/ktovoz/demo-fastapi?style=for-the-badge&logo=github&logoColor=white" alt="Last Commit">
+  </a>
+  <a href="https://github.com/ktovoz/demo-fastapi/releases">
+    <img src="https://img.shields.io/github/release-date/ktovoz/demo-fastapi?style=for-the-badge&logo=github&logoColor=white" alt="Release Date">
   </a>
 </p>
 
@@ -577,7 +524,9 @@ apiLogger.request('GET', '/api/users')
 
 <div align="center">
 
-Made with ❤️ by [ktovoz](https://ktovoz.com)
+**Made with ❤️ by ktovoz**
+
+© 2024 All rights reserved
 
 </div>
 
