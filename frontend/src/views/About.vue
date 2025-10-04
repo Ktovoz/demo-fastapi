@@ -53,7 +53,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { createLogger } from '../utils/logger'
+
+// 创建日志器
+const logger = createLogger('AboutPage')
 
 const features = ref([
   {
@@ -77,6 +81,11 @@ const features = ref([
     icon: 'thunderbolt'
   }
 ])
+
+onMounted(() => {
+  logger.info('📖 关于页面已挂载')
+  logger.debug('📋 特性列表:', features.value.map(f => f.title))
+})
 </script>
 
 <style scoped>

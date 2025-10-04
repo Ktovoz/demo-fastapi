@@ -83,8 +83,14 @@ demo-fastapi/
    # 复制环境变量文件
    cp .env.example .env
 
-   # 启动服务
+   # 启动服务（方式一：使用运行脚本）
+   python run.py
+
+   # 或（方式二：直接使用uvicorn）
    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+   # Windows用户也可以直接双击运行 start.bat
+   # Linux/Mac用户可以运行 chmod +x start.sh && ./start.sh
    ```
 
 3. **启动前端服务**
@@ -135,6 +141,10 @@ demo-fastapi/
 - ✅ CORS 跨域支持
 - ✅ 热重载开发体验
 - ✅ API 自动文档生成
+- ✅ 完整的日志系统
+  - 后端：Loguru 高性能日志库
+  - 前端：Loglevel + 自定义日志工具
+  - 支持多级别日志、本地存储、性能监控
 
 ## 许可证
 

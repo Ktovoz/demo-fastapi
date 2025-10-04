@@ -40,31 +40,55 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { api } from '../utils/api'
+import { createLogger, createPerformanceLogger } from '../utils/logger'
+
+// 创建日志器
+const logger = createLogger('HomePage')
+const perfLogger = createPerformanceLogger('HomePage')
 
 const router = useRouter()
 const loading = ref(false)
 const apiResponse = ref('')
 
+onMounted(() => {
+  logger.info('🏠 首页组件已挂载')
+})
+
 const testAPI = async () => {
+  const timer = perfLogger.startTimer('测试API连接')
+
   loading.value = true
+  logger.info('🔗 开始测试后端API连接')
+
   try {
     const response = await api.get('/')
+    timer.end()
+
     apiResponse.value = `连接成功！后端返回：${JSON.stringify(response.data)}`
+    logger.info('✅ API连接测试成功', response.data)
     message.success('API 连接成功！')
   } catch (error) {
-    console.error('API 测试失败:', error)
+    timer.end()
+    logger.error('❌ API连接测试失败', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data
+    })
+
     apiResponse.value = `连接失败：${error.message}`
     message.error('API 连接失败，请检查后端服务是否启动')
   } finally {
     loading.value = false
+    logger.info('🔗 API测试完成')
   }
 }
 
 const goToAbout = () => {
+  logger.info('🧭 导航到关于页面')
   router.push('/about')
 }
 </script>
