@@ -41,5 +41,10 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
+  },
+  preview: {
+    port: 4173,
+    host: '0.0.0.0',
+    allowedHosts: ['demo-fast.ktovoz.com', 'localhost', '127.0.0.1']
   }
 })
