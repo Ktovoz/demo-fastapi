@@ -3,6 +3,7 @@ import { userMockApi } from './api/users'
 import { roleMockApi } from './api/roles'
 import { dashboardMockApi } from './api/dashboard'
 import { systemMockApi } from './api/system'
+import { adminMockApi } from './api/admin'
 
 const flag = (import.meta.env.VITE_USE_MOCK ?? (import.meta.env.DEV ? 'true' : 'false')).toString().toLowerCase()
 
@@ -13,7 +14,8 @@ export const mockApi = {
   users: userMockApi,
   roles: roleMockApi,
   dashboard: dashboardMockApi,
-  system: systemMockApi
+  system: systemMockApi,
+  admin: adminMockApi
 }
 
 export const callMock = (namespace, method, ...args) => {

@@ -67,6 +67,13 @@ const rawMenu = [
     label: "System",
     children: [
       {
+        key: "system-overview",
+        icon: () => h(DashboardOutlined),
+        label: "Overview",
+        path: "/system/overview",
+        permission: "dashboard:view"
+      },
+      {
         key: "system-logs",
         icon: () => h(FileSearchOutlined),
         label: "Logs",
@@ -174,3 +181,4 @@ const handleCollapse = (value) => {
   color: #fff;
 }
 </style>
+

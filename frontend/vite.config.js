@@ -9,20 +9,19 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('ant-design-vue/es')) {
-              const match = id.split('ant-design-vue/es/')[1]
-              if (match) {
-                const chunk = match.split('/')[0]
-                return `antd-${chunk}`
-              }
-              return 'antd-shared'
+            // 将所有ant-design-vue相关模块打包在一起，避免模块间依赖问题
+            if (id.includes('ant-design-vue')) {
+              return 'antd'
             }
+            // @ant-design/icons-vue 单独打包
             if (id.includes('@ant-design/icons-vue')) {
               return 'antd-icons'
             }
+            // Vue相关模块打包在一起
             if (id.includes('vue')) {
               return 'vue'
             }
+            // 日志相关模块
             if (id.includes('loglevel')) {
               return 'logging'
             }
@@ -30,7 +29,13 @@ export default defineConfig({
         }
       }
     },
-    chunkSizeWarningLimit: 900
+    chunkSizeWarningLimit: 1000,
+    // 优化模块解析
+    modulePreload: {
+      resolveDependencies(filename, deps) {
+        return deps.filter(dep => !dep.includes('.map'))
+      }
+    }
   },
   server: {
     port: 3000,

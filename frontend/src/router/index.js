@@ -137,13 +137,31 @@ const routes = [
         }
       },
       {
+        path: "system",
+        redirect: "/system/overview"
+      },
+      {
+        path: "system/overview",
+        name: "SystemOverview",
+        component: loadView("../views/system/AdminOverview.vue"),
+        meta: {
+          title: "Admin Overview",
+          description: "Operations control center for the admin platform",
+          breadcrumb: [
+            { label: "System", to: "/system/overview" },
+            { label: "Overview" }
+          ],
+          permission: "dashboard:view"
+        }
+      },
+      {
         path: "system/logs",
         name: "SystemLogs",
         component: loadView("../views/system/Logs.vue"),
         meta: {
           title: "System Logs",
           breadcrumb: [
-            { label: "System", to: "/system/logs" },
+            { label: "System", to: "/system/overview" },
             { label: "Logs" }
           ],
           permission: "logs:view"
@@ -156,7 +174,7 @@ const routes = [
         meta: {
           title: "System Settings",
           breadcrumb: [
-            { label: "System", to: "/system/logs" },
+            { label: "System", to: "/system/overview" },
             { label: "Settings" }
           ],
           permission: "system:manage"
@@ -232,3 +250,4 @@ router.afterEach((to) => {
 })
 
 export default router
+

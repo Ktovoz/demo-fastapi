@@ -20,6 +20,8 @@ export const useSystemStore = defineStore("system", {
     logs: [],
     logTotal: 0,
     logLoading: false,
+    logSummary: null,
+    logSummaryLoading: false,
     logFilters: defaultLogFilters(),
     logSorter: null,
     logPagination: defaultLogPagination(),
@@ -93,6 +95,20 @@ export const useSystemStore = defineStore("system", {
         throw error
       } finally {
         this.logLoading = false
+      }
+    },
+
+    async fetchLogSummary() {
+      this.logSummaryLoading = true
+      try {
+        const response = await systemApi.fetchLogSummary()
+        this.logSummary = response.data
+        logger.info("Loaded log summary")
+      } catch (error) {
+        logger.error("Failed to load log summary", error)
+        throw error
+      } finally {
+        this.logSummaryLoading = false
       }
     },
 

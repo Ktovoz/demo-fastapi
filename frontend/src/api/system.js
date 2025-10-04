@@ -8,6 +8,12 @@ export const systemApi = {
     }
     return apiRequest.get('/system/logs', { params })
   },
+  fetchLogSummary() {
+    if (isMockEnabled) {
+      return mockApi.system.fetchLogSummary()
+    }
+    return apiRequest.get('/system/logs/summary')
+  },
   fetchSettings() {
     if (isMockEnabled) {
       return mockApi.system.fetchSettings()
