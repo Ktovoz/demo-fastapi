@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { API_CONFIG } from '../config/api'
 import { logger } from './logger'
 
 // 延迟创建API日志器，避免在模块加载时就创建
@@ -34,11 +35,7 @@ const getApiLogger = () => {
 
 // 创建 axios 实例
 const api = axios.create({
-  baseURL: '/api', // 通过 Vite 代理到后端
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  ...API_CONFIG
 })
 
 // 请求拦截器
