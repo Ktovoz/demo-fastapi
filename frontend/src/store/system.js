@@ -34,6 +34,10 @@ export const useSystemStore = defineStore("system", {
     ]
   }),
   actions: {
+    setMenuCollapsed(value) {
+      this.menuCollapsed = Boolean(value)
+    },
+
     toggleMenu() {
       this.menuCollapsed = !this.menuCollapsed
     },

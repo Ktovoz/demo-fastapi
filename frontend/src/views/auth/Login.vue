@@ -8,40 +8,35 @@
   >
     <!-- 左侧特色内容 -->
     <template #features>
-      <div class="intro-metrics">
-        <div class="metric-card">
-          <strong>12+</strong>
-          <span>预置模块场景</span>
+      <div class="intro-steps">
+        <div class="step-item">
+          <span class="step-icon">
+            <UserOutlined />
+          </span>
+          <div class="step-content">
+            <strong>快速身份验证</strong>
+            <span>支持企业邮箱登录，兼容多租户环境</span>
+          </div>
         </div>
-        <div class="metric-card">
-          <strong>秒级</strong>
-          <span>本地启动体验</span>
+        <div class="step-item">
+          <span class="step-icon">
+            <SafetyOutlined />
+          </span>
+          <div class="step-content">
+            <strong>统一权限管理</strong>
+            <span>基于角色的访问控制，精细化权限分配</span>
+          </div>
         </div>
-        <div class="metric-card">
-          <strong>24/7</strong>
-          <span>持续同步主干</span>
+        <div class="step-item">
+          <span class="step-icon">
+            <DashboardOutlined />
+          </span>
+          <div class="step-content">
+            <strong>完整功能体验</strong>
+            <span>登录后即可访问完整的仪表盘和系统功能</span>
+          </div>
         </div>
       </div>
-      <ul class="intro-list">
-        <li>
-          <span class="list-icon">
-            <CheckOutlined />
-          </span>
-          深浅主题、响应式布局随手切换
-        </li>
-        <li>
-          <span class="list-icon">
-            <CheckOutlined />
-          </span>
-          Pinia 状态与路由守卫全链路示例
-        </li>
-        <li>
-          <span class="list-icon">
-            <CheckOutlined />
-          </span>
-          Mock 数据驱动的前后端解耦
-        </li>
-      </ul>
     </template>
 
     <!-- 表单提示信息 -->
@@ -60,43 +55,51 @@
 
     <!-- 表单内容 -->
     <template #form>
-      <a-form-item
-        label="Email"
-        name="email"
-        :rules="[{ required: true, message: 'Email is required' }]"
-      >
-        <a-input
-          v-model:value="form.email"
-          size="large"
-          placeholder="name@company.com"
-          autocomplete="email"
+      <div class="form-field-group">
+        <a-form-item
+          label="Email"
+          name="email"
+          :rules="[{ required: true, message: 'Email is required' }]"
         >
-          <template #prefix>
-            <MailOutlined class="input-icon" />
-          </template>
-        </a-input>
-      </a-form-item>
+          <a-input
+            v-model:value="form.email"
+            size="large"
+            placeholder="name@company.com"
+            autocomplete="email"
+            class="form-input"
+          >
+            <template #prefix>
+              <MailOutlined class="input-icon" />
+            </template>
+          </a-input>
+        </a-form-item>
 
-      <a-form-item
-        label="Password"
-        name="password"
-        :rules="[{ required: true, message: 'Password is required' }]"
-      >
-        <a-input-password
-          v-model:value="form.password"
-          size="large"
-          placeholder="输入登录密码"
-          autocomplete="current-password"
+        <a-form-item
+          label="Password"
+          name="password"
+          :rules="[{ required: true, message: 'Password is required' }]"
         >
-          <template #prefix>
-            <LockOutlined class="input-icon" />
-          </template>
-        </a-input-password>
-      </a-form-item>
+          <a-input-password
+            v-model:value="form.password"
+            size="large"
+            placeholder="输入登录密码"
+            autocomplete="current-password"
+            class="form-input"
+          >
+            <template #prefix>
+              <LockOutlined class="input-icon" />
+            </template>
+          </a-input-password>
+        </a-form-item>
+      </div>
 
       <div class="form-options">
-        <a-checkbox v-model:checked="form.remember">记住我</a-checkbox>
-        <router-link to="/auth/forgot-password">忘记密码？</router-link>
+        <a-checkbox v-model:checked="form.remember" class="checkbox-custom">
+          <span class="checkbox-label">记住我</span>
+        </a-checkbox>
+        <router-link to="/auth/forgot-password" class="forgot-link">
+          <span class="link-text">忘记密码？</span>
+        </router-link>
       </div>
     </template>
 
@@ -108,8 +111,12 @@
         block
         size="large"
         :loading="loading"
+        class="submit-btn"
       >
-        登录系统
+        <template #loading>
+          <LoadingOutlined spin />
+        </template>
+        <span class="btn-text">登录系统</span>
       </a-button>
 
       <div class="form-divider">
@@ -117,23 +124,25 @@
       </div>
 
       <div class="form-social">
-        <a-button block @click="handleSocialLogin('github')">
+        <a-button block @click="handleSocialLogin('github')" class="social-btn">
           <template #icon>
             <GithubOutlined />
           </template>
-          GitHub
+          <span class="btn-text">GitHub</span>
         </a-button>
-        <a-button block @click="handleSocialLogin('google')">
+        <a-button block @click="handleSocialLogin('google')" class="social-btn">
           <template #icon>
             <GoogleOutlined />
           </template>
-          Google
+          <span class="btn-text">Google</span>
         </a-button>
       </div>
 
       <div class="form-footer">
-        <span>还没有账号？</span>
-        <a @click.prevent="goRegister">立即注册</a>
+        <span class="footer-text">还没有账号？</span>
+        <a @click.prevent="goRegister" class="register-link">
+          <span class="link-text">立即注册</span>
+        </a>
       </div>
     </template>
   </AuthPage>
@@ -150,7 +159,11 @@ import {
   GithubOutlined,
   GoogleOutlined,
   CheckOutlined,
-  RobotOutlined
+  RobotOutlined,
+  LoadingOutlined,
+  UserOutlined,
+  SafetyOutlined,
+  DashboardOutlined
 } from '@ant-design/icons-vue'
 import AuthPage from '../../components/AuthPage.vue'
 import { useAuthStore } from '../../store/auth'
@@ -204,114 +217,63 @@ const handleSocialLogin = (provider) => {
 </script>
 
 <style scoped>
-.intro-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.metric-card {
+.intro-steps {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  backdrop-filter: blur(8px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  gap: 16px;
 }
 
-.metric-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.metric-card:hover::before {
-  opacity: 1;
-}
-
-.metric-card:hover {
-  background: rgba(15, 23, 42, 0.5);
-  border-color: rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
-}
-
-.metric-card strong {
-  font-size: 18px;
-  color: #f8fafc;
-  letter-spacing: 0.01em;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.metric-card span {
-  font-size: 11px;
-  color: rgba(226, 232, 240, 0.8);
-  font-weight: 400;
-  line-height: 1.3;
-}
-
-.intro-list {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  list-style: none;
-  margin-bottom: 8px;
-}
-
-.intro-list li {
+.step-item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  font-size: 13px;
-  color: rgba(226, 232, 240, 0.9);
-  line-height: 1.4;
-  transition: all 0.2s ease;
-  letter-spacing: 0.01em;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(30, 58, 138, 0.35);
+  border: 1px solid rgba(96, 165, 250, 0.25);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
 }
 
-.intro-list li:hover {
-  color: #f8fafc;
-  transform: translateX(3px);
+.step-item:hover {
+  background: rgba(30, 58, 138, 0.45);
+  border-color: rgba(96, 165, 250, 0.35);
+  transform: translateY(-2px);
 }
 
-.list-icon {
+.step-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.intro-list li:hover .list-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background: rgba(59, 130, 246, 0.25);
   color: #93c5fd;
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  font-size: 18px;
+  transition: all 0.3s ease;
 }
 
-.list-icon .anticon {
-  font-size: 10px;
+.step-item:hover .step-icon {
+  background: rgba(59, 130, 246, 0.35);
+  transform: scale(1.05);
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.step-content strong {
+  font-size: 15px;
+  color: #f8fafc;
+}
+
+.step-content span {
+  font-size: 13px;
+  color: rgba(224, 231, 255, 0.78);
 }
 
 .form-demo {
@@ -372,25 +334,63 @@ const handleSocialLogin = (provider) => {
   transition: color 0.2s ease;
 }
 
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #64748b;
-  font-size: 14px;
-  margin-top: 2px;
-}
+  .form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 
-.form-options a {
-  color: #3b82f6;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #64748b;
+    font-size: 14px;
+    margin-top: 8px;
+  }
 
-.form-options a:hover {
-  color: #2563eb;
-  transform: translateY(-1px);
-}
+  .checkbox-custom {
+    margin-right: 0;
+  }
+
+  .checkbox-label {
+    font-size: 13px;
+    color: #64748b;
+    transition: color 0.2s ease;
+  }
+
+  .forgot-link {
+    color: #3b82f6;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .forgot-link::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    transition: width 0.3s ease;
+  }
+
+  .forgot-link:hover {
+    color: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  .forgot-link:hover::before {
+    width: 100%;
+  }
+
+  .link-text {
+    font-size: 13px;
+    font-weight: 500;
+  }
 
 .form-divider {
   margin: 16px 0 12px;
@@ -436,46 +436,83 @@ const handleSocialLogin = (provider) => {
   color: #3b82f6;
 }
 
-.form-footer {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  color: #64748b;
-  font-size: 14px;
-  margin-top: 12px;
-}
+  .form-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 14px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(226, 232, 240, 0.6);
+  }
 
-.form-footer a {
-  color: #3b82f6;
-  font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  .footer-text {
+    font-size: 13px;
+    color: #64748b;
+  }
 
-.form-footer a:hover {
-  color: #2563eb;
-  transform: translateY(-1px);
-}
+  .register-link {
+    color: #3b82f6;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .register-link::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    transition: width 0.3s ease;
+  }
+
+  .register-link:hover {
+    color: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  .register-link:hover::before {
+    width: 100%;
+  }
+
+  .register-link .link-text {
+    font-size: 13px;
+    font-weight: 500;
+  }
 
 /* 表单输入框样式优化 */
 :deep(.ant-form-item-label > label) {
-  color: #374151;
-  font-weight: 500;
+  color: #1e293b;
+  font-weight: 600;
   font-size: 14px;
+  letter-spacing: 0.01em;
 }
 
 :deep(.ant-input),
 :deep(.ant-input-password) {
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 15px;
-  padding: 12px 16px;
+  padding: 14px 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 :deep(.ant-input:hover),
 :deep(.ant-input-password:hover) {
-  border-color: #9ca3af;
-  background-color: #fafafa;
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.08);
 }
 
 :deep(.ant-input:focus),
@@ -483,22 +520,23 @@ const handleSocialLogin = (provider) => {
 :deep(.ant-input-password:focus),
 :deep(.ant-input-password-focused) {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
   background-color: #ffffff;
+  transform: translateY(-1px);
 }
 
 :deep(.ant-input-affix-wrapper) {
-  border-radius: 10px;
+  border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :deep(.ant-input-affix-wrapper:hover) {
-  border-color: #9ca3af;
+  border-color: #cbd5e1;
 }
 
 :deep(.ant-input-affix-wrapper-focused) {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 :deep(.ant-input-password .ant-input) {
@@ -555,6 +593,7 @@ const handleSocialLogin = (provider) => {
   color: #64748b;
   font-size: 14px;
   transition: color 0.2s ease;
+  align-items: center;
 }
 
 :deep(.ant-checkbox-wrapper:hover) {
@@ -564,20 +603,28 @@ const handleSocialLogin = (provider) => {
 :deep(.ant-checkbox-inner) {
   border-radius: 6px;
   border-color: #d1d5db;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 16px;
+  height: 16px;
 }
 
 :deep(.ant-checkbox-wrapper:hover .ant-checkbox-inner) {
-  border-color: #9ca3af;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 :deep(.ant-checkbox-checked .ant-checkbox-inner) {
-  background-color: #3b82f6;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   border-color: #3b82f6;
 }
 
 :deep(.ant-checkbox-checked::after) {
   border-color: #ffffff;
+}
+
+:deep(.ant-checkbox-checked .ant-checkbox-inner::after) {
+  border-color: #ffffff;
+  border-width: 2px;
 }
 
 /* 表单布局优化 */
@@ -602,64 +649,41 @@ const handleSocialLogin = (provider) => {
 
 /* 响应式优化 */
 @media (max-width: 992px) {
-  .intro-metrics {
+  .step-item {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .step-icon {
+    align-self: center;
+  }
+
+  .form-social {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
   }
 
-  .metric-card {
-    padding: 10px 12px;
-    gap: 1px;
-  }
-
-  .metric-card strong {
-    font-size: 16px;
-  }
-
-  .metric-card span {
-    font-size: 10px;
-  }
-
-  .intro-list {
+  .form-demo {
+    grid-template-columns: auto 1fr;
     gap: 8px;
+    padding: 12px 14px;
   }
 
-  .intro-list li {
-    font-size: 12px;
-    gap: 8px;
-    line-height: 1.3;
-  }
-
-  .list-icon {
-    width: 16px;
-    height: 16px;
-    margin-top: 0;
-  }
-
-  .list-icon .anticon {
-    font-size: 9px;
+  .form-demo__action {
+    grid-column: span 2;
+    justify-self: end;
   }
 }
 
 @media (max-width: 576px) {
-  .intro-metrics {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 8px;
-    margin-bottom: 16px;
+  .step-item {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
   }
 
-  .metric-card {
-    padding: 10px 12px;
-    gap: 1px;
-  }
-
-  .metric-card strong {
-    font-size: 15px;
-  }
-
-  .metric-card span {
-    font-size: 10px;
+  .step-icon {
+    align-self: center;
   }
 
   .form-social {
@@ -677,30 +701,24 @@ const handleSocialLogin = (provider) => {
     justify-self: end;
   }
 
-  .intro-list {
-    gap: 7px;
-  }
-
-  .intro-list li {
-    font-size: 11px;
-    gap: 7px;
-    line-height: 1.3;
-  }
-
-  .list-icon {
-    width: 15px;
-    height: 15px;
-    margin-top: 0;
-  }
-
-  .list-icon .anticon {
-    font-size: 8px;
-  }
-
   .form-options {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
+  }
+
+  .form-footer {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .form-social {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .form-divider {
+    margin: 12px 0 8px;
   }
 
   .form-footer {
@@ -720,13 +738,20 @@ const handleSocialLogin = (provider) => {
   }
 }
 
-.intro-metrics,
-.intro-list {
+.intro-steps {
   animation: fadeInUp 0.6s ease-out;
 }
 
-.intro-list {
+.intro-steps .step-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.intro-steps .step-item:nth-child(2) {
   animation-delay: 0.2s;
+}
+
+.intro-steps .step-item:nth-child(3) {
+  animation-delay: 0.3s;
 }
 
 .form-demo {

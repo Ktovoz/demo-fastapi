@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <a-layout-sider
     class="layout-sider"
     :collapsed="menuCollapsed"
@@ -11,16 +11,16 @@
       mode="inline"
       :selected-keys="selectedKeys"
       :open-keys="openKeys"
-      @openChange="(keys) => (openKeys = keys)"
-      @select="handleSelect"
       :items="menuItems"
+      @openChange="handleOpenChange"
+      @select="handleSelect"
     />
   </a-layout-sider>
 </template>
 
 <script setup>
-import { computed, h, ref, watch } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { computed, h, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import {
   DashboardOutlined,
   TeamOutlined,
@@ -28,9 +28,19 @@ import {
   SettingOutlined,
   ProfileOutlined,
   FileSearchOutlined
-} from "@ant-design/icons-vue"
-import { useSystemStore } from "../../store/system"
-import { useAuthStore } from "../../store/auth"
+} from '@ant-design/icons-vue'
+import { useSystemStore } from '../../store/system'
+import { useAuthStore } from '../../store/auth'
+import { navigationTree, findNavigationNode, findNavigationByPath } from '../../config/navigation'
+
+const iconRegistry = {
+  DashboardOutlined,
+  TeamOutlined,
+  SafetyOutlined,
+  SettingOutlined,
+  ProfileOutlined,
+  FileSearchOutlined
+}
 
 const systemStore = useSystemStore()
 const authStore = useAuthStore()
@@ -39,127 +49,89 @@ const router = useRouter()
 
 const menuCollapsed = computed(() => systemStore.menuCollapsed)
 
-const rawMenu = [
-  {
-    key: "dashboard",
-    icon: () => h(DashboardOutlined),
-    label: "Dashboard",
-    path: "/dashboard",
-    permission: "dashboard:view"
-  },
-  {
-    key: "users",
-    icon: () => h(TeamOutlined),
-    label: "Users",
-    path: "/users/list",
-    permission: "users:view"
-  },
-  {
-    key: "roles",
-    icon: () => h(SafetyOutlined),
-    label: "Roles",
-    path: "/roles/list",
-    permission: "roles:view"
-  },
-  {
-    key: "system",
-    icon: () => h(SettingOutlined),
-    label: "System",
-    children: [
-      {
-        key: "system-overview",
-        icon: () => h(DashboardOutlined),
-        label: "Overview",
-        path: "/system/overview",
-        permission: "dashboard:view"
-      },
-      {
-        key: "system-logs",
-        icon: () => h(FileSearchOutlined),
-        label: "Logs",
-        path: "/system/logs",
-        permission: "logs:view"
-      },
-      {
-        key: "system-settings",
-        icon: () => h(SettingOutlined),
-        label: "Settings",
-        path: "/system/settings",
-        permission: "system:manage"
-      }
-    ]
-  },
-  {
-    key: "profile",
-    icon: () => h(ProfileOutlined),
-    label: "Profile",
-    path: "/profile",
-    permission: "users:view"
-  }
-]
-
 const hasPermission = (item) => {
   if (!item.permission) return true
   return authStore.hasPermission(item.permission)
 }
 
-const mapMenu = (items) => {
-  return items
-    .filter((item) => hasPermission(item))
+const resolveIcon = (iconName) => {
+  const component = iconRegistry[iconName]
+  return component ? () => h(component) : undefined
+}
+
+const normalizeMenuItems = (items) =>
+  items
+    .filter(hasPermission)
     .map((item) => {
-      if (item.children) {
-        const children = mapMenu(item.children)
-        return { ...item, children }
+      const normalized = {
+        key: item.key,
+        label: item.label,
+        icon: resolveIcon(item.icon)
       }
-      return item
+      if (item.children?.length) {
+        const children = normalizeMenuItems(item.children)
+        if (children.length === 0) {
+          return null
+        }
+        normalized.children = children
+      } else {
+        normalized.path = item.path
+      }
+      return normalized
     })
-    .filter((item) => (item.children ? item.children.length > 0 : true))
-}
+    .filter(Boolean)
 
-const menuItems = computed(() => mapMenu(rawMenu))
-
-const resolveMenuItem = (items, matcher) => {
-  for (const item of items) {
-    if (matcher(item)) return item
-    if (item.children) {
-      const child = resolveMenuItem(item.children, matcher)
-      if (child) return child
-    }
-  }
-  return null
-}
-
-const selectedKeys = computed(() => {
-  const match = resolveMenuItem(menuItems.value, (item) =>
-    item.path ? route.path.startsWith(item.path) : false
-  )
-  return match ? [match.key] : []
-})
+const menuItems = computed(() => normalizeMenuItems(navigationTree))
 
 const openKeys = ref([])
 
+const currentNode = computed(() => {
+  if (route.meta?.menuKey) {
+    const found = findNavigationNode((item) => item.key === route.meta.menuKey, navigationTree)
+    if (found) return found
+  }
+  return findNavigationByPath(route.path)
+})
+
+const selectedKeys = computed(() => {
+  const key = currentNode.value?.item?.key
+  return key ? [key] : []
+})
+
+const derivedOpenKeys = computed(() => (currentNode.value?.parents ?? []))
+
 watch(
-  () => route.path,
-  () => {
-    const parent = menuItems.value.find((item) =>
-      item.children?.some((child) => route.path.startsWith(child.path || ""))
-    )
-    if (parent) {
-      openKeys.value = [parent.key]
+  derivedOpenKeys,
+  (keys) => {
+    if (!menuCollapsed.value) {
+      openKeys.value = keys
     }
   },
   { immediate: true }
 )
 
+watch(menuCollapsed, (collapsed) => {
+  openKeys.value = collapsed ? [] : derivedOpenKeys.value
+})
+
 const handleSelect = ({ key }) => {
-  const target = resolveMenuItem(menuItems.value, (item) => item.key === key)
-  if (target?.path) {
-    router.push(target.path)
+  const node = findNavigationNode((item) => item.key === key, navigationTree)
+  const path = node?.item?.path
+  if (path) {
+    router.push(path)
   }
 }
 
+const handleOpenChange = (keys) => {
+  openKeys.value = keys
+}
+
 const handleCollapse = (value) => {
-  systemStore.menuCollapsed = value
+  if (typeof systemStore.setMenuCollapsed === 'function') {
+    systemStore.setMenuCollapsed(value)
+  } else {
+    systemStore.menuCollapsed = value
+  }
 }
 </script>
 
@@ -181,4 +153,3 @@ const handleCollapse = (value) => {
   color: #fff;
 }
 </style>
-

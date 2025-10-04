@@ -44,18 +44,22 @@
             <!-- 表单提示信息插槽 -->
             <slot name="alert"></slot>
 
-            <!-- 表单内容插槽 -->
-            <a-form
-              layout="vertical"
-              @finish="handleSubmit"
-              :model="formModel"
-              class="form-body"
-            >
-              <slot name="form"></slot>
+    <!-- 表单内容插槽 -->
+    <div class="form-container">
+      <a-form
+        layout="vertical"
+        @finish="handleSubmit"
+        :model="formModel"
+        class="form-body"
+      >
+        <slot name="form"></slot>
 
-              <!-- 表单操作按钮插槽 -->
-              <slot name="actions" :loading="loading"></slot>
-            </a-form>
+        <!-- 表单操作按钮插槽 -->
+        <div class="form-actions-wrapper">
+          <slot name="actions" :loading="loading"></slot>
+        </div>
+      </a-form>
+    </div>
           </div>
         </a-col>
       </a-row>
@@ -296,6 +300,62 @@ const handleSubmit = () => {
   overflow: hidden;
 }
 
+/* 统一的表单输入框样式 */
+.form-input {
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 15px;
+  padding: 14px 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.form-input:hover {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.08);
+}
+
+.form-input:focus,
+.form-input-focused {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background-color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* 统一的按钮样式 */
+.submit-btn {
+  border-radius: 10px;
+  height: 48px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.back-btn {
+  border-radius: 10px;
+  height: 48px;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-btn:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  transform: translateY(-1px);
+}
+
+.btn-text {
+  font-weight: 500;
+}
+
 .intro-pattern {
   position: absolute;
   inset: auto;
@@ -420,10 +480,20 @@ const handleSubmit = () => {
   line-height: 1.6;
 }
 
+.form-container {
+  position: relative;
+}
+
 .form-body {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
+}
+
+.form-actions-wrapper {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
 }
 
 /* 响应式设计 */
@@ -471,6 +541,11 @@ const handleSubmit = () => {
   .intro-text {
     font-size: 12px;
   }
+
+  .form-actions-wrapper {
+    margin-top: 12px;
+    padding-top: 12px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -503,6 +578,41 @@ const handleSubmit = () => {
 
   .auth-card__form {
     padding: 28px 24px 32px;
+  }
+
+  .form-actions-wrapper {
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-card {
+    border-radius: 16px;
+  }
+
+  .auth-card__intro {
+    padding: 24px 20px;
+    gap: 18px;
+  }
+
+  .auth-card__form {
+    padding: 24px 20px 28px;
+  }
+
+  .intro-title {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .intro-text {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .form-actions-wrapper {
+    margin-top: 20px;
+    padding-top: 20px;
   }
 }
 </style>

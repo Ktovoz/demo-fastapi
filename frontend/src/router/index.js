@@ -51,6 +51,7 @@ const routes = [
           title: "Dashboard",
           description: "Key performance indicators and recent activity",
           breadcrumb: [{ label: "Dashboard" }],
+          menuKey: "dashboard",
           permission: "dashboard:view"
         }
       },
@@ -66,6 +67,7 @@ const routes = [
           title: "Users",
           description: "Manage platform users and their permissions",
           breadcrumb: [{ label: "Users" }],
+          menuKey: "users",
           permission: "users:view"
         }
       },
@@ -79,6 +81,7 @@ const routes = [
             { label: "Users", to: "/users/list" },
             { label: "Create" }
           ],
+          menuKey: "users",
           permission: "users:edit"
         }
       },
@@ -92,6 +95,7 @@ const routes = [
             { label: "Users", to: "/users/list" },
             { label: "Profile" }
           ],
+          menuKey: "users",
           permission: "users:view"
         }
       },
@@ -105,6 +109,7 @@ const routes = [
             { label: "Users", to: "/users/list" },
             { label: "Edit" }
           ],
+          menuKey: "users",
           permission: "users:edit"
         }
       },
@@ -120,6 +125,7 @@ const routes = [
           title: "Roles",
           description: "Configure application roles and permissions",
           breadcrumb: [{ label: "Roles" }],
+          menuKey: "roles",
           permission: "roles:view"
         }
       },
@@ -133,6 +139,7 @@ const routes = [
             { label: "Roles", to: "/roles/list" },
             { label: "Edit" }
           ],
+          menuKey: "roles",
           permission: "roles:edit"
         }
       },
@@ -151,6 +158,7 @@ const routes = [
             { label: "System", to: "/system/overview" },
             { label: "Overview" }
           ],
+          menuKey: "system.overview",
           permission: "dashboard:view"
         }
       },
@@ -164,6 +172,7 @@ const routes = [
             { label: "System", to: "/system/overview" },
             { label: "Logs" }
           ],
+          menuKey: "system.logs",
           permission: "logs:view"
         }
       },
@@ -177,6 +186,7 @@ const routes = [
             { label: "System", to: "/system/overview" },
             { label: "Settings" }
           ],
+          menuKey: "system.settings",
           permission: "system:manage"
         }
       },
@@ -187,6 +197,7 @@ const routes = [
         meta: {
           title: "Profile",
           breadcrumb: [{ label: "Profile" }],
+          menuKey: "profile",
           permission: "users:view"
         }
       }

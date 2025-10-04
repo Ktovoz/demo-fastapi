@@ -159,6 +159,117 @@
         </a-row>
       </section>
 
+      <section class="overview-services" v-if="serviceRows.length">
+        <a-row :gutter="[16, 16]">
+          <a-col :xs="24" :xl="16">
+            <CardContainer
+              title="服务健康追踪"
+              description="聚焦核心后台服务的实时状态，跟踪延迟波动与 SLA"
+              :body-padding="'0'"
+            >
+              <template #icon>
+                <div class="panel-icon panel-icon--sky">
+                  <ApiOutlined />
+                </div>
+              </template>
+              <div class="service-table">
+                <div class="service-table__header">
+                  <span>服务</span>
+                  <span>延迟</span>
+                  <span>波动</span>
+                  <span>可用率</span>
+                  <span>负责人</span>
+                </div>
+                <div v-for="service in serviceRows" :key="service.key" class="service-table__row">
+                  <div class="service-name">
+                    <a-badge :status="service.statusBadge" />
+                    <div class="service-name__body">
+                      <strong>{{ service.name }}</strong>
+                      <span class="service-name__status" :class="service.statusAccent">{{ service.statusLabel }}</span>
+                    </div>
+                  </div>
+                  <div class="service-latency">
+                    <span class="service-latency__value">{{ service.latency }} ms</span>
+                    <a-progress
+                      :percent="service.latencyPercent"
+                      size="small"
+                      :show-info="false"
+                      stroke-color="#2563eb"
+                    />
+                  </div>
+                  <span class="service-change" :class="service.changeClass">
+                    <component :is="service.changeIcon" />
+                    {{ service.changeLabel }}
+                  </span>
+                  <span class="service-uptime">{{ service.uptime }}</span>
+                  <span class="service-owner">{{ service.owner }}</span>
+                </div>
+              </div>
+            </CardContainer>
+          </a-col>
+          <a-col :xs="24" :xl="8">
+            <CardContainer
+              title="状态分布"
+              description="统计运行情况、可用率与团队覆盖"
+              :body-padding="'20px'"
+            >
+              <template #icon>
+                <div class="panel-icon panel-icon--teal">
+                  <DeploymentUnitOutlined />
+                </div>
+              </template>
+              <div class="service-summary">
+                <div class="service-summary__headline">
+                  <h3>{{ serviceSummary.total }}</h3>
+                  <span>接入服务总计</span>
+                </div>
+                <div class="service-summary__counts">
+                  <div
+                    v-for="item in serviceStatusBreakdown"
+                    :key="item.key"
+                    class="service-summary__count"
+                    :class="`is-${item.key}`"
+                  >
+                    <span class="service-summary__count-number">{{ item.count }}</span>
+                    <span class="service-summary__count-label">{{ item.label }}</span>
+                  </div>
+                </div>
+                <div class="service-summary__progress">
+                  <div class="service-summary__progress-item">
+                    <span>正常率</span>
+                    <a-progress
+                      :percent="serviceSummary.operationalRate"
+                      status="active"
+                      stroke-color="#22c55e"
+                      :show-info="false"
+                    />
+                  </div>
+                  <div class="service-summary__progress-item">
+                    <span>降级率</span>
+                    <a-progress
+                      :percent="serviceSummary.degradedRate"
+                      stroke-color="#f97316"
+                      :show-info="false"
+                    />
+                  </div>
+                  <div class="service-summary__meta">
+                    <span>平均可用率</span>
+                    <strong>{{ serviceSummary.averageUptime }}%</strong>
+                  </div>
+                </div>
+                <div class="service-summary__owners" v-if="serviceSummary.owners.length">
+                  <h4>团队覆盖</h4>
+                  <div v-for="owner in serviceSummary.owners" :key="owner.name" class="service-summary__owner">
+                    <span>{{ owner.name }}</span>
+                    <a-tag color="blue" :bordered="false">{{ owner.count }}</a-tag>
+                  </div>
+                </div>
+              </div>
+            </CardContainer>
+          </a-col>
+        </a-row>
+      </section>
+
       <section class="overview-bottom" v-if="overview">
         <a-row :gutter="[16, 16]">
           <a-col :xs="24" :xl="14">
@@ -285,10 +396,13 @@ import {
   BarChartOutlined,
   DashboardOutlined,
   DownOutlined,
+  MinusOutlined,
   ProjectOutlined,
   RiseOutlined,
   SafetyCertificateOutlined,
-  TeamOutlined
+  TeamOutlined,
+  ApiOutlined,
+  DeploymentUnitOutlined
 } from '@ant-design/icons-vue'
 import CardContainer from '../../components/layout/CardContainer.vue'
 import Loading from '../../components/common/Loading.vue'
@@ -302,6 +416,24 @@ const statusOptions = [
   { label: '待确认', value: 'review' },
   { label: '已完成', value: 'done' }
 ]
+
+const serviceStatusMeta = {
+  operational: { badge: 'success', label: '正常', accent: 'service-status--operational' },
+  degraded: { badge: 'warning', label: '性能下降', accent: 'service-status--degraded' },
+  maintenance: { badge: 'processing', label: '维护中', accent: 'service-status--maintenance' },
+  down: { badge: 'error', label: '故障', accent: 'service-status--down' }
+}
+
+const parsePercentage = (value) => {
+  if (typeof value === 'number') {
+    return value
+  }
+  if (typeof value !== 'string') {
+    return 0
+  }
+  const match = value.match(/[\d.]+/)
+  return match ? Number(match[0]) : 0
+}
 
 const iconMap = {
   TeamOutlined,
@@ -379,6 +511,97 @@ const trendRows = computed(() => {
     requestWidth: `${Math.round((row.requests / maxRequests) * 100)}%`,
     userWidth: `${Math.round((row.activeUsers / maxUsers) * 100)}%`,
     errorPercent: Math.min(Math.round(row.errorRate * 10) / 10, 100)
+  }))
+})
+
+const serviceRows = computed(() => {
+  const services = overview.value?.services ?? []
+  if (!services.length) return []
+  const maxLatency = Math.max(...services.map((item) => item.latency ?? 0)) || 1
+
+  return services.map((service) => {
+    const status = service.status ?? 'operational'
+    const meta = serviceStatusMeta[status] ?? serviceStatusMeta.operational
+    const latency = Number(service.latency ?? 0)
+    const latencyPercent = Math.max(0, Math.min(100, Math.round((latency / maxLatency) * 100)))
+    const change = Number(service.change ?? 0)
+    const changeLabel = (change > 0 ? '+' : '') + change + 'ms'
+    const changeClass = change > 0 ? 'service-change--up' : change < 0 ? 'service-change--down' : 'service-change--flat'
+    const changeIcon = change > 0 ? ArrowUpOutlined : change < 0 ? ArrowDownOutlined : MinusOutlined
+    const uptimeValue = parsePercentage(service.uptime)
+
+    return {
+      ...service,
+      status,
+      statusBadge: meta.badge,
+      statusLabel: meta.label,
+      statusAccent: meta.accent,
+      latency,
+      latencyPercent,
+      changeLabel,
+      changeClass,
+      changeIcon,
+      uptimeValue
+    }
+  })
+})
+
+const serviceSummary = computed(() => {
+  const rows = serviceRows.value
+  if (!rows.length) {
+    return {
+      total: 0,
+      counts: { operational: 0, degraded: 0, maintenance: 0, down: 0 },
+      operationalRate: 0,
+      degradedRate: 0,
+      averageUptime: 0,
+      owners: []
+    }
+  }
+
+  const counts = { operational: 0, degraded: 0, maintenance: 0, down: 0 }
+  let uptimeSum = 0
+  const ownersMap = new Map()
+
+  rows.forEach((service) => {
+    const status = service.status ?? 'operational'
+    counts[status] = (counts[status] ?? 0) + 1
+    uptimeSum += service.uptimeValue ?? 0
+    if (service.owner) {
+      ownersMap.set(service.owner, (ownersMap.get(service.owner) ?? 0) + 1)
+    }
+  })
+
+  const total = rows.length
+  const operationalRate = Math.min(100, Math.round((counts.operational / total) * 100))
+  const degradedRate = Math.min(100, Math.round((counts.degraded / total) * 100))
+  const averageUptime = Math.round((uptimeSum / total) * 10) / 10
+  const owners = Array.from(ownersMap.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count)
+
+  return {
+    total,
+    counts,
+    operationalRate,
+    degradedRate,
+    averageUptime,
+    owners
+  }
+})
+
+const serviceStatusBreakdown = computed(() => {
+  const summary = serviceSummary.value
+  const order = [
+    { key: 'operational', label: '正常' },
+    { key: 'degraded', label: '性能下降' },
+    { key: 'maintenance', label: '维护中' },
+    { key: 'down', label: '故障' }
+  ]
+
+  return order.map((item) => ({
+    ...item,
+    count: summary.counts[item.key] ?? 0
   }))
 })
 
@@ -994,7 +1217,299 @@ onMounted(async () => {
   font-size: 13px;
 }
 
+.overview-services {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.service-table {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.service-table__header,
+.service-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 0.8fr) minmax(0, 0.9fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.service-table__header {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+}
+
+.service-table__row {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-table__row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.service-table__row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.service-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service-name__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.service-name__body strong {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.service-name__status {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.service-status--operational {
+  color: #16a34a;
+}
+
+.service-status--degraded {
+  color: #f97316;
+}
+
+.service-status--maintenance {
+  color: #0ea5e9;
+}
+
+.service-status--down {
+  color: #ef4444;
+}
+
+.service-latency {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.service-latency__value {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.service-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.service-change svg {
+  font-size: 12px;
+}
+
+.service-change--up {
+  color: #16a34a;
+}
+
+.service-change--down {
+  color: #ef4444;
+}
+
+.service-change--flat {
+  color: #64748b;
+}
+
+.service-uptime {
+  font-weight: 600;
+  color: #111827;
+}
+
+.service-owner {
+  color: #475569;
+  font-size: 13px;
+}
+
+.service-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.service-summary__headline {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.service-summary__headline h3 {
+  margin: 0;
+  font-size: 36px;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.service-summary__headline span {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.service-summary__counts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.service-summary__count {
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(226, 232, 240, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.service-summary__count-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.service-summary__count-label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.service-summary__count.is-operational {
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.service-summary__count.is-degraded {
+  background: rgba(249, 115, 22, 0.14);
+}
+
+.service-summary__count.is-maintenance {
+  background: rgba(14, 165, 233, 0.14);
+}
+
+.service-summary__count.is-down {
+  background: rgba(239, 68, 68, 0.14);
+}
+
+.service-summary__progress {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.service-summary__progress-item span {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.service-summary__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(148, 163, 184, 0.12);
+  font-size: 13px;
+  color: #475569;
+}
+
+.service-summary__meta strong {
+  font-size: 20px;
+  color: #0f172a;
+}
+
+.service-summary__owners {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.service-summary__owners h4 {
+  margin: 0;
+  font-size: 13px;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.service-summary__owner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.panel-icon--sky {
+  background: linear-gradient(140deg, rgba(14, 165, 233, 0.22), rgba(37, 99, 235, 0.22));
+  color: #0f172a;
+}
+
+.panel-icon--teal {
+  background: linear-gradient(140deg, rgba(45, 212, 191, 0.22), rgba(15, 118, 110, 0.22));
+  color: #0f172a;
+}
+
+
 @media (max-width: 768px) {
+  .service-table {
+    padding: 16px;
+  }
+
+  .service-table__header {
+    display: none;
+  }
+
+  .service-table__row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .service-latency {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .service-change,
+  .service-uptime,
+  .service-owner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .service-summary__counts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+
   .trend-table__header,
   .trend-table__row {
     grid-template-columns: 100px repeat(3, minmax(0, 1fr));
@@ -1012,3 +1527,6 @@ onMounted(async () => {
   }
 }
 </style>
+
+
+
