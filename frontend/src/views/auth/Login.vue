@@ -1,19 +1,19 @@
-﻿<template>
+<template>
   <AuthLayout>
     <a-card title="Sign In">
-      <a-form layout="vertical" @finish="handleSubmit">
-        <a-form-item label="Email" name="email" :rules="[{ required: true, message: 'Email is required' }]">
-          <a-input v-model:value="form.email" placeholder="you@example.com" />
-        </a-form-item>
-        <a-form-item label="Password" name="password" :rules="[{ required: true, message: 'Password is required' }]">
-          <a-input-password v-model:value="form.password" placeholder="••••••••" />
+      <a-form layout="vertical" @finish="handleSubmit" :model="form">
+        <a-form-item label="Email" name="email" :rules="[{ required: true, message: 'Email is required' }]"><a-input v-model:value="form.email" placeholder="you@example.com" /></a-form-item>
+        <a-form-item label="Password" name="password" :rules="[{ required: true, message: 'Password is required' }]"><a-input-password v-model:value="form.password" placeholder="Enter password" /></a-form-item>
+        <a-form-item>
+          <a-checkbox v-model:checked="form.remember">Remember me</a-checkbox>
         </a-form-item>
         <div class="form-actions">
           <router-link to="/auth/forgot-password">Forgot password?</router-link>
         </div>
-        <a-button type="primary" html-type="submit" block :loading="loading">
-          Sign In
+        <a-button block @click="fillDemoAccount" style="margin-bottom: 12px;">
+          使用演示管理员账号
         </a-button>
+        <a-button type="primary" html-type="submit" block :loading="authStore.loading">Sign In</a-button>
         <a-button type="link" block @click="goRegister">Create an account</a-button>
       </a-form>
     </a-card>
@@ -21,25 +21,37 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import AuthLayout from '../../layouts/AuthLayout.vue'
+import { reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
+import AuthLayout from '../../layouts/AuthLayout.vue'
+import { useAuthStore } from '../../store/auth'
 
 const router = useRouter()
-const loading = ref(false)
+const route = useRoute()
+const authStore = useAuthStore()
+
 const form = reactive({
   email: '',
-  password: ''
+  password: '',
+  remember: true
 })
 
-const handleSubmit = () => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-    message.success('Signed in (mock)')
-    router.push('/dashboard')
-  }, 800)
+const handleSubmit = async () => {
+  try {
+    await authStore.login(form)
+    const redirect = route.query.redirect || '/dashboard'
+    router.push(String(redirect))
+  } catch (error) {
+    message.error(error?.message || 'Sign in failed')
+  }
+}
+
+const fillDemoAccount = () => {
+  form.email = 'admin@example.com'
+  form.password = 'admin123'
+  form.remember = true
+  message.success('已填充演示管理员账号')
 }
 
 const goRegister = () => {
@@ -54,3 +66,4 @@ const goRegister = () => {
   margin-bottom: 12px;
 }
 </style>
+

@@ -1,10 +1,12 @@
-﻿<template>
-  <div class="loading" :class="{ overlay }">
-    <a-spin :tip="tip" />
+<template>
+  <div :class="wrapperClass">
+    <a-spin :tip="tip" :size="size" />
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 const props = defineProps({
   tip: {
     type: String,
@@ -13,8 +15,22 @@ const props = defineProps({
   overlay: {
     type: Boolean,
     default: false
+  },
+  fullscreen: {
+    type: Boolean,
+    default: false
+  },
+  size: {
+    type: String,
+    default: 'default'
   }
 })
+
+const wrapperClass = computed(() => ({
+  loading: true,
+  overlay: props.overlay,
+  fullscreen: props.fullscreen
+}))
 </script>
 
 <style scoped>
@@ -31,4 +47,12 @@ const props = defineProps({
   background: rgba(255, 255, 255, 0.65);
   z-index: 10;
 }
+
+.loading.fullscreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.75);
+  z-index: 1000;
+}
 </style>
+

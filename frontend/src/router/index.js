@@ -1,125 +1,190 @@
-﻿import { createRouter, createWebHistory } from 'vue-router'
-import MainLayout from '../layouts/MainLayout.vue'
-import DashboardIndex from '../views/dashboard/Index.vue'
-import Login from '../views/auth/Login.vue'
-import Register from '../views/auth/Register.vue'
-import ForgotPassword from '../views/auth/ForgotPassword.vue'
-import UserList from '../views/users/UserList.vue'
-import UserDetail from '../views/users/UserDetail.vue'
-import UserEdit from '../views/users/UserEdit.vue'
-import RoleList from '../views/roles/RoleList.vue'
-import RoleEdit from '../views/roles/RoleEdit.vue'
-import SystemLogs from '../views/system/Logs.vue'
-import SystemSettings from '../views/system/Settings.vue'
-import Profile from '../views/profile/Profile.vue'
-import Forbidden from '../views/error/Forbidden.vue'
-import NotFound from '../views/error/NotFound.vue'
-import { createLogger } from '../utils/logger'
+﻿import { createRouter, createWebHistory } from "vue-router"
+import MainLayout from "../layouts/MainLayout.vue"
+import { createLogger } from "../utils/logger"
+import { useAuthStore } from "../store/auth"
+import { pinia } from "../store"
 
-const logger = createLogger('Router')
+const logger = createLogger("Router")
+
+const views = import.meta.glob('../views/**/*.vue')
+
+const loadView = (path) => {
+  const view = views[path]
+  if (!view) {
+    throw new Error(`View not found: ${path}`)
+  }
+  return view
+}
 
 const routes = [
   {
-    path: '/',
-    redirect: '/dashboard'
+    path: "/",
+    redirect: "/dashboard"
   },
   {
-    path: '/auth/login',
-    name: 'AuthLogin',
-    component: Login,
-    meta: { title: 'Login', public: true }
+    path: "/auth/login",
+    name: "AuthLogin",
+    component: loadView("../views/auth/Login.vue"),
+    meta: { title: "Login", public: true }
   },
   {
-    path: '/auth/register',
-    name: 'AuthRegister',
-    component: Register,
-    meta: { title: 'Register', public: true }
+    path: "/auth/register",
+    name: "AuthRegister",
+    component: loadView("../views/auth/Register.vue"),
+    meta: { title: "Register", public: true }
   },
   {
-    path: '/auth/forgot-password',
-    name: 'AuthForgotPassword',
-    component: ForgotPassword,
-    meta: { title: 'Forgot Password', public: true }
+    path: "/auth/forgot-password",
+    name: "AuthForgotPassword",
+    component: loadView("../views/auth/ForgotPassword.vue"),
+    meta: { title: "Forgot Password", public: true }
   },
   {
-    path: '/',
+    path: "/",
     component: MainLayout,
     children: [
       {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: DashboardIndex,
-        meta: { title: 'Dashboard', description: 'Key performance indicators and recent activity.' }
+        path: "dashboard",
+        name: "Dashboard",
+        component: loadView("../views/dashboard/Index.vue"),
+        meta: {
+          title: "Dashboard",
+          description: "Key performance indicators and recent activity",
+          breadcrumb: [{ label: "Dashboard" }],
+          permission: "dashboard:view"
+        }
       },
       {
-        path: 'users',
-        redirect: '/users/list'
+        path: "users",
+        redirect: "/users/list"
       },
       {
-        path: 'users/list',
-        name: 'UserList',
-        component: UserList,
-        meta: { title: 'Users', description: 'Manage platform users and their permissions.' }
+        path: "users/list",
+        name: "UserList",
+        component: loadView("../views/users/UserList.vue"),
+        meta: {
+          title: "Users",
+          description: "Manage platform users and their permissions",
+          breadcrumb: [{ label: "Users" }],
+          permission: "users:view"
+        }
       },
       {
-        path: 'users/:id',
-        name: 'UserDetail',
-        component: UserDetail,
-        meta: { title: 'User Detail' }
+        path: "users/create",
+        name: "UserCreate",
+        component: loadView("../views/users/UserEdit.vue"),
+        meta: {
+          title: "Create User",
+          breadcrumb: [
+            { label: "Users", to: "/users/list" },
+            { label: "Create" }
+          ],
+          permission: "users:edit"
+        }
       },
       {
-        path: 'users/:id/edit',
-        name: 'UserEdit',
-        component: UserEdit,
-        meta: { title: 'Edit User' }
+        path: "users/:id",
+        name: "UserDetail",
+        component: loadView("../views/users/UserDetail.vue"),
+        meta: {
+          title: "User Detail",
+          breadcrumb: [
+            { label: "Users", to: "/users/list" },
+            { label: "Profile" }
+          ],
+          permission: "users:view"
+        }
       },
       {
-        path: 'roles',
-        redirect: '/roles/list'
+        path: "users/:id/edit",
+        name: "UserEdit",
+        component: loadView("../views/users/UserEdit.vue"),
+        meta: {
+          title: "Edit User",
+          breadcrumb: [
+            { label: "Users", to: "/users/list" },
+            { label: "Edit" }
+          ],
+          permission: "users:edit"
+        }
       },
       {
-        path: 'roles/list',
-        name: 'RoleList',
-        component: RoleList,
-        meta: { title: 'Roles', description: 'Configure application roles and permissions.' }
+        path: "roles",
+        redirect: "/roles/list"
       },
       {
-        path: 'roles/:id/edit',
-        name: 'RoleEdit',
-        component: RoleEdit,
-        meta: { title: 'Edit Role' }
+        path: "roles/list",
+        name: "RoleList",
+        component: loadView("../views/roles/RoleList.vue"),
+        meta: {
+          title: "Roles",
+          description: "Configure application roles and permissions",
+          breadcrumb: [{ label: "Roles" }],
+          permission: "roles:view"
+        }
       },
       {
-        path: 'system/logs',
-        name: 'SystemLogs',
-        component: SystemLogs,
-        meta: { title: 'System Logs' }
+        path: "roles/:id/edit",
+        name: "RoleEdit",
+        component: loadView("../views/roles/RoleEdit.vue"),
+        meta: {
+          title: "Edit Role",
+          breadcrumb: [
+            { label: "Roles", to: "/roles/list" },
+            { label: "Edit" }
+          ],
+          permission: "roles:edit"
+        }
       },
       {
-        path: 'system/settings',
-        name: 'SystemSettings',
-        component: SystemSettings,
-        meta: { title: 'System Settings' }
+        path: "system/logs",
+        name: "SystemLogs",
+        component: loadView("../views/system/Logs.vue"),
+        meta: {
+          title: "System Logs",
+          breadcrumb: [
+            { label: "System", to: "/system/logs" },
+            { label: "Logs" }
+          ],
+          permission: "logs:view"
+        }
       },
       {
-        path: 'profile',
-        name: 'Profile',
-        component: Profile,
-        meta: { title: 'Profile' }
+        path: "system/settings",
+        name: "SystemSettings",
+        component: loadView("../views/system/Settings.vue"),
+        meta: {
+          title: "System Settings",
+          breadcrumb: [
+            { label: "System", to: "/system/logs" },
+            { label: "Settings" }
+          ],
+          permission: "system:manage"
+        }
+      },
+      {
+        path: "profile",
+        name: "Profile",
+        component: loadView("../views/profile/Profile.vue"),
+        meta: {
+          title: "Profile",
+          breadcrumb: [{ label: "Profile" }],
+          permission: "users:view"
+        }
       }
     ]
   },
   {
-    path: '/403',
-    name: 'Forbidden',
-    component: Forbidden,
-    meta: { title: 'Forbidden', public: true }
+    path: "/403",
+    name: "Forbidden",
+    component: loadView("../views/error/Forbidden.vue"),
+    meta: { title: "Forbidden", public: true }
   },
   {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFound,
-    meta: { title: 'Not Found', public: true }
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: loadView("../views/error/NotFound.vue"),
+    meta: { title: "Not Found", public: true }
   }
 ]
 
@@ -129,13 +194,36 @@ const router = createRouter({
   scrollBehavior: () => ({ top: 0 })
 })
 
-router.beforeEach((to, from, next) => {
-  logger.info(`Navigating: ${from.fullPath || 'start'} -> ${to.fullPath}`)
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore(pinia)
+
+  if (!authStore.initialized) {
+    await authStore.restoreSession()
+  }
+
+  const requiresAuth = !to.meta?.public
+
+  if (requiresAuth && !authStore.isAuthenticated) {
+    logger.warn("Blocked navigation for unauthenticated user", { target: to.fullPath })
+    return next({
+      path: "/auth/login",
+      query: { redirect: to.fullPath }
+    })
+  }
+
+  if (to.meta?.permission && !authStore.hasPermission(to.meta.permission)) {
+    logger.warn("Blocked navigation due to missing permission", {
+      target: to.fullPath,
+      permission: to.meta.permission
+    })
+    return next({ path: "/403" })
+  }
 
   if (to.meta?.title) {
     document.title = `${to.meta.title} - Demo FastAPI`
   }
 
+  logger.info(`Navigating: ${from.fullPath || 'start'} -> ${to.fullPath}`)
   next()
 })
 

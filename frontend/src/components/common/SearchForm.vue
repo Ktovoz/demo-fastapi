@@ -1,6 +1,6 @@
-﻿<template>
-  <a-form :model="localValues" layout="inline" @submit.prevent="handleSubmit">
-    <template v-for="item in items" :key="item.key">
+<template>
+  <a-form :model="localValues" layout="inline" @submit.prevent="handleSubmit" class="search-form">
+    <template v-for="item in visibleItems" :key="item.key">
       <a-form-item :label="item.label">
         <component
           :is="item.component || 'a-input'"
@@ -13,6 +13,9 @@
       <a-space>
         <a-button type="primary" html-type="submit">Search</a-button>
         <a-button @click="handleReset">Reset</a-button>
+        <a-button v-if="advancedItems.length" type="link" @click="advancedOpen = !advancedOpen">
+          {{ advancedOpen ? 'Hide advanced' : 'Show advanced' }}
+        </a-button>
         <slot name="extra"></slot>
       </a-space>
     </a-form-item>
@@ -20,7 +23,7 @@
 </template>
 
 <script setup>
-import { reactive, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 
 const emit = defineEmits(['submit', 'reset', 'update:modelValue'])
 
@@ -35,7 +38,16 @@ const props = defineProps({
   }
 })
 
+const advancedOpen = ref(false)
+
 const localValues = reactive({ ...props.modelValue })
+
+const basicItems = computed(() => props.items.filter((item) => !item.advanced))
+const advancedItems = computed(() => props.items.filter((item) => item.advanced))
+
+const visibleItems = computed(() =>
+  advancedOpen.value ? props.items : basicItems.value
+)
 
 watch(
   () => props.modelValue,
@@ -65,3 +77,12 @@ const handleReset = () => {
   emit('update:modelValue', { ...localValues })
 }
 </script>
+
+<style scoped>
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+</style>
+

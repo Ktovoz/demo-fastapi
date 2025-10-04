@@ -1,9 +1,12 @@
-﻿<template>
+<template>
   <a-pagination
     :current="current"
     :page-size="pageSize"
     :total="total"
     :show-size-changer="showSizeChanger"
+    :show-quick-jumper="showQuickJumper"
+    :simple="simple"
+    :show-total="showTotal ? (total) => `Total ${total}` : undefined"
     @change="handleChange"
     @showSizeChange="handleSizeChange"
   />
@@ -28,6 +31,18 @@ const props = defineProps({
   showSizeChanger: {
     type: Boolean,
     default: true
+  },
+  showQuickJumper: {
+    type: Boolean,
+    default: true
+  },
+  showTotal: {
+    type: Boolean,
+    default: true
+  },
+  simple: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -41,3 +56,4 @@ const handleSizeChange = (page, size) => {
   emit('change', { page, pageSize: size })
 }
 </script>
+

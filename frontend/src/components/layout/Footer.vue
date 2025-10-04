@@ -1,7 +1,7 @@
 ﻿<template>
   <a-layout-footer class="layout-footer">
     <slot>
-      Demo FastAPI Admin ©2025 Created by Team
+      Demo FastAPI Admin (c) 2025 Created by Team
     </slot>
   </a-layout-footer>
 </template>
