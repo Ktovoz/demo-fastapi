@@ -45,37 +45,34 @@
 | [Axios](https://axios-http.com/) | 1.6.2 | HTTP客户端 |
 | [Loglevel](https://github.com/pimterry/loglevel) | 1.8.1 | 前端日志系统 |
 
-## 项目结构
+## 🤝 贡献指南
 
-```
-demo-fastapi/
-├── backend/               # FastAPI 后端项目
-│   ├── app/
-│   │   ├── core/          # 核心配置
-│   │   ├── models/        # 数据模型
-│   │   ├── schemas/       # Pydantic模式
-│   │   ├── routers/       # API路由
-│   │   ├── services/      # 业务逻辑
-│   │   ├── utils/         # 工具模块
-│   │   └── main.py        # 应用入口
-│   ├── alembic/           # 数据库迁移
-│   ├── data/              # 数据库文件
-│   ├── requirements.txt   # Python 依赖
-│   └── .env.example       # 环境变量示例
-├── frontend/              # Vue 3 前端项目
-│   ├── src/
-│   │   ├── api/           # API接口
-│   │   ├── components/    # 公共组件
-│   │   ├── views/         # 页面视图
-│   │   ├── router/        # 路由配置
-│   │   ├── store/         # 状态管理
-│   │   ├── utils/         # 工具函数
-│   │   ├── App.vue        # 根组件
-│   │   └── main.js        # 入口文件
-│   ├── public/            # 静态资源
-│   └── package.json       # 依赖配置
-└── docs/                  # 项目文档
-```
+我们欢迎社区贡献！请查看 [CONTRIBUTING.md](CONTRIBUTING.md) 了解如何参与项目开发。
+
+### 🐛 报告问题
+如果您发现了bug，请在 [Issues](https://github.com/your-username/demo-fastapi/issues) 页面提交问题报告。
+
+### 💡 功能建议
+有新功能想法？欢迎提交 [Feature Request](https://github.com/your-username/demo-fastapi/issues/new?template=feature_request.md)。
+
+## 📄 许可证
+
+本项目基于 [MIT License](LICENSE) 开源协议发布。
+
+## ⭐ Star 历史
+
+[![Star History Chart](https://api.star-history.com/svg?repos=your-username/demo-fastapi&type=Date)](https://star-history.com/#your-username/demo-fastapi&Date)
+
+---
+
+## 🙏 致谢
+
+- [FastAPI](https://fastapi.tiangolo.com/) - 高性能Web框架
+- [Vue.js](https://vuejs.org/) - 渐进式JavaScript框架  
+- [Ant Design Vue](https://www.antdv.com/) - 企业级UI设计语言
+- [Vite](https://vitejs.dev/) - 极速构建工具
+
+**如果觉得项目有帮助，请给个 ⭐️ Star 支持一下！**
 
 ### 🔐 用户认证
 - ✅ 邮箱/用户名注册登录
@@ -126,131 +123,177 @@ demo-fastapi/
 - **默认账号**: admin/admin123 (超级管理员)
 - **系统配置**: 基础权限和系统参数
 
-## 快速开始
+## 🚀 快速开始
 
-### 前置要求
-- Node.js 16+
-- Python 3.8+
-- Git
+### 📋 环境要求
+- **Node.js**: 16.0 或更高版本
+- **Python**: 3.8 或更高版本  
+- **Git**: 最新版本
 
-### 安装步骤
+### ⚡ 一键启动
 
-1. **克隆项目**
-   ```bash
-   git clone <repository-url>
-   cd demo-fastapi
-   ```
+#### 1. 克隆项目
+```bash
+git clone https://github.com/your-username/demo-fastapi.git
+cd demo-fastapi
+```
 
-2. **启动后端服务**
-   ```bash
-   cd backend
+#### 2. 启动后端 (FastAPI)
+```bash
+cd backend
 
-   # 创建虚拟环境
-   python -m venv venv
+# Windows 用户
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+copy .env.example .env
+python run.py
 
-   # 激活虚拟环境
-   # Windows
-   venv\Scripts\activate
-   # Linux/Mac
-   source venv/bin/activate
+# Linux/Mac 用户  
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+python run.py
+```
 
-   # 安装依赖
-   pip install -r requirements.txt
+#### 3. 启动前端 (Vue 3)
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-   # 复制环境变量文件
-   cp .env.example .env
+### 🌐 访问应用
+- **前端界面**: http://localhost:3000
+- **API文档**: http://localhost:8000/docs  
+- **备用API**: http://localhost:8000/redoc
 
-   # 初始化数据库
-   python -c "from app.core.database import init_db; init_db()"
+### 🔑 默认账号
+| 角色 | 用户名 | 密码 | 权限 |
+|------|--------|------|------|
+| 超级管理员 | `admin` | `admin123` | 全部权限 |
+| 测试用户 | `test` | `test123` | 基础权限 |
 
-   # 启动服务（方式一：使用运行脚本）
-   python run.py
+## 💻 开发指南
 
-   # 或（方式二：直接使用uvicorn）
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+### 🔧 环境配置
+项目支持开发环境和生产环境配置：
 
-   # Windows用户也可以直接双击运行 start.bat
-   # Linux/Mac用户可以运行 chmod +x start.sh && ./start.sh
-   ```
+#### 开发环境
+```bash
+# 后端 - 自动热重载
+python run.py
 
-3. **启动前端服务**
-   ```bash
-   cd frontend
+# 前端 - 热更新开发服务器  
+npm run dev
+```
 
-   # 安装依赖
-   npm install
+#### 生产环境
+```bash
+# 构建前端
+npm run build
 
-   # 启动开发服务器
-   npm run dev
-   ```
+# 生产环境启动后端
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
 
-4. **访问应用**
-   - 前端：http://localhost:3000
-   - 后端 API 文档：http://localhost:8000/docs
+### 📚 API文档
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI Schema**: http://localhost:8000/openapi.json
 
-### 默认账号
-- **超级管理员**: admin/admin123
-- **测试用户**: test/test123
+### 🎯 核心API端点
 
-## 开发指南
+#### 🔐 认证模块
+```http
+POST /api/auth/login     # 用户登录
+POST /api/auth/register  # 用户注册  
+POST /api/auth/refresh   # Token刷新
+POST /api/auth/logout    # 用户登出
+```
 
-### 前端开发
-- 前端开发服务器运行在 `http://localhost:3000`
-- API 请求通过 Vite 代理到后端 `http://localhost:8000`
-- 热重载已启用，修改代码后自动刷新页面
-- 使用Pinia进行状态管理，Vue Router管理路由
+#### 👥 用户管理
+```http
+GET    /api/users           # 获取用户列表
+GET    /api/users/{id}      # 获取用户详情
+PUT    /api/users/{id}      # 更新用户信息
+DELETE /api/users/{id}      # 删除用户
+```
 
-### 后端开发
-- 后端服务运行在 `http://localhost:8000`
-- API 文档可在 `/docs` 路径查看
-- 代码修改后自动重启（开发模式）
-- 使用SQLAlchemy ORM操作SQLite数据库
-- JWT认证和基于角色的权限控制
+#### 🔑 权限管理
+```http
+GET    /api/roles           # 获取角色列表
+POST   /api/roles           # 创建角色
+PUT    /api/roles/{id}      # 更新角色
+GET    /api/permissions     # 获取权限列表
+```
 
-### 主要API端点
+#### 📊 系统监控
+```http
+GET /api/dashboard/stats   # 系统统计
+GET /api/logs              # 操作日志
+GET /api/system/info       # 系统信息
+```
 
-#### 认证相关
-- `POST /api/auth/login` - 用户登录
-- `POST /api/auth/register` - 用户注册
-- `POST /api/auth/refresh` - 刷新Token
-- `POST /api/auth/logout` - 用户登出
+### 📝 日志系统
 
-#### 用户管理
-- `GET /api/users` - 获取用户列表
-- `GET /api/users/{user_id}` - 获取用户详情
-- `PUT /api/users/{user_id}` - 更新用户信息
-- `DELETE /api/users/{user_id}` - 删除用户
+#### 后端日志 (Loguru)
+```python
+from app.utils.logger import get_logger
 
-#### 角色权限
-- `GET /api/roles` - 获取角色列表
-- `GET /api/permissions` - 获取权限列表
-- `POST /api/roles` - 创建角色
-- `PUT /api/roles/{role_id}` - 更新角色
+logger = get_logger(__name__)
+logger.info("用户登录成功", user_id=user.id)
+```
 
-#### 系统监控
-- `GET /api/dashboard/stats` - 获取系统统计
-- `GET /api/logs` - 获取操作日志
-- `GET /api/system/info` - 获取系统信息
+#### 前端日志 (Loglevel)
+```javascript
+import logger from '@/utils/logger'
 
-## 项目特性
+logger.info('组件初始化完成')
+const apiLogger = logger.createApiLogger()
+apiLogger.request('GET', '/api/users')
+```
 
-- ✅ 前后端分离架构
-- ✅ 现代化技术栈 (Vue3 + FastAPI)
-- ✅ 完整的用户认证系统
-- ✅ 基于角色的权限管理 (RBAC)
-- ✅ 响应式 UI 界面
-- ✅ RESTful API 设计
-- ✅ 类型安全的数据验证
-- ✅ SQLite 轻量级数据库
-- ✅ 完整的日志系统
-  - 后端：Loguru 高性能日志库
-  - 前端：Loglevel + 自定义日志工具
-  - 支持多级别日志、本地存储、性能监控
-- ✅ CORS 跨域支持
-- ✅ 热重载开发体验
-- ✅ API 自动文档生成
-- ✅ 数据库迁移支持 (Alembic)
-- ✅ 初始化数据和测试账号
+## 📸 界面预览
+
+### 🎨 登录页面
+*现代化的登录界面，支持记住密码和自动登录*
+
+### 📊 仪表板
+*数据可视化面板，实时展示系统状态和用户统计*
+
+### 👥 用户管理
+*完整的用户CRUD操作，支持批量处理和高级搜索*
+
+### 🔑 权限管理  
+*基于角色的权限控制系统，灵活的权限分配*
+
+### 📋 系统日志
+*详细的操作日志记录，支持分类查看和搜索过滤*
+
+## 🏗️ 项目结构
+```
+demo-fastapi/
+├── backend/               # 🚀 FastAPI 后端
+│   ├── app/              # 应用核心
+│   │   ├── main.py       # 应用入口
+│   │   ├── routers/      # API路由
+│   │   ├── models/       # 数据模型
+│   │   ├── schemas/      # 数据验证
+│   │   └── utils/        # 工具函数
+│   ├── requirements.txt  # Python依赖
+│   └── run.py           # 启动脚本
+├── frontend/              # 🎨 Vue 3 前端
+│   ├── src/              # 源代码
+│   │   ├── views/        # 页面组件
+│   │   ├── components/   # 公共组件
+│   │   ├── api/          # API接口
+│   │   └── utils/        # 工具函数
+│   ├── package.json      # 依赖配置
+│   └── vite.config.js    # 构建配置
+└── doc/                  # 📚 项目文档
+```
 
 ## 许可证
 
