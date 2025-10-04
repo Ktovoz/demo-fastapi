@@ -1,13 +1,25 @@
-﻿import { authMockApi } from './api/auth'
+import { authMockApi } from './api/auth'
 import { userMockApi } from './api/users'
 import { roleMockApi } from './api/roles'
 import { dashboardMockApi } from './api/dashboard'
 import { systemMockApi } from './api/system'
 import { adminMockApi } from './api/admin'
 
-const flag = (import.meta.env.VITE_USE_MOCK ?? (import.meta.env.DEV ? 'true' : 'false')).toString().toLowerCase()
+const mockFlagRaw = import.meta.env.VITE_USE_MOCK
+const normalizedFlag = typeof mockFlagRaw === 'string'
+  ? mockFlagRaw
+  : mockFlagRaw == null
+    ? ''
+    : String(mockFlagRaw)
 
-export const isMockEnabled = flag !== 'false' && flag !== '0'
+const flag = normalizedFlag.trim().toLowerCase()
+export const isMockEnabled = ['true', '1', 'yes', 'on'].includes(flag)
+
+if (import.meta.env.DEV) {
+  const mode = isMockEnabled ? 'mock' : 'real'
+  const flagLabel = flag || 'unset'
+  console.info(`[mock] API mock mode: ${mode} (VITE_USE_MOCK=${flagLabel})`);
+}
 
 export const mockApi = {
   auth: authMockApi,
@@ -29,3 +41,4 @@ export const callMock = (namespace, method, ...args) => {
   }
   return handler(...args)
 }
+

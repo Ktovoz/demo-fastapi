@@ -21,4 +21,4 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 # 启动预览服务器
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "4173"]
+CMD ["npm", "run", "preview:mock", "--", "--host", "0.0.0.0", "--port", "4173"]
