@@ -12,7 +12,7 @@
       <Footer />
     </template>
 
-    <PageContainer :title="pageTitle" :description="pageDescription" :breadcrumbs="breadcrumbs">
+    <PageContainer :title="pageTitle" :description="pageDescription" :breadcrumbs="breadcrumbs" :hide-header="hideHeader">
       <router-view />
     </PageContainer>
   </AppShell>
@@ -34,6 +34,7 @@ const systemStore = useSystemStore()
 const pageTitle = computed(() => route.meta?.title ?? '')
 const pageDescription = computed(() => route.meta?.description ?? '')
 const breadcrumbs = computed(() => route.meta?.breadcrumb ?? [])
+const hideHeader = computed(() => Boolean(route.meta?.hideHeader))
 const theme = computed(() => systemStore.theme)
 const menuCollapsed = computed(() => systemStore.menuCollapsed)
 </script>

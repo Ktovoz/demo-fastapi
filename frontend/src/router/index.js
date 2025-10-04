@@ -52,7 +52,8 @@ const routes = [
           description: "关键指标与近期活动",
           breadcrumb: [{ label: "仪表盘" }],
           menuKey: "dashboard",
-          permission: "dashboard:view"
+          permission: "dashboard:view",
+          hideHeader: true
         }
       },
       {
