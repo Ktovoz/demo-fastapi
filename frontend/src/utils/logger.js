@@ -72,7 +72,7 @@ class Logger {
 
     const {
       level = import.meta.env.DEV ? 'DEBUG' : 'INFO',
-      prefix = 'Demo App',
+      prefixName = 'Demo App',
       enableConsole = true,
       enableStorage = false,
       storageKey = 'app_logs',
@@ -84,7 +84,7 @@ class Logger {
       prefix.apply(log, {
         format: formatPrefix,
         levelFormatter: (level) => level.toUpperCase(),
-        nameFormatter: (name) => name || prefix,
+        nameFormatter: (name) => name || prefixName,
         timestampFormatter: (date) => date.toISOString(),
         styleFormatter: formatStyles
       })
@@ -100,7 +100,7 @@ class Logger {
       }
 
       // 初始化日志
-      this.info('📝 日志系统已初始化', { level, prefix, enableConsole, enableStorage })
+      this.info('📝 日志系统已初始化', { level, prefix: prefixName, enableConsole, enableStorage })
 
       this.isInitialized = true
 
