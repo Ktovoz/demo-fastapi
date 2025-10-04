@@ -23,12 +23,12 @@ def setup_logger():
     log_dir = Path(LOG_FILE).parent
     log_dir.mkdir(exist_ok=True)
 
-    # 控制台日志处理器
+        # 控制台日志处理器
     logger.add(
         sys.stdout,
         format=LOG_FORMAT,
         level=LOG_LEVEL,
-        colorize=True,
+        colorize=False,  # 禁用颜色以避免编码问题
         backtrace=True,
         diagnose=True
     )
@@ -60,8 +60,8 @@ def setup_logger():
         encoding="utf-8"
     )
 
-    logger.info(f"📝 日志系统已初始化，日志级别: {LOG_LEVEL}")
-    logger.info(f"📁 日志文件位置: {LOG_FILE}")
+    logger.info(f"日志系统已初始化，日志级别: {LOG_LEVEL}")
+    logger.info(f"日志文件位置: {LOG_FILE}")
 
     return logger
 
