@@ -129,44 +129,44 @@ const toggle = () => {
 <style scoped>
 .card-container {
   position: relative;
-  border-radius: 20px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.88));
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(248, 250, 252, 0.94));
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   overflow: hidden;
 }
 
 .card-container--borderless {
   border-color: transparent;
-  box-shadow: 0 10px 28px rgba(148, 163, 184, 0.12);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
 }
 
 .card-container:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
 }
 
 .card-container::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 55%);
+  background: radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.12), transparent 60%);
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0.55;
 }
 
 .card-container--collapsed {
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
 }
 
 .card-container :deep(.ant-card) {
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
 }
 
 .card-container :deep(.ant-card-head) {
-  padding: 18px 24px 0;
+  padding: 16px 20px 0;
   border-bottom: none;
   background: transparent;
   min-height: auto;
@@ -202,10 +202,10 @@ const toggle = () => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), rgba(59, 130, 246, 0.05));
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.12);
   color: #1d4ed8;
 }
 
@@ -216,7 +216,7 @@ const toggle = () => {
 }
 
 .card-header__title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #0f172a;
 }
@@ -230,13 +230,13 @@ const toggle = () => {
 .card-header__actions {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .collapse-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   color: #1d4ed8;
 }
 
@@ -245,7 +245,7 @@ const toggle = () => {
 }
 
 .card-actions {
-  padding: 0 24px 16px;
+  padding: 0 20px 12px;
 }
 
 .card-body {
@@ -265,15 +265,15 @@ const toggle = () => {
 
 @media (max-width: 768px) {
   .card-container {
-    border-radius: 18px;
+    border-radius: 14px;
   }
 
   .card-container :deep(.ant-card-head) {
-    padding: 16px 18px 0;
+    padding: 14px 16px 0;
   }
 
   .card-actions {
-    padding: 0 18px 14px;
+    padding: 0 16px 12px;
   }
 }
 </style>

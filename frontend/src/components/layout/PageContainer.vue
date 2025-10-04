@@ -54,21 +54,9 @@ const breadcrumbs = computed(() => props.breadcrumbs ?? [])
 <style scoped>
 .page-container {
   position: relative;
-  padding: clamp(24px, 5vw, 48px);
+  padding: clamp(20px, 4vw, 40px);
   min-height: calc(100vh - 120px);
-  background: radial-gradient(circle at 20% 15%, rgba(59, 130, 246, 0.12), transparent 60%),
-    radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.08), transparent 55%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
-}
-
-.page-container::after {
-  content: '';
-  position: absolute;
-  inset: clamp(12px, 2vw, 24px);
-  border-radius: 32px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  pointer-events: none;
-  opacity: 0.5;
+  background: linear-gradient(180deg, #f7f9fc 0%, #eef2ff 60%, #f8fafc 100%);
 }
 
 .page-surface {
@@ -76,7 +64,7 @@ const breadcrumbs = computed(() => props.breadcrumbs ?? [])
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .page-breadcrumbs {
@@ -84,83 +72,73 @@ const breadcrumbs = computed(() => props.breadcrumbs ?? [])
 }
 
 .page-breadcrumbs :deep(.ant-breadcrumb a) {
-  color: #1d4ed8;
+  color: #2563eb;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 24px;
-  padding: 24px 28px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  box-shadow: 0 14px 38px rgba(15, 23, 42, 0.08);
+  gap: 20px;
+  padding: 20px 24px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
 }
 
 .page-header__info {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .page-meta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-size: 12px;
   font-weight: 500;
-  color: #1d4ed8;
+  color: #2563eb;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .page-title {
   margin: 0;
-  font-size: clamp(22px, 4vw, 30px);
+  font-size: clamp(20px, 3.2vw, 28px);
   font-weight: 600;
   color: #0f172a;
 }
 
 .page-description {
   margin: 0;
-  max-width: 680px;
+  max-width: 640px;
   color: #475569;
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .page-header__actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .page-content {
   position: relative;
-  padding: clamp(24px, 4vw, 36px);
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 28px;
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-}
-
-.page-content::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 28px;
-  background: radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.12), transparent 60%);
-  pointer-events: none;
+  padding: clamp(20px, 3.6vw, 32px);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.75);
 }
 
 @media (max-width: 992px) {
   .page-header {
     flex-direction: column;
     align-items: stretch;
-    padding: 20px 24px;
   }
 
   .page-header__actions {
@@ -171,21 +149,17 @@ const breadcrumbs = computed(() => props.breadcrumbs ?? [])
 
 @media (max-width: 768px) {
   .page-container {
-    padding: 20px;
-  }
-
-  .page-container::after {
-    inset: 12px;
-    border-radius: 24px;
+    padding: 18px;
   }
 
   .page-header {
-    border-radius: 20px;
+    border-radius: 16px;
+    padding: 18px;
   }
 
   .page-content {
-    border-radius: 22px;
-    padding: 20px;
+    border-radius: 18px;
+    padding: 18px;
   }
 }
 </style>

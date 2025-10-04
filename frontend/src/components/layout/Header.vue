@@ -15,7 +15,7 @@
     <div class="header-right">
       <a-input-search
         v-model:value="search"
-        placeholder="Quick search"
+        placeholder="搜索功能或页面"
         allow-clear
         class="header-search"
         @search="handleSearch"
@@ -97,7 +97,6 @@ const handleMenuClick = ({ key }) => {
 
 const handleSearch = (value) => {
   if (!value) return
-  // For now just log search intent; integrate with global search later
   console.info("Global search", value)
 }
 
@@ -114,36 +113,25 @@ const clearNotifications = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(226, 232, 240, 0.78));
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  padding: 0 22px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.65);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
   color: #0f172a;
-  gap: 16px;
-}
-
-.layout-header::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.18), transparent 55%);
-  opacity: 0.8;
+  gap: 14px;
 }
 
 .header-left,
 .header-right {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
 }
 
 .trigger {
-  color: #0f172a;
-  border-radius: 12px;
+  color: inherit;
+  border-radius: 10px;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -159,15 +147,14 @@ const clearNotifications = () => {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 6px 12px;
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.7);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  gap: 10px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: rgba(241, 245, 249, 0.7);
 }
 
 .brand-name {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: #0f172a;
@@ -175,40 +162,36 @@ const clearNotifications = () => {
 
 .brand-divider {
   width: 1px;
-  height: 18px;
-  background: rgba(15, 23, 42, 0.12);
+  height: 16px;
+  background: rgba(15, 23, 42, 0.16);
 }
 
 .page-title {
   font-size: 14px;
   font-weight: 500;
-  color: #1e3a8a;
-}
-
-.header-right {
-  gap: 20px;
+  color: #1f3c88;
 }
 
 .header-search {
-  width: clamp(200px, 18vw, 260px);
+  width: clamp(180px, 16vw, 240px);
 }
 
 .header-search :deep(.ant-input-affix-wrapper) {
-  border-radius: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .header-search :deep(.ant-input-affix-wrapper:hover),
 .header-search :deep(.ant-input-affix-wrapper-focused) {
-  border-color: rgba(59, 130, 246, 0.45);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
 }
 
 .icon-button {
   color: #0f172a;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .icon-button:hover {
@@ -227,12 +210,12 @@ const clearNotifications = () => {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: #0f172a;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.7);
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(241, 245, 249, 0.7);
   transition: background 0.2s ease;
 }
 
@@ -287,22 +270,22 @@ const clearNotifications = () => {
 
 @media (max-width: 992px) {
   .layout-header {
-    padding: 0 18px;
+    padding: 0 16px;
     gap: 12px;
   }
 
   .header-right {
-    gap: 14px;
+    gap: 12px;
   }
 
   .header-search {
-    width: 180px;
+    width: 170px;
   }
 }
 
 @media (max-width: 768px) {
   .layout-header {
-    padding: 0 14px;
+    padding: 0 12px;
     gap: 10px;
     flex-wrap: wrap;
   }
@@ -315,10 +298,12 @@ const clearNotifications = () => {
   .header-right {
     width: 100%;
     justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .brand {
-    padding: 4px 10px;
+    padding: 4px 8px;
   }
 
   .header-search {
