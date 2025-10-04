@@ -23,6 +23,9 @@ RUN npm run build
 # 使用 Nginx 作为生产服务器
 FROM nginx:alpine as production-stage
 
+# 允许 nginx 使用环境变量
+ENV API_BASE_URL=http://localhost:8000
+
 # 复制构建好的文件到 Nginx 静态目录
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
