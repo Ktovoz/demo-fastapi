@@ -9,19 +9,13 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // 将所有ant-design-vue相关模块打包在一起，避免模块间依赖问题
-            if (id.includes('ant-design-vue')) {
+            // Group Ant Design Vue and icon packages together to avoid circular init timing issues
+            if (id.includes('ant-design-vue') || id.includes('@ant-design/icons-vue')) {
               return 'antd'
             }
-            // @ant-design/icons-vue 单独打包
-            if (id.includes('@ant-design/icons-vue')) {
-              return 'antd-icons'
-            }
-            // Vue相关模块打包在一起
             if (id.includes('vue')) {
               return 'vue'
             }
-            // 日志相关模块
             if (id.includes('loglevel')) {
               return 'logging'
             }
@@ -53,3 +47,4 @@ export default defineConfig({
     allowedHosts: ['demo-fast.ktovoz.com', 'localhost', '127.0.0.1']
   }
 })
+
