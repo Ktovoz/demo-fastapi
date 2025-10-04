@@ -12,9 +12,9 @@
           <strong>{{ trafficHighlights.avgUsersDisplay }}</strong> 人。快速复盘重点指标，为下一步决策做好准备。
         </p>
         <div class="hero-status">
-          <a-tag color="success">运行中：{{ healthSummary.operational }}/{{ healthSummary.total }}</a-tag>
-          <a-tag v-if="healthSummary.degraded" color="warning">待关注：{{ healthSummary.degraded }}</a-tag>
-          <a-tag v-if="healthSummary.down" color="error">故障：{{ healthSummary.down }}</a-tag>
+          <a-tag color="success" :bordered="false">运行中：{{ healthSummary.operational }}/{{ healthSummary.total }}</a-tag>
+          <a-tag v-if="healthSummary.degraded" color="warning" :bordered="false">待关注：{{ healthSummary.degraded }}</a-tag>
+          <a-tag v-if="healthSummary.down" color="error" :bordered="false">故障：{{ healthSummary.down }}</a-tag>
         </div>
       </div>
       <div class="hero-metrics">
@@ -26,7 +26,7 @@
         <div class="hero-metric">
           <span class="hero-metric__label">服务覆盖</span>
           <span class="hero-metric__value">{{ healthSummary.total }} 项</span>
-          <span class="hero-metric__hint">包括核心与辅助服务</span>
+          <span class="hero-metric__hint">包含核心与辅助服务</span>
         </div>
         <div class="hero-metric">
           <span class="hero-metric__label">状态面板</span>
@@ -39,7 +39,7 @@
     <section class="dashboard-metrics">
       <a-row :gutter="[16, 16]">
         <a-col :xs="24" :sm="12" :xl="6" v-for="card in decoratedSummaryCards" :key="card.key">
-          <CardContainer :body-padding="'24px'" :hoverable="true" :description="card.hint">
+          <CardContainer :body-padding="'18px'" :hoverable="true" :description="card.hint">
             <template #icon>
               <div class="metric-card__icon" :class="card.accentClass">
                 <component :is="card.icon" />
@@ -105,7 +105,7 @@
           <CardContainer
             title="系统健康状态"
             description="实时同步各核心模块的运行状况"
-            :body-padding="'24px'"
+            :body-padding="'18px'"
           >
             <template #icon>
               <div class="panel-icon panel-icon--purple">
@@ -139,7 +139,7 @@
           <CardContainer
             title="实时活动追踪"
             description="记录最近的审批与自动化事件"
-            :body-padding="'24px'"
+            :body-padding="'18px'"
           >
             <template #icon>
               <div class="panel-icon panel-icon--green">
@@ -164,7 +164,7 @@
           <CardContainer
             title="快捷操作"
             description="一键处理日常高频任务"
-            :body-padding="'24px'"
+            :body-padding="'18px'"
           >
             <template #icon>
               <div class="panel-icon panel-icon--amber">
@@ -395,7 +395,7 @@ const quickActions = computed(() => [
     label: '创建用户',
     description: '邀请新成员加入演示环境',
     icon: TeamOutlined,
-    tone: 'secondary',
+    tone: 'neutral',
     handler: () => navigate('/users/list')
   },
   {
@@ -403,7 +403,7 @@ const quickActions = computed(() => [
     label: '配置角色',
     description: '快速对齐权限矩阵',
     icon: DeploymentUnitOutlined,
-    tone: 'secondary',
+    tone: 'neutral',
     handler: () => navigate('/roles/list')
   }
 ])
@@ -415,7 +415,7 @@ onMounted(loadMetrics)
 .dashboard {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
 }
 
 .dashboard section {
@@ -425,39 +425,39 @@ onMounted(loadMetrics)
 
 .dashboard-hero {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  padding: 32px;
-  border-radius: 28px;
-  background: linear-gradient(135deg, rgba(226, 232, 240, 0.9), rgba(191, 219, 254, 0.85));
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 24px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(229, 234, 242, 0.92), rgba(210, 228, 255, 0.88));
+  border: 1px solid rgba(203, 213, 225, 0.65);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
 }
 
 .hero-text {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .hero-greeting {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
+  gap: 8px;
+  font-size: 13px;
   font-weight: 500;
-  color: #1d4ed8;
+  color: #2563eb;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
 .hero-emoji {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .hero-title {
   margin: 0;
-  font-size: clamp(26px, 4vw, 32px);
+  font-size: clamp(24px, 3.8vw, 30px);
   font-weight: 600;
   color: #0f172a;
 }
@@ -465,7 +465,8 @@ onMounted(loadMetrics)
 .hero-subtitle {
   margin: 0;
   color: #334155;
-  line-height: 1.7;
+  line-height: 1.6;
+  font-size: 14px;
 }
 
 .hero-subtitle strong {
@@ -475,73 +476,67 @@ onMounted(loadMetrics)
 .hero-status {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .hero-metrics {
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .hero-metric {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 18px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.24);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .hero-metric__label {
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
   color: #64748b;
   letter-spacing: 0.08em;
 }
 
 .hero-metric__value {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #0f172a;
 }
 
 .hero-metric__hint {
-  font-size: 13px;
+  font-size: 12px;
   color: #64748b;
-}
-
-.dashboard-metrics {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .metric-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .metric-card__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   color: #fff;
 }
 
 .metric-card__title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #0f172a;
 }
 
 .metric-card__value {
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 600;
   color: #0f172a;
 }
@@ -550,14 +545,15 @@ onMounted(loadMetrics)
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .metric-card__trend {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   font-weight: 500;
+  font-size: 13px;
 }
 
 .metric-card__trend.trend-up {
@@ -573,7 +569,7 @@ onMounted(loadMetrics)
 }
 
 .metric-card__trend :deep(.anticon) {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .metric-card__badge {
@@ -612,9 +608,9 @@ onMounted(loadMetrics)
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   color: #fff;
 }
 
@@ -635,7 +631,7 @@ onMounted(loadMetrics)
 }
 
 .trend-panel {
-  padding: 24px;
+  padding: 20px 22px;
 }
 
 .trend-legend {
@@ -644,13 +640,13 @@ onMounted(loadMetrics)
   gap: 6px 12px;
   font-size: 12px;
   color: #475569;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   align-items: center;
 }
 
 .legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
 }
 
@@ -665,13 +661,13 @@ onMounted(loadMetrics)
 .trend-grid {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .trend-row {
   display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 12px;
+  grid-template-columns: 70px 1fr;
+  gap: 10px;
   align-items: center;
 }
 
@@ -687,13 +683,13 @@ onMounted(loadMetrics)
 
 .trend-row__metric {
   display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 12px;
+  grid-template-columns: 52px 1fr;
+  gap: 10px;
   align-items: center;
 }
 
 .metric-label {
-  font-size: 13px;
+  font-size: 12px;
   color: #475569;
   font-variant-numeric: tabular-nums;
 }
@@ -705,24 +701,24 @@ onMounted(loadMetrics)
 .health-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .health-item {
-  padding: 16px 18px;
-  border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  background: rgba(255, 255, 255, 0.9);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.75);
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .health-item--operational {
-  border-color: rgba(34, 197, 94, 0.3);
+  border-color: rgba(34, 197, 94, 0.35);
 }
 
 .health-item--degraded {
-  border-color: rgba(234, 179, 8, 0.3);
-  background: rgba(254, 240, 138, 0.25);
+  border-color: rgba(234, 179, 8, 0.35);
+  background: rgba(254, 240, 138, 0.22);
 }
 
 .health-item--down {
@@ -733,25 +729,25 @@ onMounted(loadMetrics)
 .health-item__header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-weight: 600;
   color: #0f172a;
 }
 
 .health-item__message {
   margin: 6px 0 0;
-  font-size: 13px;
+  font-size: 12px;
   color: #475569;
 }
 
 .activity-timeline {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .activity-item {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .activity-item__time {
@@ -764,7 +760,7 @@ onMounted(loadMetrics)
   display: inline-flex;
   flex-wrap: wrap;
   gap: 6px;
-  font-size: 14px;
+  font-size: 13px;
   color: #1f2937;
 }
 
@@ -779,31 +775,30 @@ onMounted(loadMetrics)
 .quick-actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .quick-action {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 14px;
+  gap: 12px;
   align-items: center;
-  padding: 16px 18px;
-  border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.75);
+  background: rgba(255, 255, 255, 0.96);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
 }
 
 .quick-action--primary {
   border-color: rgba(37, 99, 235, 0.35);
-  background: linear-gradient(135deg, rgba(219, 234, 254, 0.9), rgba(191, 219, 254, 0.85));
+  background: linear-gradient(135deg, rgba(219, 234, 254, 0.92), rgba(191, 219, 254, 0.86));
 }
 
 .quick-action:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
   border-color: rgba(59, 130, 246, 0.35);
 }
 
@@ -811,9 +806,9 @@ onMounted(loadMetrics)
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   background: rgba(37, 99, 235, 0.12);
   color: #1d4ed8;
 }
@@ -825,7 +820,7 @@ onMounted(loadMetrics)
 .quick-action__content {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   text-align: left;
 }
 
@@ -836,12 +831,17 @@ onMounted(loadMetrics)
 }
 
 .quick-action__description {
-  font-size: 13px;
+  font-size: 12px;
   color: #64748b;
 }
 
 .quick-action__chevron {
   color: #94a3b8;
+}
+
+.quick-action--neutral .quick-action__icon {
+  background: rgba(148, 163, 184, 0.16);
+  color: #475569;
 }
 
 @media (max-width: 992px) {
@@ -850,17 +850,17 @@ onMounted(loadMetrics)
   }
 
   .hero-metrics {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .dashboard {
-    gap: 24px;
+    gap: 20px;
   }
 
   .dashboard-hero {
-    padding: 24px;
+    padding: 20px;
   }
 
   .trend-row {
