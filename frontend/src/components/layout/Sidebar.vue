@@ -1,13 +1,14 @@
 <template>
   <a-layout-sider
-    class="layout-sider"
+    :class="sidebarClasses"
     :collapsed="menuCollapsed"
     collapsible
     @collapse="handleCollapse"
   >
     <div class="logo">Demo</div>
     <a-menu
-      theme="dark"
+      class="sidebar-menu"
+      :theme="menuTheme"
       mode="inline"
       :selected-keys="selectedKeys"
       :open-keys="openKeys"
@@ -48,6 +49,12 @@ const route = useRoute()
 const router = useRouter()
 
 const menuCollapsed = computed(() => systemStore.menuCollapsed)
+const menuTheme = computed(() => (systemStore.theme === 'dark' ? 'dark' : 'light'))
+const sidebarClasses = computed(() => [
+  'layout-sider',
+  menuCollapsed.value ? 'layout-sider--collapsed' : 'layout-sider--expanded',
+  menuTheme.value === 'dark' ? 'layout-sider--dark' : 'layout-sider--light'
+])
 
 const hasPermission = (item) => {
   if (!item.permission) return true
@@ -98,7 +105,7 @@ const selectedKeys = computed(() => {
   return key ? [key] : []
 })
 
-const derivedOpenKeys = computed(() => (currentNode.value?.parents ?? []))
+const derivedOpenKeys = computed(() => currentNode.value?.parents ?? [])
 
 watch(
   derivedOpenKeys,
@@ -137,19 +144,129 @@ const handleCollapse = (value) => {
 
 <style scoped>
 .layout-sider {
+  position: relative;
   min-height: 100vh;
+  padding: 20px 16px 24px;
+  transition: background 0.3s ease, box-shadow 0.3s ease, width 0.2s ease;
+  border-right: 1px solid rgba(148, 163, 184, 0.18);
+  backdrop-filter: blur(22px);
+}
+
+.layout-sider::before,
+.layout-sider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.65;
+  transition: opacity 0.3s ease;
+}
+
+.layout-sider::before {
+  background: radial-gradient(circle at 20% 10%, rgba(59, 130, 246, 0.25), transparent 55%);
+}
+
+.layout-sider::after {
+  background: radial-gradient(circle at 80% 90%, rgba(14, 165, 233, 0.18), transparent 60%);
+}
+
+.layout-sider--dark {
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92));
+  border-right-color: rgba(30, 41, 59, 0.6);
+}
+
+.layout-sider--light {
+  background: linear-gradient(160deg, rgba(241, 245, 249, 0.92), rgba(226, 232, 240, 0.88));
+  border-right-color: rgba(148, 163, 184, 0.4);
+}
+
+.layout-sider--collapsed {
+  padding-inline: 12px;
 }
 
 .logo {
+  position: relative;
+  z-index: 1;
   height: 48px;
-  margin: 16px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  color: #fff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 14px;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+.layout-sider--dark .logo {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.28), rgba(129, 140, 248, 0.42));
+  color: #e2e8f0;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.35);
+}
+
+.layout-sider--collapsed .logo {
+  font-size: 14px;
+  letter-spacing: 0.12em;
+}
+
+.sidebar-menu {
+  position: relative;
+  z-index: 1;
+  border: none;
+  background: transparent;
+}
+
+.sidebar-menu :deep(.ant-menu-item),
+.sidebar-menu :deep(.ant-menu-submenu-title) {
+  border-radius: 12px;
+  margin-inline: 4px;
+  margin-block: 2px;
+  padding-inline: 12px !important;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-menu :deep(.ant-menu-light .ant-menu-item:hover),
+.sidebar-menu :deep(.ant-menu-light .ant-menu-submenu-title:hover) {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+}
+
+.sidebar-menu :deep(.ant-menu-item-selected) {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(14, 165, 233, 0.14));
+  color: #1d4ed8;
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.28);
+}
+
+.sidebar-menu :deep(.ant-menu-dark) {
+  background: transparent;
+}
+
+.sidebar-menu :deep(.ant-menu-dark .ant-menu-item-selected) {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.28), rgba(79, 70, 229, 0.3));
+  color: #f8fafc;
+}
+
+.sidebar-menu :deep(.ant-menu-submenu-arrow) {
+  color: inherit;
+}
+
+.sidebar-menu :deep(.ant-menu-item-group-title) {
+  padding-inline-start: 12px;
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sidebar-menu :deep(.ant-menu-inline) {
+  border-inline-end: none !important;
+}
+
+.sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-item) {
+  padding-inline: 16px !important;
 }
 </style>
