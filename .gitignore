@@ -206,3 +206,29 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 /.idea
+
+# Frontend (Node.js)
+frontend/node_modules/
+frontend/dist/
+frontend/.nuxt/
+frontend/.output/
+frontend/.vite/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+frontend/.DS_Store
+frontend/Thumbs.db
+
+# Backend
+backend/.env
+backend/__pycache__/
+backend/*.pyc
+backend/app.db
+backend/app.db-journal
+backend/logs/
