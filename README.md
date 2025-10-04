@@ -1,33 +1,49 @@
-# 后台管理Demo系统
+# 🚀 Demo Admin System
 
-一个基于Vue3 + Ant Design Vue前端和FastAPI后端的后台管理系统Demo，包含完整的用户认证和基础后台管理功能。
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Vue 3](https://img.shields.io/badge/Vue%203-3.3.11-4FC08D.svg?style=flat&logo=vue.js)](https://vuejs.org/)
+[![Ant Design Vue](https://img.shields.io/badge/Ant%20Design%20Vue-4.0.8-0170FE.svg?style=flat&logo=ant-design)](https://www.antdv.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## 项目概述
+一个现代化的前后端分离后台管理系统，采用 **FastAPI + Vue 3 + Ant Design Vue** 技术栈，提供完整的用户认证、权限管理和系统监控功能。
 
-本项目是一个前后端分离的后台管理系统Demo，旨在展示现代化的Web应用开发技术栈和最佳实践。系统包含用户认证、权限管理、用户管理、系统监控等核心功能模块，适合作为后台管理系统的学习参考或快速开发模板。
+## ✨ 项目亮点
 
-## 技术栈
+- **🔥 最新技术栈**: FastAPI + Vue 3 + TypeScript 支持
+- **🎨 现代化UI**: Ant Design Vue 企业级设计系统
+- **🔐 完整认证**: JWT + RBAC 权限管理系统
+- **📊 系统监控**: 实时系统状态和日志监控
+- **📝 完整日志**: 前后端统一日志系统
+- **🚀 开发友好**: 热重载 + 自动API文档 + 代码提示
+- **📱 响应式设计**: 支持移动端和桌面端
+- **⚡ 高性能**: 异步处理 + 轻量级数据库
 
-### 后端技术栈
-- **Web框架**: FastAPI - 高性能异步Web框架
-- **ASGI服务器**: Uvicorn - ASGI服务器
-- **数据库**: SQLite - 轻量级数据库
-- **ORM**: SQLAlchemy - Python SQL工具包
-- **数据验证**: Pydantic - 类型安全的数据验证
-- **身份认证**: JWT + Passlib - 用户认证和密码处理
-- **日志系统**: Loguru - 简洁高效的日志库
-- **环境配置**: Python-dotenv - 环境变量管理
-- **数据库迁移**: Alembic - 数据库版本控制
+## 🎯 核心功能
 
-### 前端技术栈
-- **核心框架**: Vue 3 - 渐进式JavaScript框架
-- **UI组件库**: Ant Design Vue - 企业级UI设计语言
-- **构建工具**: Vite - 新一代前端构建工具
-- **路由管理**: Vue Router - 官方路由管理器
-- **状态管理**: Pinia - Vue的状态管理库
-- **HTTP客户端**: Axios - HTTP请求库
-- **日志系统**: Loglevel - 轻量级日志库
-- **图标库**: @ant-design/icons-vue - Ant Design图标
+## 🛠️ 技术架构
+
+### 后端架构 (Python)
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| [FastAPI](https://fastapi.tiangolo.com/) | 0.104.1 | 高性能异步Web框架 |
+| [Uvicorn](https://www.uvicorn.org/) | 0.24.0 | ASGI服务器 |
+| [SQLAlchemy](https://www.sqlalchemy.org/) | Latest | ORM数据库工具 |
+| [Pydantic](https://pydantic-docs.helpmanual.io/) | 2.5.0 | 数据验证和序列化 |
+| [JWT](https://jwt.io/) | 3.3.0 | 身份认证 |
+| [Passlib](https://passlib.readthedocs.io/) | 1.7.4 | 密码加密 |
+| [Loguru](https://loguru.readthedocs.io/) | 0.7.2 | 日志系统 |
+| [SQLite](https://www.sqlite.org/) | Built-in | 轻量级数据库 |
+
+### 前端架构 (JavaScript)
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| [Vue 3](https://vuejs.org/) | 3.3.11 | 渐进式JavaScript框架 |
+| [Ant Design Vue](https://www.antdv.com/) | 4.0.8 | 企业级UI组件库 |
+| [Vite](https://vitejs.dev/) | 5.0.8 | 新一代构建工具 |
+| [Vue Router](https://router.vuejs.org/) | 4.2.5 | 路由管理 |
+| [Pinia](https://pinia.vuejs.org/) | 2.1.7 | 状态管理 |
+| [Axios](https://axios-http.com/) | 1.6.2 | HTTP客户端 |
+| [Loglevel](https://github.com/pimterry/loglevel) | 1.8.1 | 前端日志系统 |
 
 ## 项目结构
 
@@ -61,39 +77,39 @@ demo-fastapi/
 └── docs/                  # 项目文档
 ```
 
-## 核心功能模块
+### 🔐 用户认证
+- ✅ 邮箱/用户名注册登录
+- ✅ JWT Token认证机制
+- ✅ 密码加密存储 (bcrypt)
+- ✅ Token自动刷新
+- ✅ 会话管理
 
-### 用户认证模块
-- **用户注册**: 邮箱/用户名注册
-- **用户登录**: 账号密码登录
-- **密码重置**: 邮箱验证重置密码
-- **JWT认证**: 基于Token的身份认证
-- **登录状态**: Token刷新和会话管理
+### 👥 用户管理
+- ✅ 用户列表分页查询
+- ✅ 用户信息编辑
+- ✅ 用户状态管理
+- ✅ 批量操作支持
+- ✅ 高级搜索过滤
 
-### 用户管理模块
-- **用户列表**: 分页查询、搜索过滤
-- **用户详情**: 查看用户完整信息
-- **用户编辑**: 修改用户信息和权限
-- **用户状态**: 启用/禁用用户账号
-- **用户删除**: 删除用户账号
+### 🔑 权限管理
+- ✅ 基于角色的访问控制 (RBAC)
+- ✅ 角色创建和管理
+- ✅ 权限分配和回收
+- ✅ 用户角色关联
+- ✅ 动态权限验证
 
-### 权限管理模块
-- **角色管理**: 创建和管理系统角色
-- **权限分配**: 为角色分配不同权限
-- **用户角色**: 为用户分配角色
-- **权限控制**: 基于角色的访问控制
+### 📊 系统监控
+- ✅ 实时系统状态监控
+- ✅ 用户行为统计
+- ✅ 操作日志记录
+- ✅ 系统性能监控
+- ✅ 异常日志追踪
 
-### 系统监控模块
-- **系统概览**: 服务器状态和资源使用情况
-- **用户统计**: 用户注册和活跃度统计
-- **操作日志**: 用户操作记录和系统日志
-- **日志查看**: 分类查看和搜索日志
-
-### 数据管理模块
-- **数据概览**: 系统数据统计和可视化
-- **数据导入**: Excel/CSV文件导入
-- **数据导出**: 数据导出为Excel/CSV
-- **数据备份**: 数据库备份和恢复
+### 📱 响应式界面
+- ✅ 移动端适配
+- ✅ 主题切换支持
+- ✅ 国际化支持
+- ✅ 友好的用户交互
 
 ## 数据库设计
 
