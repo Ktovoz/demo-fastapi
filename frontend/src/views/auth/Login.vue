@@ -15,6 +15,7 @@
         </a-button>
         <a-button type="primary" html-type="submit" block :loading="authStore.loading">Sign In</a-button>
         <a-button type="link" block @click="goRegister">Create an account</a-button>
+        <div class="author-note">作者：ktovoz</div>
       </a-form>
     </a-card>
   </AuthLayout>
@@ -65,5 +66,12 @@ const goRegister = () => {
   justify-content: flex-end;
   margin-bottom: 12px;
 }
+.author-note {
+  margin-top: 16px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
+
 </style>
 
