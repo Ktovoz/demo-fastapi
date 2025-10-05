@@ -37,7 +37,7 @@ async def get_dashboard_metrics(db: Session = Depends(get_db)):
         
         # 获取错误请求数
         error_requests = db.query(OperationLog).filter(
-            OperationLog.method.like('%ERROR%')
+            OperationLog.action.like('%ERROR%')
         ).count()
         
         # 生成流量图表数据（最近7天）
@@ -98,8 +98,8 @@ async def get_dashboard_metrics(db: Session = Depends(get_db)):
                 "id": f"LOG-{log.id}",
                 "time": log.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 "user": log.user.full_name if log.user else "系统",
-                "action": log.method,
-                "target": log.path
+                "action": log.action,
+                "target": log.resource
             })
         
         # 如果没有足够的日志，添加一些模拟数据

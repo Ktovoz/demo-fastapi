@@ -176,11 +176,11 @@ async def login_json(
             logger.info(f"✅ 找到用户角色: {role.name}")
 
             # 获取角色权限
-            logger.debug(f"🔍 角色 {role.name} 的权限关系: {role.role_permissions}")
+            logger.debug(f"🔍 角色 {role.name} 开始获取权限")
             for role_permission in role.role_permissions:
                 permission = role_permission.permission
                 user_permissions.append(permission.name)
-                logger.debug(f"✅ 找到权限: {permission.name}")
+                logger.debug(f"✅ 找到权限: {permission.name} (role_permission_id: {role_permission.id})")
 
         # 去重
         user_permissions = list(set(user_permissions))

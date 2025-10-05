@@ -15,4 +15,4 @@ class RolePermission(BaseModel):
     permission = relationship("Permission", back_populates="role_permissions")
 
     def __repr__(self):
-        return f"<RolePermission(role_id={self.role_id}, permission_id={self.role_permission_id})>"
+        return f"<RolePermission(role_id={self.role_id}, permission_id={self.permission_id})>"

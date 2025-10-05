@@ -34,34 +34,23 @@ async def get_system_logs(
         if keyword:
             query = query.filter(
                 or_(
-                    OperationLog.method.like(f"%{keyword}%"),
-                    OperationLog.path.like(f"%{keyword}%"),
-                    OperationLog.ip.like(f"%{keyword}%")
+                    OperationLog.action.like(f"%{keyword}%"),
+                    OperationLog.resource.like(f"%{keyword}%"),
+                    OperationLog.ip_address.like(f"%{keyword}%")
                 )
             )
         
         # 级别筛选
         if level != "ALL":
-            # 这里假设OperationLog模型有level字段，如果没有，可以基于其他逻辑
-            # 例如根据method或status_code判断级别
+            # 基于action字段判断日志级别
             if level == "ERROR":
-                query = query.filter(or_(
-                    OperationLog.method.like("%ERROR%"),
-                    OperationLog.status_code >= 400
-                ))
+                query = query.filter(OperationLog.action.like("%ERROR%"))
             elif level == "WARN":
-                query = query.filter(and_(
-                    OperationLog.method.notlike("%ERROR%"),
-                    or_(
-                        OperationLog.method.like("%WARN%"),
-                        and_(OperationLog.status_code >= 300, OperationLog.status_code < 400)
-                    )
-                ))
+                query = query.filter(OperationLog.action.like("%WARN%"))
             elif level == "INFO":
                 query = query.filter(and_(
-                    OperationLog.method.notlike("%ERROR%"),
-                    OperationLog.method.notlike("%WARN%"),
-                    OperationLog.status_code < 300
+                    OperationLog.action.notlike("%ERROR%"),
+                    OperationLog.action.notlike("%WARN%")
                 ))
         
         # 排序处理
@@ -74,8 +63,8 @@ async def get_system_logs(
                 # 映射字段名
                 field_mapping = {
                     "time": OperationLog.created_at,
-                    "method": OperationLog.method,
-                    "path": OperationLog.path
+                    "method": OperationLog.action,
+                    "path": OperationLog.resource
                 }
                 
                 if field in field_mapping:
@@ -103,28 +92,28 @@ async def get_system_logs(
         for log in logs:
             # 确定日志级别
             log_level = "INFO"
-            if "ERROR" in log.method.upper() or log.status_code >= 400:
+            if "ERROR" in log.action.upper():
                 log_level = "ERROR"
-            elif "WARN" in log.method.upper() or (log.status_code >= 300 and log.status_code < 400):
+            elif "WARN" in log.action.upper():
                 log_level = "WARN"
-            elif "DEBUG" in log.method.upper():
+            elif "DEBUG" in log.action.upper():
                 log_level = "DEBUG"
             
             # 构建上下文信息
             context = {
                 "requestId": f"req-{log.id}",
-                "ip": log.ip,
+                "ip": log.ip_address,
                 "userAgent": log.user_agent,
-                "statusCode": log.status_code
+                "resourceId": log.resource_id
             }
-            
+
             # 构建日志数据
             log_data = {
                 "id": f"LOG-{log.id}",
                 "time": log.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 "level": log_level,
-                "module": log.method.split()[0] if log.method and " " in log.method else "system",
-                "message": f"{log.method} {log.path}",
+                "module": log.action.split()[0] if log.action and " " in log.action else "system",
+                "message": f"{log.action} {log.resource}",
                 "context": context
             }
             
@@ -221,26 +210,16 @@ async def get_logs_summary(db: Session = Depends(get_db)):
         total_logs = db.query(OperationLog).count()
         
         # 获取各级别日志数量
-        error_count = db.query(OperationLog).filter(or_(
-            OperationLog.method.like("%ERROR%"),
-            OperationLog.status_code >= 400
-        )).count()
-        
-        warn_count = db.query(OperationLog).filter(and_(
-            OperationLog.method.notlike("%ERROR%"),
-            or_(
-                OperationLog.method.like("%WARN%"),
-                and_(OperationLog.status_code >= 300, OperationLog.status_code < 400)
-            )
-        )).count()
-        
+        error_count = db.query(OperationLog).filter(OperationLog.action.like("%ERROR%")).count()
+
+        warn_count = db.query(OperationLog).filter(OperationLog.action.like("%WARN%")).count()
+
         info_count = db.query(OperationLog).filter(and_(
-            OperationLog.method.notlike("%ERROR%"),
-            OperationLog.method.notlike("%WARN%"),
-            OperationLog.status_code < 300
+            OperationLog.action.notlike("%ERROR%"),
+            OperationLog.action.notlike("%WARN%")
         )).count()
-        
-        debug_count = db.query(OperationLog).filter(OperationLog.method.like("%DEBUG%")).count()
+
+        debug_count = db.query(OperationLog).filter(OperationLog.action.like("%DEBUG%")).count()
         
         # 构建严重程度统计
         severity = {
@@ -257,11 +236,11 @@ async def get_logs_summary(db: Session = Depends(get_db)):
         for log in recent_logs:
             # 确定日志级别
             log_level = "INFO"
-            if "ERROR" in log.method.upper() or log.status_code >= 400:
+            if "ERROR" in log.action.upper():
                 log_level = "ERROR"
-            elif "WARN" in log.method.upper() or (log.status_code >= 300 and log.status_code < 400):
+            elif "WARN" in log.action.upper():
                 log_level = "WARN"
-            elif "DEBUG" in log.method.upper():
+            elif "DEBUG" in log.action.upper():
                 log_level = "DEBUG"
             
             # 构建日志数据
