@@ -312,38 +312,38 @@
 
 ## 后端开发待办清单
 - **认证模块**
-  - [ ] POST /auth/login —— 实现账号密码登录，返回 token、expiresIn、user。
-  - [ ] POST /auth/register —— 支持创建账号，校验邮箱重复。
-  - [ ] POST /auth/forgot-password —— 发送重置邮件并返回发送状态。
+  - [x] POST /auth/login —— 实现账号密码登录，返回 token、expiresIn、user。
+  - [x] POST /auth/register —— 支持创建账号，校验邮箱重复。
+  - [x] POST /auth/forgot-password —— 发送重置邮件并返回发送状态。
 - **仪表盘**
-  - [ ] GET /dashboard/metrics —— 聚合 summaryCards、trafficChart、systemHealth、recentActivities。
-  - [ ] GET /dashboard/overview —— 按 metrics 同步结构，预留渐进加载。
+  - [x] GET /dashboard/metrics —— 聚合 summaryCards、trafficChart、systemHealth、recentActivities。
+  - [x] GET /dashboard/overview —— 按 metrics 同步结构，预留渐进加载。
 - **用户管理**
-  - [ ] GET /users —— 支持多条件分页筛选及 sorter。
-  - [ ] GET /users/{id} —— 返回完整用户详情字段。
-  - [ ] POST /users —— 创建用户，校验必填字段。
-  - [ ] PUT /users/{id} —— 更新基础信息、权限、状态。
-  - [ ] PATCH /users/{id}/status —— 切换启用/禁用并返回最新状态。
-  - [ ] DELETE /users/{id} —— 单个删除返回删除结果。
-  - [ ] POST /users/bulk-delete —— 接收 ids 数组执行批量删除。
+  - [x] GET /users —— 支持多条件分页筛选及 sorter。
+  - [x] GET /users/{id} —— 返回完整用户详情字段。
+  - [x] POST /users —— 创建用户，校验必填字段。
+  - [x] PUT /users/{id} —— 更新基础信息、权限、状态。
+  - [x] PATCH /users/{id}/status —— 切换启用/禁用并返回最新状态。
+  - [x] DELETE /users/{id} —— 单个删除返回删除结果。
+  - [x] POST /users/bulk-delete —— 接收 ids 数组执行批量删除。
 - **角色管理**
-  - [ ] GET /roles —— 返回全部角色列表。
-  - [ ] GET /roles/{id} —— 提供编辑所需详情。
-  - [ ] PUT /roles/{id} —— 更新 displayName、description、permissions、status。
+  - [x] GET /roles —— 返回全部角色列表。
+  - [x] GET /roles/{id} —— 提供编辑所需详情。
+  - [x] PUT /roles/{id} —— 更新 displayName、description、permissions、status。
 - **运营中心**
-  - [ ] GET /admin/overview —— 汇总 cards、trend、services、shifts。
-  - [ ] GET /admin/alerts —— 列出告警并区分 severity、acknowledged。
-  - [ ] POST /admin/alerts/{id}/acknowledge —— 标记告警为已处理。
-  - [ ] GET /admin/tasks —— 支持过滤、分页、排序。
-  - [ ] POST /admin/tasks —— 创建任务并返回完整对象。
-  - [ ] PATCH /admin/tasks/{id} —— 更新任务状态或其他字段。
-  - [ ] GET /admin/audit-timeline —— 返回审计时间线条目。
+  - [x] GET /admin/overview —— 汇总 cards、trend、services、shifts。
+  - [x] GET /admin/alerts —— 列出告警并区分 severity、acknowledged。
+  - [x] POST /admin/alerts/{id}/acknowledge —— 标记告警为已处理。
+  - [x] GET /admin/tasks —— 支持过滤、分页、排序。
+  - [x] POST /admin/tasks —— 创建任务并返回完整对象。
+  - [x] PATCH /admin/tasks/{id} —— 更新任务状态或其他字段。
+  - [x] GET /admin/audit-timeline —— 返回审计时间线条目。
 - **系统日志与配置**
-  - [ ] GET /system/logs —— 分页返回日志列表及 context。
-  - [ ] GET /system/logs/summary —— 汇总 severity、topModules、recent、errorRatio。
-  - [ ] GET /system/settings —— 读取 config，含 notifications/security。
-  - [ ] PUT /system/settings —— 保存配置并返回最新值。
+  - [x] GET /system/logs —— 分页返回日志列表及 context。
+  - [x] GET /system/logs/summary —— 汇总 severity、topModules、recent、errorRatio。
+  - [x] GET /system/settings —— 读取 config，含 notifications/security。
+  - [x] PUT /system/settings —— 保存配置并返回最新值。
 - **通用/错误处理**
-  - [ ] 统一错误响应 —— 返回 message/detail 字段，覆盖 4xx/5xx。
-  - [ ] 权限校验 —— 401/403 正确落地，触发前端登出或拒绝访问。
-  - [ ] GET /health —— 返回 status/timestamp/version，供探针和前端检测使用。
+  - [x] 统一错误响应 —— 返回 message/detail 字段，覆盖 4xx/5xx。
+  - [x] 权限校验 —— 401/403 正确落地，触发前端登出或拒绝访问。
+  - [x] GET /health —— 返回 status/timestamp/version，供探针和前端检测使用。
