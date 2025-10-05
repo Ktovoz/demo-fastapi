@@ -14,11 +14,26 @@ export const useRoleStore = defineStore("role", {
     async fetchRoles() {
       this.loading = true
       try {
+        logger.debug("Fetching roles...")
         const response = await roleApi.fetchRoles()
-        this.list = response.data
-        logger.info("Loaded roles", { total: this.list.length })
+        logger.debug("Roles API response:", response)
+
+        // 适配后端API响应结构 (BaseResponse包装)
+        if (response.data && response.data.data) {
+          // 后端API返回的结构: { data: { data: [roles] } }
+          this.list = response.data.data || []
+          logger.info("Loaded roles from backend API", { total: this.list.length })
+        } else if (response.data && Array.isArray(response.data)) {
+          // Mock数据或直接返回的结构: { data: [roles] }
+          this.list = response.data || []
+          logger.info("Loaded roles from mock/direct API", { total: this.list.length })
+        } else {
+          logger.warn("Unexpected API response structure:", response)
+          this.list = []
+        }
       } catch (error) {
         logger.error("Failed to load roles", error)
+        this.list = []
         throw error
       } finally {
         this.loading = false
@@ -29,8 +44,13 @@ export const useRoleStore = defineStore("role", {
       this.loading = true
       try {
         const response = await roleApi.fetchRole(id)
-        this.currentRole = response.data
-        return response.data
+        logger.debug("Role detail API response:", response)
+
+        // 适配后端API响应结构
+        const roleData = response.data?.data || response.data
+        this.currentRole = roleData
+        logger.info("Loaded role detail", { id, name: roleData?.displayName })
+        return roleData
       } catch (error) {
         logger.error("Failed to load role detail", { id, error })
         throw error
@@ -43,10 +63,14 @@ export const useRoleStore = defineStore("role", {
       this.loading = true
       try {
         const response = await roleApi.updateRole(id, payload)
-        this.currentRole = response.data
-        this.list = this.list.map((item) => (item.id === response.data.id ? response.data : item))
-        logger.info("Role updated", { id })
-        return response.data
+        logger.debug("Update role API response:", response)
+
+        // 适配后端API响应结构
+        const roleData = response.data?.data || response.data
+        this.currentRole = roleData
+        this.list = this.list.map((item) => (item.id === roleData.id ? roleData : item))
+        logger.info("Role updated", { id, name: roleData?.displayName })
+        return roleData
       } catch (error) {
         logger.error("Failed to update role", { id, error })
         throw error

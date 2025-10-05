@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .log-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 3px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        .log-item.error {
+            border-left-color: #f5222d;
+        }
+        .log-item.warn {
+            border-left-color: #fa8c16;
+        }
+        .log-item.info {
+            border-left-color: #1890ff;
+        }
+        .log-item.debug {
+            border-left-color: #52c41a;
+        }
+        .level {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .level.error { background-color: #f5222d; }
+        .level.warn { background-color: #fa8c16; }
+        .level.info { background-color: #1890ff; }
+        .level.debug { background-color: #52c41a; }
+        button {
+            padding: 8px 16px;
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #40a9ff;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>系统日志API测试</h1>
+    
+    <div class="section">
+        <h2>API调用测试</h2>
+        <button onclick="testLogsAPI()">测试日志列表API</button>
+        <button onclick="testLogSummaryAPI()">测试日志概览API</button>
+        <div id="api-status"></div>
+    </div>
+    
+    <div class="section">
+        <h2>日志列表</h2>
+        <div id="logs-container">点击"测试日志列表API"按钮加载数据</div>
+    </div>
+    
+    <div class="section">
+        <h2>日志概览</h2>
+        <div id="summary-container">点击"测试日志概览API"按钮加载数据</div>
+    </div>
+    
+    <div class="section">
+        <h2>原始响应</h2>
+        <pre id="raw-response">等待API调用...</pre>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        
+        async function testLogsAPI() {
+            const statusDiv = document.getElementById('api-status');
+            const logsDiv = document.getElementById('logs-container');
+            const rawDiv = document.getElementById('raw-response');
+            
+            try {
+                statusDiv.innerHTML = '<p>正在调用日志列表API...</p>';
+                
+                const response = await fetch(`${API_BASE}/system/logs?page=1&pageSize=10`);
+                const data = await response.json();
+                
+                statusDiv.innerHTML = `<p>API调用成功，状态码: ${response.status}</p>`;
+                rawDiv.textContent = JSON.stringify(data, null, 2);
+                
+                if (data.success && data.data) {
+                    const logs = data.data.items;
+                    let html = `<p>共获取 ${logs.length} 条日志 (总数: ${data.data.total})</p>`;
+                    
+                    logs.forEach(log => {
+                        html += `
+                            <div class="log-item ${log.level.toLowerCase()}">
+                                <div>
+                                    <span class="level ${log.level.toLowerCase()}">${log.level}</span>
+                                    <strong>${log.time}</strong> - ${log.module}
+                                </div>
+                                <div>${log.message}</div>
+                                <div style="font-size: 12px; color: #666;">
+                                    ID: ${log.id} | IP: ${log.context?.ip || 'N/A'}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    logsDiv.innerHTML = html;
+                } else {
+                    logsDiv.innerHTML = '<p>API返回数据格式不正确</p>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<p style="color: red;">API调用失败: ${error.message}</p>`;
+                logsDiv.innerHTML = '<p>无法加载日志数据</p>';
+                rawDiv.textContent = `错误: ${error.message}`;
+            }
+        }
+        
+        async function testLogSummaryAPI() {
+            const statusDiv = document.getElementById('api-status');
+            const summaryDiv = document.getElementById('summary-container');
+            const rawDiv = document.getElementById('raw-response');
+            
+            try {
+                statusDiv.innerHTML = '<p>正在调用日志概览API...</p>';
+                
+                const response = await fetch(`${API_BASE}/system/logs/summary`);
+                const data = await response.json();
+                
+                statusDiv.innerHTML = `<p>API调用成功，状态码: ${response.status}</p>`;
+                rawDiv.textContent = JSON.stringify(data, null, 2);
+                
+                if (data.success && data.data) {
+                    const summary = data.data;
+                    let html = `
+                        <p><strong>日志总数:</strong> ${summary.total}</p>
+                        <p><strong>错误率:</strong> ${summary.errorRatio}%</p>
+                        
+                        <h4>级别分布:</h4>
+                        <ul>
+                    `;
+                    
+                    Object.entries(summary.severity).forEach(([level, count]) => {
+                        html += `<li>${level}: ${count}</li>`;
+                    });
+                    
+                    html += `</ul>
+                        
+                        <h4>模块热点:</h4>
+                        <ul>
+                    `;
+                    
+                    summary.topModules.forEach(module => {
+                        html += `<li>${module.module}: ${module.total} 次</li>`;
+                    });
+                    
+                    html += `</ul>
+                        
+                        <h4>最近日志:</h4>
+                    `;
+                    
+                    summary.recent.forEach(log => {
+                        html += `
+                            <div class="log-item ${log.level.toLowerCase()}">
+                                <div>
+                                    <span class="level ${log.level.toLowerCase()}">${log.level}</span>
+                                    <strong>${log.time}</strong> - ${log.module}
+                                </div>
+                                <div>${log.message}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    summaryDiv.innerHTML = html;
+                } else {
+                    summaryDiv.innerHTML = '<p>API返回数据格式不正确</p>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<p style="color: red;">API调用失败: ${error.message}</p>`;
+                summaryDiv.innerHTML = '<p>无法加载日志概览数据</p>';
+                rawDiv.textContent = `错误: ${error.message}`;
+            }
+        }
+        
+        // 页面加载时自动测试
+        window.onload = function() {
+            testLogsAPI();
+            testLogSummaryAPI();
+        };
+    </script>
+</body>
+</html>

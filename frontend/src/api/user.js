@@ -4,8 +4,10 @@ import { isMockEnabled, mockApi } from "../mock"
 export const userApi = {
   fetchUsers(params) {
     if (isMockEnabled) {
+      console.log("Using mock data for users")
       return mockApi.users.fetchUsers(params)
     }
+    console.log("Fetching users from API with params:", params)
     return apiRequest.get("/users", { params })
   },
   fetchUser(id) {

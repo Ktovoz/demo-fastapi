@@ -89,11 +89,14 @@ export const useSystemStore = defineStore("system", {
           ...extra
         }
         const response = await systemApi.fetchLogs(params)
-        this.logs = response.data.items
-        this.logTotal = response.data.total
-        this.logPagination.page = response.data.page
-        this.logPagination.pageSize = response.data.pageSize
-        logger.info("Loaded system logs", { total: this.logTotal })
+        logger.debug("Logs API response:", response)
+        // 修复数据访问路径：后端返回的是 { success: true, data: { items: [...], total: 60, page: 1, pageSize: 10 } }
+        const responseData = response.data.data || response.data
+        this.logs = responseData.items || []
+        this.logTotal = responseData.total || 0
+        this.logPagination.page = responseData.page || 1
+        this.logPagination.pageSize = responseData.pageSize || 10
+        logger.info("Loaded system logs", { total: this.logTotal, itemsCount: this.logs.length })
       } catch (error) {
         logger.error("Failed to load logs", error)
         throw error
@@ -106,8 +109,10 @@ export const useSystemStore = defineStore("system", {
       this.logSummaryLoading = true
       try {
         const response = await systemApi.fetchLogSummary()
-        this.logSummary = response.data
-        logger.info("Loaded log summary")
+        logger.debug("Log summary API response:", response)
+        // 修复数据访问路径：后端返回的是 { success: true, data: { severity: {...}, recent: [...] } }
+        this.logSummary = response.data.data || response.data
+        logger.info("Loaded log summary", { total: this.logSummary?.total || 0 })
       } catch (error) {
         logger.error("Failed to load log summary", error)
         throw error

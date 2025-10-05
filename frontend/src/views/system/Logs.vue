@@ -248,25 +248,37 @@ const combinedLoading = computed(() => logLoading.value || logSummaryLoading.val
 const handleSearch = () => {
   systemStore.setLogFilters({ ...formValues })
   systemStore.setLogPagination({ page: 1 })
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const handleReset = () => {
   systemStore.resetLogFilters()
   Object.assign(formValues, { keyword: '', level: 'ALL' })
   systemStore.setLogPagination({ page: 1 })
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const handlePageChange = ({ page, pageSize }) => {
   systemStore.setLogPagination({ page, pageSize })
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const handleTableChange = (pagination, filters, sorter) => {
   const { order, field } = sorter
   systemStore.setLogSorter(order ? { field, order } : null)
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const exportLogs = () => {
@@ -297,7 +309,8 @@ const refreshAll = async () => {
     ])
     message.success('日志数据已刷新')
   } catch (error) {
-    message.error('刷新失败，请稍后重试')
+    console.error('刷新失败:', error)
+    message.error(`刷新失败: ${error.message || '请稍后重试'}`)
   }
 }
 
@@ -308,7 +321,8 @@ onMounted(async () => {
       systemStore.fetchLogs()
     ])
   } catch (error) {
-    message.error('加载系统日志失败')
+    console.error('加载系统日志失败:', error)
+    message.error(`加载系统日志失败: ${error.message || '请检查网络连接'}`)
   }
 })
 </script>

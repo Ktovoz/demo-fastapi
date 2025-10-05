@@ -68,6 +68,23 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         }
     )
 
+from fastapi.exceptions import RequestValidationError
+from pydantic import ValidationError
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """请求验证异常处理器"""
+    logger.warning(f"请求验证错误: {exc.errors()} - {request.url}")
+    return JSONResponse(
+        status_code=422,
+        content={
+            "message": "请求数据验证失败",
+            "detail": exc.errors(),
+            "status_code": 422,
+            "path": str(request.url)
+        }
+    )
+
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     """通用异常处理器"""
@@ -113,6 +130,10 @@ async def log_requests(request: Request, call_next):
         process_time = time.time() - start_time
         status_code = response.status_code
 
+        # 记录性能数据
+        from .utils.performance import performance_monitor
+        performance_monitor.record_request(path, method, process_time, status_code)
+
         # 记录响应
         if status_code == 404:
             logger.warning(f"⚠️ 路由未找到: {method} {path}")
@@ -131,13 +152,15 @@ async def log_requests(request: Request, call_next):
     except Exception as e:
         process_time = time.time() - start_time
         logger.error(f"请求失败: {method} {url} | 错误: {str(e)} | 耗时: {process_time:.3f}s")
+        
+        # 记录性能数据（失败的请求）
+        from .utils.performance import performance_monitor
+        performance_monitor.record_request(path, method, process_time, 500)
+        
         raise
 
 # 导入路由
-try:
-    from .routers import api
-except ImportError:
-    from routers import api
+from .routers import api
 
 # 注册路由
 logger.info("🔧 正在注册路由...")
