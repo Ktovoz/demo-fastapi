@@ -124,8 +124,8 @@
               </a-form-item>
             </section>
 
-            <!-- 系统管理功能（仅超级管理员） -->
-            <section v-if="authStore.user?.is_superuser" class="settings-section">
+            <!-- 系统管理功能（管理员及超级管理员） -->
+            <section v-if="authStore.user?.is_superuser || authStore.user?.roles?.includes('admin') || authStore.user?.email === 'admin@example.com'" class="settings-section">
               <header>
                 <h3 style="color: #ff4d4f;">
                   <WarningOutlined style="margin-right: 8px;" />
@@ -234,6 +234,7 @@ import dayjs from 'dayjs'
 import CardContainer from '../../components/layout/CardContainer.vue'
 import { useSystemStore } from '../../store/system'
 import { useAuthStore } from '../../store/auth'
+import { createLogger } from '../../utils/logger'
 import {
   BellOutlined,
   MailOutlined,
@@ -246,6 +247,7 @@ import {
 const systemStore = useSystemStore()
 const authStore = useAuthStore()
 const saving = ref(false)
+const logger = createLogger('Settings')
 
 const form = reactive({
   appName: '',
@@ -309,7 +311,8 @@ const fetchSystemStatus = async () => {
     await systemStore.fetchSystemStatus()
     message.success('获取系统状态成功')
   } catch (error) {
-    message.error('获取系统状态失败')
+    console.error('获取系统状态失败:', error)
+    message.error('获取系统状态失败: ' + (error.message || '请检查网络连接'))
   }
 }
 
@@ -319,7 +322,8 @@ const fetchSchedulerStatus = async () => {
     await systemStore.fetchSchedulerStatus()
     message.success('获取调度器状态成功')
   } catch (error) {
-    message.error('获取调度器状态失败')
+    console.error('获取调度器状态失败:', error)
+    message.error('获取调度器状态失败: ' + (error.message || '请检查网络连接'))
   }
 }
 
@@ -360,8 +364,8 @@ onMounted(async () => {
     }
   }
 
-  // 如果是超级管理员，自动获取系统状态
-  if (authStore.user?.is_superuser) {
+  // 如果是超级管理员或管理员，自动获取系统状态
+  if (authStore.user?.is_superuser || authStore.user?.email === 'admin@example.com') {
     fetchSystemStatus()
     fetchSchedulerStatus()
   }

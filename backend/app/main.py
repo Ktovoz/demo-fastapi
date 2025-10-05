@@ -228,7 +228,7 @@ async def health_check():
     }
 
 # 调度器状态
-@app.get("/scheduler/status", response_model=dict)
+@app.get("/api/scheduler/status", response_model=dict)
 async def scheduler_status():
     """获取调度器状态"""
     try:
