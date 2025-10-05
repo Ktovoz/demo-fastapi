@@ -2,7 +2,7 @@ from fastapi import Request, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, Tuple
 import json
 import time
 from datetime import datetime
@@ -326,7 +326,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
             except Exception:
                 pass
 
-    def _parse_action_and_resource(self, method: str, path: str) -> tuple[str, str]:
+    def _parse_action_and_resource(self, method: str, path: str) -> Tuple[str, str]:
         """解析操作类型和资源"""
         path_parts = [part for part in path.split('/') if part]
 

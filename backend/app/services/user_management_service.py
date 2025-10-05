@@ -164,6 +164,7 @@ class UserManagementService:
                 "tags": ["北京", "前端"],  # 模拟数据，实际应从用户表获取
                 "permissions": user_permissions,
                 "avatar": user.avatar,
+                "is_superuser": user.is_superuser,  # 添加超级用户标识
                 "createdAt": user.created_at.isoformat() + "Z" if user.created_at else None,
                 "lastLogin": user.last_login.isoformat() + "Z" if user.last_login else None
             }

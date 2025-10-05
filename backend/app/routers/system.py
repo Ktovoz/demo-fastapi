@@ -1,13 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
 
 from ..core.database import get_db
 from ..utils.logger import get_logger
 from ..services.system_management_service import SystemManagementService
+from ..services.system_init_service import SystemInitService
 from ..utils.exceptions import service_exception_handler
 from ..schemas.base import BaseResponse, PaginatedResponse
 from ..schemas.system import SystemSettingsUpdate
+from ..core.security import get_current_user
+from ..models.user import User
 
 router = APIRouter()
 logger = get_logger(__name__)
@@ -201,7 +204,7 @@ async def get_cache_stats():
 async def clear_cache():
     """清空缓存"""
     logger.info("清空缓存")
-    
+
     try:
         from ..utils.cache import cache
         count = cache.clear()
@@ -211,7 +214,115 @@ async def clear_cache():
             message="缓存清空成功",
             data={"deleted": count}
         )
-        
+
     except Exception as e:
         logger.error(f"清空缓存失败: {str(e)}")
+        raise service_exception_handler(e)
+
+@router.get("/system/status", response_model=BaseResponse)
+async def get_system_status(db: Session = Depends(get_db)):
+    """获取系统状态"""
+    logger.info("获取系统状态")
+
+    try:
+        status = SystemInitService.get_system_status(db)
+        logger.info("获取系统状态成功")
+        return BaseResponse(
+            success=True,
+            message="获取系统状态成功",
+            data=status
+        )
+
+    except Exception as e:
+        logger.error(f"获取系统状态失败: {str(e)}")
+        raise service_exception_handler(e)
+
+@router.post("/system/fix-admin", response_model=BaseResponse)
+async def fix_admin_superuser(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """修复admin用户的superuser权限（临时接口）"""
+    logger.info(f"用户 {current_user.username} 请求修复admin权限")
+
+    try:
+        # 查找admin用户
+        admin_user = db.query(User).filter(
+            (User.username == "admin") | (User.email == "admin@example.com")
+        ).first()
+
+        if not admin_user:
+            return BaseResponse(
+                success=False,
+                message="未找到admin用户"
+            )
+
+        # 更新admin用户的superuser权限
+        admin_user.is_superuser = True
+        db.commit()
+        db.refresh(admin_user)
+
+        logger.info(f"成功修复admin用户权限: {admin_user.username} (is_superuser={admin_user.is_superuser})")
+
+        return BaseResponse(
+            success=True,
+            message="admin用户权限修复成功",
+            data={
+                "user_id": admin_user.id,
+                "username": admin_user.username,
+                "email": admin_user.email,
+                "is_superuser": admin_user.is_superuser
+            }
+        )
+
+    except Exception as e:
+        logger.error(f"修复admin用户权限失败: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"修复admin权限失败: {str(e)}"
+        )
+
+@router.post("/system/reset", response_model=BaseResponse)
+async def reset_system(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """系统初始化（仅超级管理员）"""
+    logger.info(f"用户 {current_user.username} 请求系统初始化")
+
+    # 检查权限 - 只有超级管理员可以执行
+    if not current_user.is_superuser:
+        logger.warning(f"用户 {current_user.username} 尝试执行系统初始化，权限不足")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="只有超级管理员可以执行系统初始化"
+        )
+
+    try:
+        # 手动记录初始化开始日志
+        from ..models.operation_log import OperationLog
+        init_log = OperationLog(
+            user_id=current_user.id,
+            action="手动系统初始化",
+            resource="system",
+            description=f"用户 {current_user.username} 手动执行系统初始化",
+            ip_address="127.0.0.1",  # 这里可以从request获取真实IP
+            user_agent="System Management Interface"
+        )
+        db.add(init_log)
+        db.commit()
+
+        # 执行系统初始化
+        result = SystemInitService.reset_system(db)
+
+        logger.info(f"系统初始化成功: {result['summary']}")
+        return BaseResponse(
+            success=True,
+            message="系统初始化成功",
+            data=result
+        )
+
+    except Exception as e:
+        logger.error(f"系统初始化失败: {str(e)}")
         raise service_exception_handler(e)

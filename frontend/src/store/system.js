@@ -31,7 +31,10 @@ export const useSystemStore = defineStore("system", {
       { id: 1, title: "Deployment successful", read: false, time: "2025-10-04 09:20" },
       { id: 2, title: "3 security alerts", read: false, time: "2025-10-04 08:45" },
       { id: 3, title: "Weekly report available", read: true, time: "2025-10-03 18:00" }
-    ]
+    ],
+    systemStatus: null,
+    resetLoading: false,
+    schedulerStatus: null
   }),
   actions: {
     setMenuCollapsed(value) {
@@ -135,6 +138,55 @@ export const useSystemStore = defineStore("system", {
 
     setLogSorter(sorter) {
       this.logSorter = sorter
+    },
+
+    async fetchSystemStatus() {
+      try {
+        const response = await systemApi.getSystemStatus()
+        this.systemStatus = response.data
+        logger.info("获取系统状态成功")
+        return response.data
+      } catch (error) {
+        logger.error("获取系统状态失败", error)
+        throw error
+      }
+    },
+
+    async resetSystem() {
+      this.resetLoading = true
+      try {
+        const response = await systemApi.resetSystem()
+        logger.info("系统重置成功")
+        return response.data
+      } catch (error) {
+        logger.error("系统重置失败", error)
+        throw error
+      } finally {
+        this.resetLoading = false
+      }
+    },
+
+    async fetchSchedulerStatus() {
+      try {
+        const response = await systemApi.getSchedulerStatus()
+        this.schedulerStatus = response.data
+        logger.info("获取调度器状态成功")
+        return response.data
+      } catch (error) {
+        logger.error("获取调度器状态失败", error)
+        throw error
+      }
+    },
+
+    async fixAdminSuperuser() {
+      try {
+        const response = await systemApi.fixAdminSuperuser()
+        logger.info("修复admin权限成功", response.data)
+        return response.data
+      } catch (error) {
+        logger.error("修复admin权限失败", error)
+        throw error
+      }
     }
   }
 })

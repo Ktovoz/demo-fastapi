@@ -7,6 +7,7 @@ from datetime import datetime
 from .core.config import settings
 from .core.database import init_db
 from .utils.logger import get_logger
+from .utils.scheduler import scheduler, setup_default_tasks
 
 logger = get_logger(__name__)
 
@@ -21,6 +22,11 @@ async def lifespan(app: FastAPI):
         init_db()
         logger.info("数据库初始化完成")
 
+        # 设置并启动定时任务
+        setup_default_tasks()
+        await scheduler.start()
+        logger.info("定时任务调度器已启动")
+
         # 应用启动完成
         logger.info(f"{settings.APP_NAME} v{settings.APP_VERSION} 启动成功")
         logger.info(f"服务运行在: http://{settings.HOST}:{settings.PORT}")
@@ -33,6 +39,8 @@ async def lifespan(app: FastAPI):
     yield
 
     # 关闭时执行
+    logger.info("正在关闭定时任务调度器...")
+    await scheduler.stop()
     logger.info("后台管理系统正在关闭...")
 
 # 创建FastAPI应用
@@ -200,7 +208,7 @@ async def root():
 async def health_check():
     """健康检查"""
     logger.debug("执行健康检查")
-    
+
     # 检查数据库连接状态
     try:
         from .core.database import SessionLocal
@@ -212,12 +220,29 @@ async def health_check():
     except Exception as e:
         status = "degraded"
         logger.error(f"数据库连接异常: {str(e)}")
-    
+
     return {
         "status": status,
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "version": settings.APP_VERSION
     }
+
+# 调度器状态
+@app.get("/scheduler/status", response_model=dict)
+async def scheduler_status():
+    """获取调度器状态"""
+    try:
+        status = scheduler.get_status()
+        return {
+            "success": True,
+            "data": status
+        }
+    except Exception as e:
+        logger.error(f"获取调度器状态失败: {str(e)}")
+        return {
+            "success": False,
+            "message": f"获取调度器状态失败: {str(e)}"
+        }
 
 if __name__ == "__main__":
     import uvicorn

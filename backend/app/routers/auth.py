@@ -45,13 +45,15 @@ async def login(
         
         # 获取用户角色和权限
         user_roles, user_permissions = UserService.get_user_roles_and_permissions(db, user)
-        
+
         # 创建访问令牌
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        logger.info(f"🏗️ 为用户 {user.username} (ID: {user.id}) 创建访问令牌")
         access_token = create_access_token(
-            data={"sub": user.username}, expires_delta=access_token_expires
+            data={"sub": str(user.id)}, expires_delta=access_token_expires
         )
-        
+        logger.info(f"✅ 访问令牌已创建: {access_token[:30]}..." if len(access_token) > 30 else f"令牌: {access_token}")
+
         # 构建响应数据
         user_data = {
             "id": f"USR-{user.id}",
@@ -60,6 +62,7 @@ async def login(
             "role": user_roles[0] if user_roles else "user",  # 主要角色
             "permissions": user_permissions,
             "avatar": user.avatar,
+            "is_superuser": user.is_superuser,  # 添加超级用户标识
             "lastLogin": user.last_login.isoformat() + "Z" if user.last_login else None
         }
         
