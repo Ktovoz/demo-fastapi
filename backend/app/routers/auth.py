@@ -20,13 +20,6 @@ logger = get_logger(__name__)
 # OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
-# 在模块加载时打印路由信息
-logger.info("🔧 认证路由模块已加载")
-logger.info("📋 认证路由列表:")
-logger.info("  - POST /login (表单登录)")
-logger.info("  - POST /login-json (JSON登录)")
-logger.info("  - POST /register (用户注册)")
-logger.info("  - POST /forgot-password (找回密码)")
 
 @router.post("/login", response_model=BaseResponse)
 async def login(
@@ -34,9 +27,6 @@ async def login(
     db: Session = Depends(get_db)
 ):
     """用户登录"""
-    logger.info(f"🔐 用户登录接口被调用")
-    logger.info(f"📝 登录表单数据: username={form_data.username}")
-    logger.debug(f"🔍 完整表单数据: {form_data.__dict__}")
     
     try:
         # 验证用户凭据
@@ -79,7 +69,6 @@ async def login(
         }
         
         logger.info(f"用户登录成功: {user.username}")
-        logger.debug(f"用户数据: {user_data}")
         
         return BaseResponse(
             success=True,
@@ -97,9 +86,6 @@ async def login_json(
     db: Session = Depends(get_db)
 ):
     """JSON格式用户登录"""
-    logger.info(f"🔐 JSON登录接口被调用")
-    logger.info(f"📝 登录数据: email={login_data.email}, remember={login_data.remember}")
-    logger.debug(f"🔍 完整登录数据: {login_data}")
     
     try:
         email = login_data.email
@@ -149,8 +135,7 @@ async def login_json(
             "user": user_data
         }
         
-        logger.info(f"用户登录成功(JSON): {user.username}")
-        logger.debug(f"用户数据: {user_data}")
+        logger.info(f"用户登录成功: {user.username}")
         
         return BaseResponse(
             success=True,
@@ -168,16 +153,13 @@ async def register(
     db: Session = Depends(get_db)
 ):
     """用户注册"""
-    logger.info(f"用户注册尝试: {register_data.email}")
-    logger.debug(f"注册数据详情: {register_data}")
 
     try:
         name = register_data.name
         email = register_data.email
         password = register_data.password
 
-        logger.debug(f"解析注册数据: name={name}, email={email}, password_length={len(password)}")
-
+        
         # 检查邮箱是否已存在
         existing_user = UserService.get_user_by_email(db, email)
         if existing_user:
@@ -214,8 +196,6 @@ async def register(
         raise
     except Exception as e:
         logger.error(f"用户注册失败: {str(e)}")
-        logger.error(f"异常类型: {type(e).__name__}")
-        logger.error(f"异常详情: {e}")
         raise service_exception_handler(e)
 
 @router.post("/forgot-password", response_model=BaseResponse)

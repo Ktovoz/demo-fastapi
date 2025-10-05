@@ -156,8 +156,7 @@ class UserService:
                     db.add(role_permission)
                 
                 db.commit()
-                logger.info(f"为普通用户角色分配了 {len(basic_permissions)} 个基本权限")
-            
+                            
             # 将用户分配到普通用户角色
             user_role_assignment = UserRole(
                 user_id=user.id,
@@ -166,7 +165,7 @@ class UserService:
             db.add(user_role_assignment)
             db.commit()
             
-            logger.info(f"✅ 用户 {user.username} 已分配默认角色: {user_role.name}")
+            logger.info(f"用户 {user.username} 已分配默认角色: {user_role.name}")
             
         except Exception as e:
             logger.error(f"为用户分配默认角色失败: {str(e)}")
