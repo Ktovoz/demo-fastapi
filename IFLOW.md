@@ -13,7 +13,7 @@
 - **ORM**: SQLAlchemy 2.0.23 - Python SQL工具包
 - **认证**: JWT + Passlib - 用户认证和密码处理
 - **日志**: Loguru 0.7.2 - 简洁高效的日志库
-- **环境配置**: Python-dotenv - 环境变量管理
+- **环境配置**: Python-dotenv 1.0.0 - 环境变量管理
 - **HTTP客户端**: HTTPX 0.25.2 - 异步HTTP客户端
 - **数据验证**: Pydantic 2.5.0 - 数据验证和设置管理
 - **邮件验证**: Email-validator 2.1.0 - 邮箱格式验证
@@ -48,11 +48,22 @@ D:\code\demo-fastapi\
 │   │   │   ├── role_permission.py # 角色权限关联
 │   │   │   └── operation_log.py # 操作日志模型
 │   │   ├── routers/      # API路由
-│   │   │   └── api.py    # API路由定义
+│   │   │   ├── api.py    # API路由定义
+│   │   │   ├── auth.py   # 认证路由
+│   │   │   ├── dashboard.py # 仪表板路由
+│   │   │   ├── users.py  # 用户管理路由
+│   │   │   ├── roles.py  # 角色管理路由
+│   │   │   ├── admin.py  # 管理路由
+│   │   │   └── system.py # 系统管理路由
 │   │   ├── schemas/      # Pydantic模式
+│   │   │   ├── base.py   # 基础模式
+│   │   │   └── common.py # 通用模式
 │   │   ├── services/     # 业务服务
+│   │   │   ├── __init__.py
+│   │   │   └── init_service.py # 初始化服务
 │   │   ├── utils/        # 工具模块
 │   │   │   ├── logger.py # 日志系统配置
+│   │   │   ├── permissions.py # 权限工具
 │   │   │   └── security.py # 安全工具
 │   │   └── main.py       # 应用入口
 │   ├── alembic/          # 数据库迁移
@@ -72,7 +83,8 @@ D:\code\demo-fastapi\
 │   │   │   ├── role.js   # 角色接口
 │   │   │   ├── admin.js  # 管理员接口
 │   │   │   ├── dashboard.js # 仪表板接口
-│   │   │   └── system.js # 系统接口
+│   │   │   ├── system.js # 系统接口
+│   │   │   └── index.js  # API入口
 │   │   ├── components/   # 公共组件
 │   │   │   ├── layout/   # 布局组件
 │   │   │   ├── common/   # 通用组件
@@ -121,6 +133,7 @@ cd backend
 # 创建虚拟环境并激活
 python -m venv venv
 venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux/Mac
 
 # 安装依赖
 pip install -r requirements.txt
@@ -185,18 +198,21 @@ npm run preview
 - 登录/注册/密码重置
 - 用户会话管理
 - 权限验证中间件
+- 记住我功能
 
 ### 权限管理系统
 - 基于角色的权限控制(RBAC)
 - 用户-角色-权限三级关联
 - 动态权限验证
 - 权限继承机制
+- 角色管理界面
 
 ### 操作日志系统
 - 用户操作记录
 - 系统日志管理
 - 日志级别控制
 - 日志文件轮转
+- 日志查询和筛选
 
 ### 前端页面模块
 - **仪表板**: 系统概览和数据统计
@@ -204,6 +220,7 @@ npm run preview
 - **角色管理**: 角色权限配置和管理
 - **系统管理**: 系统设置和日志查看
 - **个人资料**: 用户信息管理
+- **认证页面**: 登录、注册、忘记密码
 
 ## 日志系统特性
 

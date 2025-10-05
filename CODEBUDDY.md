@@ -1,21 +1,20 @@
-This file contains essential information for Terminal Assistant Agent to operate effectively in this demo-fastapi repository.
-
 ## Project Overview
 
-A full-stack admin system demo with Vue 3 frontend and FastAPI backend, featuring user authentication, role-based access control (RBAC), and system monitoring.
+Full-stack admin system with Vue 3 frontend and FastAPI backend, featuring authentication, RBAC, and monitoring.
 
 ## Development Commands
 
 ### Backend (FastAPI)
-- **Start development server**: `cd backend && python run.py` (or `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`)
+- **Start dev server**: `cd backend && python run.py` (or `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`)
 - **Initialize database**: `cd backend && python -c "from app.core.database import init_db; init_db()"`
-- **Windows start script**: `cd backend && start.bat`
-- **Linux/Mac start script**: `cd backend && chmod +x start.sh && ./start.sh`
+- **Windows script**: `cd backend && start.bat`
+- **Linux/Mac script**: `cd backend && chmod +x start.sh && ./start.sh`
 
-### Frontend (Vue 3 + Vite)
-- **Start development server**: `cd frontend && npm run dev` (runs on http://localhost:3000)
-- **Build for production**: `cd frontend && npm run build`
-- **Preview production build**: `cd frontend && npm run preview`
+### Frontend (Vue 3 + Vite)  
+- **Dev server (real API)**: `cd frontend && npm run dev:real` (port 3000)
+- **Dev server (mock API)**: `cd frontend && npm run dev:mock` 
+- **Build for production**: `cd frontend && npm run build:real`
+- **Preview production**: `cd frontend && npm run preview:real`
 
 ## Architecture
 
@@ -42,29 +41,23 @@ A full-stack admin system demo with Vue 3 frontend and FastAPI backend, featurin
 - **API Proxying**: Vite dev server proxies `/api` requests to backend (localhost:8000)
 - **Database**: SQLite with Alembic migrations (migration files in `backend/alembic/`)
 
-### API Endpoints
+### Key Endpoints
 - Auth: `/api/auth/login`, `/api/auth/register`, `/api/auth/refresh`, `/api/auth/logout`
-- Users: `/api/users`, `/api/users/{id}` (CRUD operations)
+- Users: `/api/users`, `/api/users/{id}` (CRUD)
 - Roles: `/api/roles` (role management)
-- Dashboard: `/api/dashboard/stats` (system statistics)
+- Dashboard: `/api/dashboard/stats` (system stats)
 - Logs: `/api/logs` (operation logs)
 
-### Development Notes
-- Backend uses Python 3.8+ with FastAPI, SQLAlchemy, and Pydantic
-- Frontend uses Vue 3 with Composition API, Pinia for state management
-- UI components from Ant Design Vue
-- Database initialized with default admin user: `admin/admin123`
-- Frontend development server runs on port 3000 with hot reload
-- Backend API runs on port 8000 with auto-generated docs at `/docs`
-- Environment variables loaded from `.env` files (use `.env.example` as template)
+### Default Credentials
+- Admin: `admin/admin123`
+- Test: `test/test123`
 
-### Logging System
-- Backend: Loguru for structured logging with request/response logging
-- Frontend: Custom logger based on Loglevel with prefix formatting and local storage
-- Both systems support multiple log levels and performance monitoring
+### Development Notes
+- Backend: Python 3.8+, FastAPI, SQLAlchemy, Pydantic
+- Frontend: Vue 3, Composition API, Pinia, Ant Design Vue
+- Frontend proxies `/api` to backend (localhost:8000)
+- Backend docs at `/docs` and `/redoc`
 
 ### Testing
-- Run backend tests with `pytest` (test files should be in `backend/tests/`)
-- Frontend testing setup not yet configured (consider adding Vitest)
-
-This project follows a clean separation of concerns with backend API serving frontend through a proxy during development.
+- Backend: `pytest` (tests in `backend/tests/`)
+- Frontend testing not yet configured
