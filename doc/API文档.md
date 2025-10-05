@@ -187,40 +187,7 @@
 
 ## 后台运营中心（/admin）
 
-### GET /admin/overview
-- **用途**：运营总览页数据。
-- **响应体关键字段**：
-  - `cards`: 仪表卡片数组。每项 `{ key, title, value, unit?, change, changeType, description?, icon, trendLabel? }`。
-  - `trend`: 趋势数组。每项 `{ date: "10-04", requests: 18200, activeUsers: 820, errorRate: 0.42 }`。
-  - `services`: 服务状态列表。每项 `{ key, name, owner, status, uptime, latency, change }`。
-  - `shifts`: 值班信息。每项 `{ id, name, window, lead, readiness }`，其中 `readiness` 为 0-1 浮点，前端会转换为百分比。
-
-### GET /admin/alerts
-- **用途**：实时告警列表。
-- **响应项字段**：`id, severity (high|medium|low), title, message, timestamp, owner, acknowledged (bool)`。
-
-### POST /admin/alerts/{id}/acknowledge
-- **用途**：标记告警已处理。
-- **响应**：返回更新后的告警对象。
-
-### GET /admin/tasks
-- **用途**：任务列表。
-- **查询参数**：`page`(默认1)、`pageSize`(默认6)、`status`(`todo|in_progress|review|done|all`)、`priority`(`high|medium|low|all`)、`keyword`、`tags[]`、`sorter`。
-- **响应项字段**：`id, title, assignee, due, priority, status, tags[], avatarColor`。
-
-### POST /admin/tasks
-- **用途**：新增任务。
-- **请求体**：至少包含 `title, assignee, priority, status, tags[]?, avatarColor?, due?`（可选字段后端可补默认）。
-- **响应**：返回新建任务对象。
-
-### PATCH /admin/tasks/{id}
-- **用途**：更新任务（目前前端用于状态流转）。
-- **请求体**：部分字段，例如 `{ "status": "done" }`。
-- **响应**：返回更新后的任务对象。
-
-### GET /admin/audit-timeline
-- **用途**：管理员操作审计时间线。
-- **响应项字段**：`id, time, actor, action, target, detail, status (success|warning|failed)`。
+注：根据代码分析，项目中未实现运营中心相关接口（/admin/*），而是实现了系统管理相关接口（/system/*）。
 
 ---
 
@@ -313,6 +280,7 @@
 ## 后端开发待办清单
 - **认证模块**
   - [x] POST /auth/login —— 实现账号密码登录，返回 token、expiresIn、user。
+  - [x] POST /auth/login-json —— 支持JSON格式登录，支持记住我功能。
   - [x] POST /auth/register —— 支持创建账号，校验邮箱重复。
   - [x] POST /auth/forgot-password —— 发送重置邮件并返回发送状态。
 - **仪表盘**
@@ -330,15 +298,7 @@
   - [x] GET /roles —— 返回全部角色列表。
   - [x] GET /roles/{id} —— 提供编辑所需详情。
   - [x] PUT /roles/{id} —— 更新 displayName、description、permissions、status。
-- **运营中心**
-  - [x] GET /admin/overview —— 汇总 cards、trend、services、shifts。
-  - [x] GET /admin/alerts —— 列出告警并区分 severity、acknowledged。
-  - [x] POST /admin/alerts/{id}/acknowledge —— 标记告警为已处理。
-  - [x] GET /admin/tasks —— 支持过滤、分页、排序。
-  - [x] POST /admin/tasks —— 创建任务并返回完整对象。
-  - [x] PATCH /admin/tasks/{id} —— 更新任务状态或其他字段。
-  - [x] GET /admin/audit-timeline —— 返回审计时间线条目。
-- **系统日志与配置**
+- **系统管理**
   - [x] GET /system/logs —— 分页返回日志列表及 context。
   - [x] GET /system/logs/summary —— 汇总 severity、topModules、recent、errorRatio。
   - [x] GET /system/settings —— 读取 config，含 notifications/security。
@@ -347,3 +307,5 @@
   - [x] 统一错误响应 —— 返回 message/detail 字段，覆盖 4xx/5xx。
   - [x] 权限校验 —— 401/403 正确落地，触发前端登出或拒绝访问。
   - [x] GET /health —— 返回 status/timestamp/version，供探针和前端检测使用。
+
+注：根据代码分析，项目中未实现运营中心相关接口（/admin/*），而是实现了系统管理相关接口（/system/*）。
