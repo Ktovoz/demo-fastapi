@@ -6,6 +6,22 @@ from app.utils.logger import get_logger
 router = APIRouter()
 logger = get_logger(__name__)
 
+# 导入子路由
+from .auth import router as auth_router
+from .dashboard import router as dashboard_router
+from .users import router as users_router
+from .roles import router as roles_router
+from .admin import router as admin_router
+from .system import router as system_router
+
+# 注册子路由
+router.include_router(auth_router, prefix="/auth", tags=["认证"])
+router.include_router(dashboard_router, prefix="/dashboard", tags=["仪表盘"])
+router.include_router(users_router, prefix="/users", tags=["用户管理"])
+router.include_router(roles_router, prefix="/roles", tags=["角色管理"])
+router.include_router(admin_router, prefix="/admin", tags=["运营中心"])
+router.include_router(system_router, prefix="/system", tags=["系统管理"])
+
 @router.get("/")
 async def api_info():
     """获取 API 基本信息"""

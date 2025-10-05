@@ -10,7 +10,7 @@ import { computed } from 'vue'
 const props = defineProps({
   tip: {
     type: String,
-    default: 'Loading...'
+    default: '加载中...'
   },
   overlay: {
     type: Boolean,

@@ -3,7 +3,7 @@ export const mockAccounts = [
     "email": "admin@example.com",
     "password": "admin123",
     "id": 1,
-    "name": "Admin User",
+    "name": "系统管理员",
     "role": "admin",
     "permissions": [
       "*"
@@ -14,7 +14,7 @@ export const mockAccounts = [
     "email": "manager@example.com",
     "password": "manager123",
     "id": 2,
-    "name": "Team Manager",
+    "name": "团队经理",
     "role": "manager",
     "permissions": [
       "dashboard:view",
@@ -27,7 +27,7 @@ export const mockAccounts = [
     "email": "support@example.com",
     "password": "support123",
     "id": 3,
-    "name": "Support Agent",
+    "name": "客服人员",
     "role": "support",
     "permissions": [
       "dashboard:view",

@@ -1,8 +1,8 @@
 ﻿<template>
   <div class="error-page">
-    <a-result status="404" title="Page Not Found" sub-title="The page you are looking for does not exist.">
+    <a-result status="404" title="页面未找到" sub-title="您访问的页面不存在。">
       <template #extra>
-        <a-button type="primary" @click="goHome">Back Home</a-button>
+        <a-button type="primary" @click="goHome">返回首页</a-button>
       </template>
     </a-result>
   </div>

@@ -3,49 +3,49 @@
     <a-form layout="vertical" @finish="handleSubmit" :model="form" :disabled="loading">
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="Name" name="name" :rules="[{ required: true, message: 'Name is required' }]">
+          <a-form-item label="姓名" name="name" :rules="[{ required: true, message: '请输入姓名' }]">
             <a-input v-model:value="form.name" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="Email" name="email" :rules="[{ required: true, message: 'Email is required' }]">
+          <a-form-item label="邮箱" name="email" :rules="[{ required: true, message: '请输入邮箱' }]">
             <a-input v-model:value="form.email" />
           </a-form-item>
         </a-col>
       </a-row>
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="Role" name="role">
+          <a-form-item label="角色" name="role">
             <a-select v-model:value="form.role" :options="roleOptions" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="Status" name="status">
+          <a-form-item label="状态" name="status">
             <a-select v-model:value="form.status" :options="statusOptions" />
           </a-form-item>
         </a-col>
       </a-row>
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="Department" name="department">
+          <a-form-item label="部门" name="department">
             <a-select v-model:value="form.department" :options="departmentOptions" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="Phone" name="phone">
+          <a-form-item label="电话" name="phone">
             <a-input v-model:value="form.phone" />
           </a-form-item>
         </a-col>
       </a-row>
-      <a-form-item label="Tags" name="tags">
-        <a-select v-model:value="form.tags" mode="tags" placeholder="Add tags" />
+      <a-form-item label="标签" name="tags">
+        <a-select v-model:value="form.tags" mode="tags" placeholder="添加标签" />
       </a-form-item>
-      <a-form-item label="Permissions" name="permissions">
+      <a-form-item label="权限" name="permissions">
         <a-select v-model:value="form.permissions" mode="multiple" :options="permissionOptions" />
       </a-form-item>
       <a-space>
-        <a-button @click="goBack">Cancel</a-button>
-        <a-button type="primary" html-type="submit" :loading="submitting">Save</a-button>
+        <a-button @click="goBack">取消</a-button>
+        <a-button type="primary" html-type="submit" :loading="submitting">保存</a-button>
       </a-space>
     </a-form>
   </CardContainer>
@@ -78,34 +78,34 @@ const form = reactive({
 })
 
 const roleOptions = [
-  { label: 'Admin', value: 'admin' },
-  { label: 'Manager', value: 'manager' },
-  { label: 'Support', value: 'support' },
-  { label: 'User', value: 'user' }
+  { label: '管理员', value: 'admin' },
+  { label: '经理', value: 'manager' },
+  { label: '客服', value: 'support' },
+  { label: '普通用户', value: 'user' }
 ]
 
 const statusOptions = [
-  { label: 'Active', value: 'active' },
-  { label: 'Inactive', value: 'inactive' },
-  { label: 'Pending', value: 'pending' }
+  { label: '活跃', value: 'active' },
+  { label: '禁用', value: 'inactive' },
+  { label: '待审核', value: 'pending' }
 ]
 
 const departmentOptions = [
-  { label: 'Operations', value: 'Operations' },
-  { label: 'Engineering', value: 'Engineering' },
-  { label: 'Support', value: 'Support' },
-  { label: 'Finance', value: 'Finance' }
+  { label: '运营部', value: 'Operations' },
+  { label: '工程部', value: 'Engineering' },
+  { label: '客服部', value: 'Support' },
+  { label: '财务部', value: 'Finance' }
 ]
 
 const permissionOptions = [
-  { label: 'View Users', value: 'users:view' },
-  { label: 'Edit Users', value: 'users:edit' },
-  { label: 'Delete Users', value: 'users:delete' },
-  { label: 'View Logs', value: 'logs:view' },
-  { label: 'Manage System', value: 'system:manage' }
+  { label: '查看用户', value: 'users:view' },
+  { label: '编辑用户', value: 'users:edit' },
+  { label: '删除用户', value: 'users:delete' },
+  { label: '查看日志', value: 'logs:view' },
+  { label: '管理系统', value: 'system:manage' }
 ]
 
-const pageTitle = computed(() => (isCreate.value ? 'Create User' : 'Edit User'))
+const pageTitle = computed(() => (isCreate.value ? '创建用户' : '编辑用户'))
 
 const loadUser = async () => {
   if (isCreate.value) {
@@ -125,7 +125,7 @@ const loadUser = async () => {
       permissions: user.permissions ?? []
     })
   } catch (error) {
-    message.error('Unable to load user')
+    message.error('无法加载用户信息')
   } finally {
     loading.value = false
   }
@@ -141,14 +141,14 @@ const handleSubmit = async () => {
     }
     if (isCreate.value) {
       await userStore.createUser(payload)
-      message.success('User created')
+      message.success('用户创建成功')
     } else {
       await userStore.updateUser(route.params.id, payload)
-      message.success('User updated')
+      message.success('用户更新成功')
     }
     router.push('/users/list')
   } catch (error) {
-    message.error('Failed to save user')
+    message.error('保存用户失败')
   } finally {
     submitting.value = false
   }

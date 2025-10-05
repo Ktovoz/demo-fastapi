@@ -80,9 +80,9 @@
             <div class="trend-panel">
               <div class="trend-legend">
                 <span class="legend-dot legend-dot--primary"></span>
-                <span>API Requests</span>
+                <span>API 请求</span>
                 <span class="legend-dot legend-dot--secondary"></span>
-                <span>Active Users</span>
+                <span>活跃用户</span>
               </div>
               <div class="trend-grid">
                 <div v-for="row in trendRows" :key="row.label" class="trend-row">
@@ -196,7 +196,7 @@
       </a-row>
     </section>
   </div>
-  <Loading v-else overlay tip="Loading dashboard" />
+  <Loading v-else overlay tip="正在加载仪表盘" />
 </template>
 
 <script setup>
@@ -232,9 +232,9 @@ const systemHealth = ref([])
 const recentActivities = ref([])
 
 const statusMap = {
-  operational: { status: 'success', label: 'Operational' },
-  degraded: { status: 'warning', label: 'Degraded' },
-  down: { status: 'error', label: 'Down' }
+  operational: { status: 'success', label: '运行中' },
+  degraded: { status: 'warning', label: '性能下降' },
+  down: { status: 'error', label: '故障' }
 }
 
 const greetingName = computed(() => authStore.user?.name ?? '管理员')
@@ -368,7 +368,7 @@ const loadMetrics = async () => {
     systemHealth.value = data.systemHealth
     recentActivities.value = data.recentActivities
   } catch (error) {
-    message.error('Failed to load dashboard data')
+    message.error('加载仪表盘数据失败')
   } finally {
     loading.value = false
   }

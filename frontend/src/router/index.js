@@ -25,19 +25,19 @@ const routes = [
     path: "/auth/login",
     name: "AuthLogin",
     component: loadView("../views/auth/Login.vue"),
-    meta: { title: "Login", public: true }
+    meta: { title: "登录", public: true }
   },
   {
     path: "/auth/register",
     name: "AuthRegister",
     component: loadView("../views/auth/Register.vue"),
-    meta: { title: "Register", public: true }
+    meta: { title: "注册", public: true }
   },
   {
     path: "/auth/forgot-password",
     name: "AuthForgotPassword",
     component: loadView("../views/auth/ForgotPassword.vue"),
-    meta: { title: "Forgot Password", public: true }
+    meta: { title: "忘记密码", public: true }
   },
   {
     path: "/",
@@ -65,9 +65,9 @@ const routes = [
         name: "UserList",
         component: loadView("../views/users/UserList.vue"),
         meta: {
-          title: "Users",
-          description: "Manage platform users and their permissions",
-          breadcrumb: [{ label: "Users" }],
+          title: "用户管理",
+          description: "管理平台用户及其权限",
+          breadcrumb: [{ label: "用户管理" }],
           menuKey: "users",
           permission: "users:view"
         }
@@ -77,10 +77,10 @@ const routes = [
         name: "UserCreate",
         component: loadView("../views/users/UserEdit.vue"),
         meta: {
-          title: "Create User",
+          title: "创建用户",
           breadcrumb: [
-            { label: "Users", to: "/users/list" },
-            { label: "Create" }
+            { label: "用户管理", to: "/users/list" },
+            { label: "创建" }
           ],
           menuKey: "users",
           permission: "users:edit"
@@ -91,10 +91,10 @@ const routes = [
         name: "UserDetail",
         component: loadView("../views/users/UserDetail.vue"),
         meta: {
-          title: "User Detail",
+          title: "用户详情",
           breadcrumb: [
-            { label: "Users", to: "/users/list" },
-            { label: "Profile" }
+            { label: "用户管理", to: "/users/list" },
+            { label: "详情" }
           ],
           menuKey: "users",
           permission: "users:view"
@@ -105,10 +105,10 @@ const routes = [
         name: "UserEdit",
         component: loadView("../views/users/UserEdit.vue"),
         meta: {
-          title: "Edit User",
+          title: "编辑用户",
           breadcrumb: [
-            { label: "Users", to: "/users/list" },
-            { label: "Edit" }
+            { label: "用户管理", to: "/users/list" },
+            { label: "编辑" }
           ],
           menuKey: "users",
           permission: "users:edit"
@@ -123,9 +123,9 @@ const routes = [
         name: "RoleList",
         component: loadView("../views/roles/RoleList.vue"),
         meta: {
-          title: "Roles",
-          description: "Configure application roles and permissions",
-          breadcrumb: [{ label: "Roles" }],
+          title: "角色管理",
+          description: "配置应用角色和权限",
+          breadcrumb: [{ label: "角色管理" }],
           menuKey: "roles",
           permission: "roles:view"
         }
@@ -135,10 +135,10 @@ const routes = [
         name: "RoleEdit",
         component: loadView("../views/roles/RoleEdit.vue"),
         meta: {
-          title: "Edit Role",
+          title: "编辑角色",
           breadcrumb: [
-            { label: "Roles", to: "/roles/list" },
-            { label: "Edit" }
+            { label: "角色管理", to: "/roles/list" },
+            { label: "编辑" }
           ],
           menuKey: "roles",
           permission: "roles:edit"
@@ -153,11 +153,11 @@ const routes = [
         name: "SystemOverview",
         component: loadView("../views/system/AdminOverview.vue"),
         meta: {
-          title: "Admin Overview",
-          description: "Operations control center for the admin platform",
+          title: "系统概览",
+          description: "管理平台运营控制中心",
           breadcrumb: [
-            { label: "System", to: "/system/overview" },
-            { label: "Overview" }
+            { label: "系统管理", to: "/system/overview" },
+            { label: "概览" }
           ],
           menuKey: "system.overview",
           permission: "dashboard:view"
@@ -168,10 +168,10 @@ const routes = [
         name: "SystemLogs",
         component: loadView("../views/system/Logs.vue"),
         meta: {
-          title: "System Logs",
+          title: "系统日志",
           breadcrumb: [
-            { label: "System", to: "/system/overview" },
-            { label: "Logs" }
+            { label: "系统管理", to: "/system/overview" },
+            { label: "日志" }
           ],
           menuKey: "system.logs",
           permission: "logs:view"
@@ -182,10 +182,10 @@ const routes = [
         name: "SystemSettings",
         component: loadView("../views/system/Settings.vue"),
         meta: {
-          title: "System Settings",
+          title: "系统设置",
           breadcrumb: [
-            { label: "System", to: "/system/overview" },
-            { label: "Settings" }
+            { label: "系统管理", to: "/system/overview" },
+            { label: "设置" }
           ],
           menuKey: "system.settings",
           permission: "system:manage"
@@ -196,8 +196,8 @@ const routes = [
         name: "Profile",
         component: loadView("../views/profile/Profile.vue"),
         meta: {
-          title: "Profile",
-          breadcrumb: [{ label: "Profile" }],
+          title: "个人资料",
+          breadcrumb: [{ label: "个人资料" }],
           menuKey: "profile",
           permission: "users:view"
         }
@@ -208,13 +208,13 @@ const routes = [
     path: "/403",
     name: "Forbidden",
     component: loadView("../views/error/Forbidden.vue"),
-    meta: { title: "Forbidden", public: true }
+    meta: { title: "访问被拒绝", public: true }
   },
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: loadView("../views/error/NotFound.vue"),
-    meta: { title: "Not Found", public: true }
+    meta: { title: "页面未找到", public: true }
   }
 ]
 

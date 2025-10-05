@@ -57,14 +57,14 @@
     <template #form>
       <div class="form-field-group">
         <a-form-item
-          label="Email"
+          label="邮箱"
           name="email"
-          :rules="[{ required: true, message: 'Email is required' }]"
+          :rules="[{ required: true, message: '请输入邮箱' }]"
         >
           <a-input
             v-model:value="form.email"
             size="large"
-            placeholder="name@company.com"
+            placeholder="请输入邮箱地址"
             autocomplete="email"
             class="form-input"
           >
@@ -75,14 +75,14 @@
         </a-form-item>
 
         <a-form-item
-          label="Password"
+          label="密码"
           name="password"
-          :rules="[{ required: true, message: 'Password is required' }]"
+          :rules="[{ required: true, message: '请输入密码' }]"
         >
           <a-input-password
             v-model:value="form.password"
             size="large"
-            placeholder="输入登录密码"
+            placeholder="请输入登录密码"
             autocomplete="current-password"
             class="form-input"
           >
@@ -196,7 +196,7 @@ const handleSubmit = async () => {
     const redirect = route.query.redirect || '/dashboard'
     router.push(String(redirect))
   } catch (error) {
-    message.error(error?.message || 'Sign in failed')
+    message.error(error?.message || '登录失败')
   }
 }
 

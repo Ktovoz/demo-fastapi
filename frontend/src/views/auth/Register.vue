@@ -51,7 +51,7 @@
           <a-form-item
             label="姓名"
             name="name"
-            :rules="[{ required: true, message: 'Name is required' }]"
+            :rules="[{ required: true, message: '请输入姓名' }]"
             class="form-item"
           >
             <a-input
@@ -70,7 +70,7 @@
           <a-form-item
             label="工作邮箱"
             name="email"
-            :rules="[{ required: true, message: 'Email is required' }]"
+            :rules="[{ required: true, message: '请输入邮箱' }]"
             class="form-item"
           >
             <a-input
@@ -91,7 +91,7 @@
           <a-form-item
             label="设置密码"
             name="password"
-            :rules="[{ required: true, message: 'Password is required' }]"
+            :rules="[{ required: true, message: '请输入密码' }]"
             class="form-item"
           >
             <a-input-password
@@ -200,10 +200,10 @@ const pageConfig = {
 
 const validateConfirm = (_rule, value) => {
   if (!value) {
-    return Promise.reject('Confirm your password')
+    return Promise.reject('请确认密码')
   }
   if (value !== form.password) {
-    return Promise.reject('Passwords do not match')
+    return Promise.reject('两次输入的密码不一致')
   }
   return Promise.resolve()
 }
@@ -215,7 +215,7 @@ const handleSubmit = async () => {
     message.success('账号已创建（演示环境）')
     router.push('/auth/login')
   } catch (error) {
-    message.error(error?.message || 'Registration failed')
+    message.error(error?.message || '注册失败')
   } finally {
     loading.value = false
   }

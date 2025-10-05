@@ -1,5 +1,5 @@
 <template>
-  <CardContainer title="Roles" bordered>
+  <CardContainer title="角色列表" bordered>
     <Table :columns="columns" :data-source="roles" :loading="loading" row-key="id">
       <template #permissions="{ record }">
         <a-space wrap>
@@ -11,7 +11,7 @@
       </template>
       <template #actions="{ record }">
         <a-space>
-          <a-button type="link" size="small" @click="editRole(record.id)">Edit</a-button>
+          <a-button type="link" size="small" @click="editRole(record.id)">编辑</a-button>
         </a-space>
       </template>
     </Table>
@@ -34,12 +34,12 @@ const { list, loading } = storeToRefs(roleStore)
 const roles = computed(() => list.value)
 
 const columns = [
-  { title: 'Role', dataIndex: 'displayName', key: 'displayName' },
-  { title: 'Description', dataIndex: 'description', key: 'description' },
-  { title: 'Members', dataIndex: 'members', key: 'members', width: 120 },
-  { title: 'Permissions', key: 'permissions', slots: { customRender: 'permissions' } },
-  { title: 'Status', key: 'status', slots: { customRender: 'status' }, width: 140 },
-  { title: 'Actions', key: 'actions', slots: { customRender: 'actions' }, width: 120 }
+  { title: '角色', dataIndex: 'displayName', key: 'displayName' },
+  { title: '描述', dataIndex: 'description', key: 'description' },
+  { title: '成员数', dataIndex: 'members', key: 'members', width: 120 },
+  { title: '权限', key: 'permissions', slots: { customRender: 'permissions' } },
+  { title: '状态', key: 'status', slots: { customRender: 'status' }, width: 140 },
+  { title: '操作', key: 'actions', slots: { customRender: 'actions' }, width: 120 }
 ]
 
 const editRole = (id) => {

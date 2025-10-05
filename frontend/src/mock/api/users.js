@@ -4,10 +4,10 @@ import { filterByKeyword, paginateList, simulateResponse, sortByField } from '..
 let users = [...mockUsers]
 
 const roleLabelMap = {
-  admin: 'Admin',
-  manager: 'Manager',
-  support: 'Support',
-  user: 'User'
+  admin: '管理员',
+  manager: '经理',
+  support: '客服',
+  user: '普通用户'
 }
 
 const applyFilters = (collection, filters = {}) => {

@@ -66,7 +66,7 @@
                   <a-card bordered class="notify-card" hoverable>
                     <div class="notify-card__header">
                       <MailOutlined />
-                      <span>Email</span>
+                      <span>邮件</span>
                     </div>
                     <p>用于投递管理层摘要、日常提醒。</p>
                     <a-switch v-model:checked="form.notifications.email" />
@@ -181,7 +181,7 @@ const form = reactive({
 })
 
 const languageOptions = [
-  { label: 'English', value: 'en' },
+  { label: '英文', value: 'en' },
   { label: '中文', value: 'zh' }
 ]
 
@@ -221,8 +221,8 @@ const languageLabel = computed(() => languageOptions.find((item) => item.value =
 const themeLabel = computed(() => themeOptions.find((item) => item.value === form.theme)?.label ?? form.theme)
 const activeChannels = computed(() => {
   const channels = []
-  if (form.notifications.email) channels.push('Email')
-  if (form.notifications.sms) channels.push('SMS')
+  if (form.notifications.email) channels.push('邮件')
+  if (form.notifications.sms) channels.push('短信')
   if (form.notifications.inApp) channels.push('站内')
   return channels.length ? channels : ['已全部关闭']
 })

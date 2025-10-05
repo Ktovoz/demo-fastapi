@@ -8,24 +8,24 @@
     >
       <template #extra>
         <a-space>
-          <a-button type="primary" @click="createUser">New User</a-button>
-          <a-button @click="exportUsers">Export</a-button>
+          <a-button type="primary" @click="createUser">新建用户</a-button>
+          <a-button @click="exportUsers">导出</a-button>
         </a-space>
       </template>
     </SearchForm>
 
-    <CardContainer title="User List" bordered :collapsible="false" style="margin-top: 16px;">
+    <CardContainer title="用户列表" bordered :collapsible="false" style="margin-top: 16px;">
       <template #actions>
         <a-space>
           <a-button
             :disabled="selectedRowKeys.length === 0"
             @click="bulkDisable"
-          >Disable Selected</a-button>
+          >禁用选中</a-button>
           <a-button
             danger
             :disabled="selectedRowKeys.length === 0"
             @click="showDeleteDialog = true"
-          >Delete Selected</a-button>
+          >删除选中</a-button>
         </a-space>
       </template>
 
@@ -52,10 +52,10 @@
         </template>
         <template #actions="{ record }">
           <a-space>
-            <a-button type="link" size="small" @click="viewUser(record.id)">View</a-button>
-            <a-button type="link" size="small" @click="editUser(record.id)">Edit</a-button>
+            <a-button type="link" size="small" @click="viewUser(record.id)">查看</a-button>
+            <a-button type="link" size="small" @click="editUser(record.id)">编辑</a-button>
             <a-button type="link" size="small" @click="toggleStatus(record.id)">
-              {{ record.status === 'active' ? 'Disable' : 'Enable' }}
+              {{ record.status === 'active' ? '禁用' : '启用' }}
             </a-button>
           </a-space>
         </template>
@@ -73,12 +73,12 @@
 
     <ConfirmDialog
       v-model:open="showDeleteDialog"
-      title="Delete Users"
+      title="删除用户"
       :loading="deleting"
       @confirm="deleteSelected"
       @cancel="() => (showDeleteDialog = false)"
     >
-      This action will permanently remove the selected users. Continue?
+      此操作将永久删除选中的用户，是否继续？
     </ConfirmDialog>
   </div>
 </template>
@@ -105,59 +105,59 @@ const { list, total, loading, pagination, selectedRowKeys } = storeToRefs(userSt
 const formValues = reactive({ ...userStore.filters })
 
 const searchItems = [
-  { key: "keyword", label: "Keyword", component: "a-input", props: { placeholder: "Name or email" } },
+  { key: "keyword", label: "关键词", component: "a-input", props: { placeholder: "姓名或邮箱" } },
   {
     key: "status",
-    label: "Status",
+    label: "状态",
     component: "a-select",
     props: {
       options: [
-        { label: "All", value: "all" },
-        { label: "Active", value: "active" },
-        { label: "Inactive", value: "inactive" },
-        { label: "Pending", value: "pending" }
+        { label: "全部", value: "all" },
+        { label: "活跃", value: "active" },
+        { label: "禁用", value: "inactive" },
+        { label: "待审核", value: "pending" }
       ]
     }
   },
   {
     key: "role",
-    label: "Role",
+    label: "角色",
     component: "a-select",
     props: {
       options: [
-        { label: "All", value: "all" },
-        { label: "Admin", value: "admin" },
-        { label: "Manager", value: "manager" },
-        { label: "Support", value: "support" },
-        { label: "User", value: "user" }
+        { label: "全部", value: "all" },
+        { label: "管理员", value: "admin" },
+        { label: "经理", value: "manager" },
+        { label: "客服", value: "support" },
+        { label: "普通用户", value: "user" }
       ]
     }
   },
   {
     key: "department",
     advanced: true,
-    label: "Department",
+    label: "部门",
     component: "a-select",
     props: {
       mode: "multiple",
-      placeholder: "Departments",
+      placeholder: "选择部门",
       options: [
-        { label: "Operations", value: "Operations" },
-        { label: "Engineering", value: "Engineering" },
-        { label: "Support", value: "Support" },
-        { label: "Finance", value: "Finance" }
+        { label: "运营部", value: "Operations" },
+        { label: "工程部", value: "Engineering" },
+        { label: "客服部", value: "Support" },
+        { label: "财务部", value: "Finance" }
       ]
     }
   }
 ]
 
 const columns = [
-  { title: "User", dataIndex: "name", key: "name", slots: { customRender: "name" }, sorter: true },
-  { title: "Role", dataIndex: "roleName", key: "roleName" },
-  { title: "Department", dataIndex: "department", key: "department" },
-  { title: "Status", dataIndex: "status", key: "status", slots: { customRender: "status" } },
-  { title: "Last Login", dataIndex: "lastLogin", key: "lastLogin", sorter: true },
-  { title: "Actions", key: "actions", slots: { customRender: "actions" }, width: 220 }
+  { title: "用户", dataIndex: "name", key: "name", slots: { customRender: "name" }, sorter: true },
+  { title: "角色", dataIndex: "roleName", key: "roleName" },
+  { title: "部门", dataIndex: "department", key: "department" },
+  { title: "状态", dataIndex: "status", key: "status", slots: { customRender: "status" } },
+  { title: "最后登录", dataIndex: "lastLogin", key: "lastLogin", sorter: true },
+  { title: "操作", key: "actions", slots: { customRender: "actions" }, width: 220 }
 ]
 
 const users = computed(() => list.value)
@@ -210,18 +210,18 @@ const editUser = (id) => {
 const toggleStatus = async (id) => {
   try {
     await userStore.toggleUserStatus(id)
-    message.success("User status updated")
+    message.success("用户状态已更新")
   } catch (error) {
-    message.error("Failed to update user status")
+    message.error("更新用户状态失败")
   }
 }
 
 const bulkDisable = async () => {
   try {
     await Promise.all(selectedRowKeys.value.map((id) => userStore.toggleUserStatus(id)))
-    message.success("Selected users toggled")
+    message.success("选中用户状态已切换")
   } catch (error) {
-    message.error("Bulk operation failed")
+    message.error("批量操作失败")
   }
 }
 
@@ -230,17 +230,17 @@ const createUser = () => {
 }
 
 const exportUsers = () => {
-  message.info("Exporting mock data")
+  message.info("正在导出模拟数据")
 }
 
 const deleteSelected = async () => {
   deleting.value = true
   try {
     await userStore.deleteUsers(selectedRowKeys.value)
-    message.success("Users deleted")
+    message.success("用户已删除")
     showDeleteDialog.value = false
   } catch (error) {
-    message.error("Delete failed")
+    message.error("删除失败")
   } finally {
     deleting.value = false
   }

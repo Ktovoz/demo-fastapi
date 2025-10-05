@@ -11,10 +11,10 @@
     </template>
     <a-form-item>
       <a-space>
-        <a-button type="primary" html-type="submit">Search</a-button>
-        <a-button @click="handleReset">Reset</a-button>
+        <a-button type="primary" html-type="submit">搜索</a-button>
+        <a-button @click="handleReset">重置</a-button>
         <a-button v-if="advancedItems.length" type="link" @click="advancedOpen = !advancedOpen">
-          {{ advancedOpen ? 'Hide advanced' : 'Show advanced' }}
+          {{ advancedOpen ? '隐藏高级选项' : '显示高级选项' }}
         </a-button>
         <slot name="extra"></slot>
       </a-space>

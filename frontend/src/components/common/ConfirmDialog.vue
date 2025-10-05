@@ -10,7 +10,7 @@
     @ok="handleOk"
     @cancel="handleCancel"
   >
-    <slot>Are you sure you want to continue?</slot>
+    <slot>您确定要继续吗？</slot>
   </a-modal>
 </template>
 
@@ -24,7 +24,7 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: 'Confirm'
+    default: '确认'
   },
   loading: {
     type: Boolean,
@@ -32,11 +32,11 @@ const props = defineProps({
   },
   okText: {
     type: String,
-    default: 'Confirm'
+    default: '确认'
   },
   cancelText: {
     type: String,
-    default: 'Cancel'
+    default: '取消'
   },
   okType: {
     type: String,

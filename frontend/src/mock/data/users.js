@@ -1,16 +1,16 @@
 export const mockUsers = [
   {
     "id": 1,
-    "name": "User 01",
-    "email": "user01@example.com",
+    "name": "张三",
+    "email": "zhangsan@example.com",
     "role": "admin",
-    "roleName": "Admin",
+    "roleName": "管理员",
     "status": "inactive",
     "createdAt": "2025-09-02",
     "lastLogin": "2025-10-02 01:31",
     "avatar": "",
-    "phone": "+1-555-01001",
-    "department": "Engineering",
+    "phone": "+86-138-0001-0001",
+    "department": "工程部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -20,16 +20,16 @@ export const mockUsers = [
   },
   {
     "id": 2,
-    "name": "User 02",
-    "email": "user02@example.com",
+    "name": "李四",
+    "email": "lisi@example.com",
     "role": "manager",
-    "roleName": "Manager",
+    "roleName": "经理",
     "status": "pending",
     "createdAt": "2025-09-03",
     "lastLogin": "2025-10-03 02:32",
     "avatar": "",
-    "phone": "+1-555-01002",
-    "department": "Support",
+    "phone": "+86-138-0002-0002",
+    "department": "客服部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -39,16 +39,16 @@ export const mockUsers = [
   },
   {
     "id": 3,
-    "name": "User 03",
-    "email": "user03@example.com",
+    "name": "王五",
+    "email": "wangwu@example.com",
     "role": "support",
-    "roleName": "Support",
+    "roleName": "客服",
     "status": "active",
     "createdAt": "2025-09-04",
     "lastLogin": "2025-10-04 03:33",
     "avatar": "",
-    "phone": "+1-555-01003",
-    "department": "Finance",
+    "phone": "+86-138-0003-0003",
+    "department": "财务部",
     "permissions": [
       "users:view",
       "roles:view"
@@ -59,36 +59,55 @@ export const mockUsers = [
   },
   {
     "id": 4,
-    "name": "User 04",
-    "email": "user04@example.com",
+    "name": "赵六",
+    "email": "zhaoliu@example.com",
     "role": "user",
-    "roleName": "User",
+    "roleName": "普通用户",
     "status": "inactive",
     "createdAt": "2025-09-05",
     "lastLogin": "2025-10-05 04:34",
     "avatar": "",
-    "phone": "+1-555-01004",
-    "department": "Operations",
+    "phone": "+86-138-0004-0004",
+    "department": "运营部",
     "permissions": [
-      "users:view",
-      "roles:view"
+      "users:view"
     ],
-    "tags": [
-      "new"
-    ]
+    "tags": []
   },
   {
     "id": 5,
-    "name": "User 05",
-    "email": "user05@example.com",
+    "name": "孙七",
+    "email": "sunqi@example.com",
     "role": "admin",
-    "roleName": "Admin",
-    "status": "pending",
+    "roleName": "管理员",
+    "status": "active",
     "createdAt": "2025-09-06",
     "lastLogin": "2025-10-06 05:35",
     "avatar": "",
-    "phone": "+1-555-01005",
-    "department": "Engineering",
+    "phone": "+86-138-0005-0005",
+    "department": "工程部",
+    "permissions": [
+      "users:view",
+      "roles:view",
+      "users:edit",
+      "users:delete"
+    ],
+    "tags": [
+      "senior"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "周八",
+    "email": "zhouba@example.com",
+    "role": "manager",
+    "roleName": "经理",
+    "status": "pending",
+    "createdAt": "2025-09-07",
+    "lastLogin": "2025-10-07 06:36",
+    "avatar": "",
+    "phone": "+86-138-0006-0006",
+    "department": "市场部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -97,38 +116,17 @@ export const mockUsers = [
     "tags": []
   },
   {
-    "id": 6,
-    "name": "User 06",
-    "email": "user06@example.com",
-    "role": "manager",
-    "roleName": "Manager",
-    "status": "active",
-    "createdAt": "2025-09-07",
-    "lastLogin": "2025-10-07 06:30",
-    "avatar": "",
-    "phone": "+1-555-01006",
-    "department": "Support",
-    "permissions": [
-      "users:view",
-      "roles:view",
-      "users:edit"
-    ],
-    "tags": [
-      "beta"
-    ]
-  },
-  {
     "id": 7,
-    "name": "User 07",
-    "email": "user07@example.com",
+    "name": "吴九",
+    "email": "wujiu@example.com",
     "role": "support",
-    "roleName": "Support",
-    "status": "inactive",
+    "roleName": "客服",
+    "status": "active",
     "createdAt": "2025-09-08",
-    "lastLogin": "2025-10-08 07:31",
+    "lastLogin": "2025-10-08 07:37",
     "avatar": "",
-    "phone": "+1-555-01007",
-    "department": "Finance",
+    "phone": "+86-138-0007-0007",
+    "department": "客服部",
     "permissions": [
       "users:view",
       "roles:view"
@@ -137,57 +135,53 @@ export const mockUsers = [
   },
   {
     "id": 8,
-    "name": "User 08",
-    "email": "user08@example.com",
+    "name": "郑十",
+    "email": "zhengshi@example.com",
     "role": "user",
-    "roleName": "User",
-    "status": "pending",
+    "roleName": "普通用户",
+    "status": "inactive",
     "createdAt": "2025-09-09",
-    "lastLogin": "2025-10-09 08:32",
+    "lastLogin": "2025-10-09 08:38",
     "avatar": "",
-    "phone": "+1-555-01008",
-    "department": "Operations",
+    "phone": "+86-138-0008-0008",
+    "department": "运营部",
     "permissions": [
-      "users:view",
-      "roles:view"
+      "users:view"
     ],
-    "tags": [
-      "new"
-    ]
+    "tags": []
   },
   {
     "id": 9,
-    "name": "User 09",
-    "email": "user09@example.com",
+    "name": "钱一",
+    "email": "qianyi@example.com",
     "role": "admin",
-    "roleName": "Admin",
+    "roleName": "管理员",
     "status": "active",
     "createdAt": "2025-09-10",
-    "lastLogin": "2025-10-10 09:33",
+    "lastLogin": "2025-10-10 09:39",
     "avatar": "",
-    "phone": "+1-555-01009",
-    "department": "Engineering",
+    "phone": "+86-138-0009-0009",
+    "department": "工程部",
     "permissions": [
       "users:view",
       "roles:view",
-      "users:edit"
+      "users:edit",
+      "users:delete"
     ],
-    "tags": [
-      "beta"
-    ]
+    "tags": []
   },
   {
     "id": 10,
-    "name": "User 10",
-    "email": "user10@example.com",
+    "name": "孙二",
+    "email": "suner@example.com",
     "role": "manager",
-    "roleName": "Manager",
-    "status": "inactive",
+    "roleName": "经理",
+    "status": "pending",
     "createdAt": "2025-09-11",
-    "lastLogin": "2025-10-11 00:34",
+    "lastLogin": "2025-10-11 10:40",
     "avatar": "",
-    "phone": "+1-555-01010",
-    "department": "Support",
+    "phone": "+86-138-0010-0010",
+    "department": "财务部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -197,16 +191,16 @@ export const mockUsers = [
   },
   {
     "id": 11,
-    "name": "User 11",
-    "email": "user11@example.com",
+    "name": "李三",
+    "email": "lisan@example.com",
     "role": "support",
-    "roleName": "Support",
-    "status": "pending",
+    "roleName": "客服",
+    "status": "active",
     "createdAt": "2025-09-12",
-    "lastLogin": "2025-10-12 01:35",
+    "lastLogin": "2025-10-12 11:41",
     "avatar": "",
-    "phone": "+1-555-01011",
-    "department": "Finance",
+    "phone": "+86-138-0011-0011",
+    "department": "客服部",
     "permissions": [
       "users:view",
       "roles:view"
@@ -215,55 +209,53 @@ export const mockUsers = [
   },
   {
     "id": 12,
-    "name": "User 12",
-    "email": "user12@example.com",
+    "name": "周四",
+    "email": "zhousi@example.com",
     "role": "user",
-    "roleName": "User",
-    "status": "active",
+    "roleName": "普通用户",
+    "status": "inactive",
     "createdAt": "2025-09-13",
-    "lastLogin": "2025-10-13 02:30",
+    "lastLogin": "2025-10-13 12:42",
     "avatar": "",
-    "phone": "+1-555-01012",
-    "department": "Operations",
+    "phone": "+86-138-0012-0012",
+    "department": "运营部",
     "permissions": [
-      "users:view",
-      "roles:view"
+      "users:view"
     ],
-    "tags": [
-      "beta"
-    ]
+    "tags": []
   },
   {
     "id": 13,
-    "name": "User 13",
-    "email": "user13@example.com",
+    "name": "吴五",
+    "email": "wuwu@example.com",
     "role": "admin",
-    "roleName": "Admin",
-    "status": "inactive",
+    "roleName": "管理员",
+    "status": "active",
     "createdAt": "2025-09-14",
-    "lastLogin": "2025-10-14 03:31",
+    "lastLogin": "2025-10-14 13:43",
     "avatar": "",
-    "phone": "+1-555-01013",
-    "department": "Engineering",
+    "phone": "+86-138-0013-0013",
+    "department": "工程部",
     "permissions": [
       "users:view",
       "roles:view",
-      "users:edit"
+      "users:edit",
+      "users:delete"
     ],
     "tags": []
   },
   {
     "id": 14,
-    "name": "User 14",
-    "email": "user14@example.com",
+    "name": "郑六",
+    "email": "zhengliu@example.com",
     "role": "manager",
-    "roleName": "Manager",
+    "roleName": "经理",
     "status": "pending",
     "createdAt": "2025-09-15",
-    "lastLogin": "2025-10-15 04:32",
+    "lastLogin": "2025-10-15 14:44",
     "avatar": "",
-    "phone": "+1-555-01014",
-    "department": "Support",
+    "phone": "+86-138-0014-0014",
+    "department": "市场部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -273,56 +265,71 @@ export const mockUsers = [
   },
   {
     "id": 15,
-    "name": "User 15",
-    "email": "user15@example.com",
+    "name": "王七",
+    "email": "wangqi@example.com",
     "role": "support",
-    "roleName": "Support",
+    "roleName": "客服",
     "status": "active",
     "createdAt": "2025-09-16",
-    "lastLogin": "2025-10-16 05:33",
+    "lastLogin": "2025-10-16 15:45",
     "avatar": "",
-    "phone": "+1-555-01015",
-    "department": "Finance",
+    "phone": "+86-138-0015-0015",
+    "department": "客服部",
     "permissions": [
       "users:view",
       "roles:view"
     ],
-    "tags": [
-      "beta"
-    ]
+    "tags": []
   },
   {
     "id": 16,
-    "name": "User 16",
-    "email": "user16@example.com",
+    "name": "赵八",
+    "email": "zhaoba@example.com",
     "role": "user",
-    "roleName": "User",
+    "roleName": "普通用户",
     "status": "inactive",
     "createdAt": "2025-09-17",
-    "lastLogin": "2025-10-17 06:34",
+    "lastLogin": "2025-10-17 16:46",
     "avatar": "",
-    "phone": "+1-555-01016",
-    "department": "Operations",
+    "phone": "+86-138-0016-0016",
+    "department": "运营部",
     "permissions": [
-      "users:view",
-      "roles:view"
+      "users:view"
     ],
-    "tags": [
-      "new"
-    ]
+    "tags": []
   },
   {
     "id": 17,
-    "name": "User 17",
-    "email": "user17@example.com",
+    "name": "钱九",
+    "email": "qianjiu@example.com",
     "role": "admin",
-    "roleName": "Admin",
-    "status": "pending",
+    "roleName": "管理员",
+    "status": "active",
     "createdAt": "2025-09-18",
-    "lastLogin": "2025-10-18 07:35",
+    "lastLogin": "2025-10-18 17:47",
     "avatar": "",
-    "phone": "+1-555-01017",
-    "department": "Engineering",
+    "phone": "+86-138-0017-0017",
+    "department": "工程部",
+    "permissions": [
+      "users:view",
+      "roles:view",
+      "users:edit",
+      "users:delete"
+    ],
+    "tags": []
+  },
+  {
+    "id": 18,
+    "name": "孙十",
+    "email": "sunshi@example.com",
+    "role": "manager",
+    "roleName": "经理",
+    "status": "pending",
+    "createdAt": "2025-09-19",
+    "lastLogin": "2025-10-19 18:48",
+    "avatar": "",
+    "phone": "+86-138-0018-0018",
+    "department": "财务部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -331,38 +338,17 @@ export const mockUsers = [
     "tags": []
   },
   {
-    "id": 18,
-    "name": "User 18",
-    "email": "user18@example.com",
-    "role": "manager",
-    "roleName": "Manager",
-    "status": "active",
-    "createdAt": "2025-09-19",
-    "lastLogin": "2025-10-19 08:30",
-    "avatar": "",
-    "phone": "+1-555-01018",
-    "department": "Support",
-    "permissions": [
-      "users:view",
-      "roles:view",
-      "users:edit"
-    ],
-    "tags": [
-      "beta"
-    ]
-  },
-  {
     "id": 19,
-    "name": "User 19",
-    "email": "user19@example.com",
+    "name": "李一一",
+    "email": "liyiyi@example.com",
     "role": "support",
-    "roleName": "Support",
-    "status": "inactive",
+    "roleName": "客服",
+    "status": "active",
     "createdAt": "2025-09-20",
-    "lastLogin": "2025-10-20 09:31",
+    "lastLogin": "2025-10-20 19:49",
     "avatar": "",
-    "phone": "+1-555-01019",
-    "department": "Finance",
+    "phone": "+86-138-0019-0019",
+    "department": "客服部",
     "permissions": [
       "users:view",
       "roles:view"
@@ -371,57 +357,53 @@ export const mockUsers = [
   },
   {
     "id": 20,
-    "name": "User 20",
-    "email": "user20@example.com",
+    "name": "周二二",
+    "email": "zhouerer@example.com",
     "role": "user",
-    "roleName": "User",
-    "status": "pending",
+    "roleName": "普通用户",
+    "status": "inactive",
     "createdAt": "2025-09-21",
-    "lastLogin": "2025-10-21 00:32",
+    "lastLogin": "2025-10-21 20:50",
     "avatar": "",
-    "phone": "+1-555-01020",
-    "department": "Operations",
+    "phone": "+86-138-0020-0020",
+    "department": "运营部",
     "permissions": [
-      "users:view",
-      "roles:view"
+      "users:view"
     ],
-    "tags": [
-      "new"
-    ]
+    "tags": []
   },
   {
     "id": 21,
-    "name": "User 21",
-    "email": "user21@example.com",
+    "name": "吴三三",
+    "email": "wusansan@example.com",
     "role": "admin",
-    "roleName": "Admin",
+    "roleName": "管理员",
     "status": "active",
     "createdAt": "2025-09-22",
-    "lastLogin": "2025-10-22 01:33",
+    "lastLogin": "2025-10-22 21:51",
     "avatar": "",
-    "phone": "+1-555-01021",
-    "department": "Engineering",
+    "phone": "+86-138-0021-0021",
+    "department": "工程部",
     "permissions": [
       "users:view",
       "roles:view",
-      "users:edit"
+      "users:edit",
+      "users:delete"
     ],
-    "tags": [
-      "beta"
-    ]
+    "tags": []
   },
   {
     "id": 22,
-    "name": "User 22",
-    "email": "user22@example.com",
+    "name": "郑四四",
+    "email": "zhengsisi@example.com",
     "role": "manager",
-    "roleName": "Manager",
-    "status": "inactive",
+    "roleName": "经理",
+    "status": "pending",
     "createdAt": "2025-09-23",
-    "lastLogin": "2025-10-23 02:34",
+    "lastLogin": "2025-10-23 22:52",
     "avatar": "",
-    "phone": "+1-555-01022",
-    "department": "Support",
+    "phone": "+86-138-0022-0022",
+    "department": "市场部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -431,16 +413,16 @@ export const mockUsers = [
   },
   {
     "id": 23,
-    "name": "User 23",
-    "email": "user23@example.com",
+    "name": "王五五",
+    "email": "wangwuwu@example.com",
     "role": "support",
-    "roleName": "Support",
-    "status": "pending",
+    "roleName": "客服",
+    "status": "active",
     "createdAt": "2025-09-24",
-    "lastLogin": "2025-10-24 03:35",
+    "lastLogin": "2025-10-24 23:53",
     "avatar": "",
-    "phone": "+1-555-01023",
-    "department": "Finance",
+    "phone": "+86-138-0023-0023",
+    "department": "客服部",
     "permissions": [
       "users:view",
       "roles:view"
@@ -449,55 +431,53 @@ export const mockUsers = [
   },
   {
     "id": 24,
-    "name": "User 24",
-    "email": "user24@example.com",
+    "name": "赵六六",
+    "email": "zhaoliuliu@example.com",
     "role": "user",
-    "roleName": "User",
-    "status": "active",
+    "roleName": "普通用户",
+    "status": "inactive",
     "createdAt": "2025-09-25",
-    "lastLogin": "2025-10-25 04:30",
+    "lastLogin": "2025-10-25 00:54",
     "avatar": "",
-    "phone": "+1-555-01024",
-    "department": "Operations",
+    "phone": "+86-138-0024-0024",
+    "department": "运营部",
     "permissions": [
-      "users:view",
-      "roles:view"
+      "users:view"
     ],
-    "tags": [
-      "beta"
-    ]
+    "tags": []
   },
   {
     "id": 25,
-    "name": "User 25",
-    "email": "user25@example.com",
+    "name": "钱七七",
+    "email": "qianqiqi@example.com",
     "role": "admin",
-    "roleName": "Admin",
-    "status": "inactive",
+    "roleName": "管理员",
+    "status": "active",
     "createdAt": "2025-09-26",
-    "lastLogin": "2025-10-26 05:31",
+    "lastLogin": "2025-10-26 01:55",
     "avatar": "",
-    "phone": "+1-555-01025",
-    "department": "Engineering",
+    "phone": "+86-138-0025-0025",
+    "department": "工程部",
     "permissions": [
       "users:view",
       "roles:view",
-      "users:edit"
+      "users:edit",
+      "users:delete"
     ],
     "tags": []
   },
   {
     "id": 26,
-    "name": "User 26",
-    "email": "user26@example.com",
+    "name": "孙八八",
+    "email": "sunbaba@example.com",
     "role": "manager",
-    "roleName": "Manager",
+    "roleName": "经理",
     "status": "pending",
     "createdAt": "2025-09-27",
-    "lastLogin": "2025-10-27 06:32",
+    "lastLogin": "2025-10-27 02:56",
     "avatar": "",
-    "phone": "+1-555-01026",
-    "department": "Support",
+    "phone": "+86-138-0026-0026",
+    "department": "财务部",
     "permissions": [
       "users:view",
       "roles:view",
@@ -507,82 +487,76 @@ export const mockUsers = [
   },
   {
     "id": 27,
-    "name": "User 27",
-    "email": "user27@example.com",
+    "name": "李九九",
+    "email": "lijiujiu@example.com",
     "role": "support",
-    "roleName": "Support",
+    "roleName": "客服",
     "status": "active",
     "createdAt": "2025-09-28",
-    "lastLogin": "2025-10-28 07:33",
+    "lastLogin": "2025-10-28 03:57",
     "avatar": "",
-    "phone": "+1-555-01027",
-    "department": "Finance",
+    "phone": "+86-138-0027-0027",
+    "department": "客服部",
     "permissions": [
       "users:view",
       "roles:view"
     ],
-    "tags": [
-      "beta"
-    ]
+    "tags": []
   },
   {
     "id": 28,
-    "name": "User 28",
-    "email": "user28@example.com",
+    "name": "周十十",
+    "email": "zhoushishi@example.com",
     "role": "user",
-    "roleName": "User",
+    "roleName": "普通用户",
     "status": "inactive",
     "createdAt": "2025-09-29",
-    "lastLogin": "2025-10-01 08:34",
+    "lastLogin": "2025-10-29 04:58",
     "avatar": "",
-    "phone": "+1-555-01028",
-    "department": "Operations",
+    "phone": "+86-138-0028-0028",
+    "department": "运营部",
     "permissions": [
-      "users:view",
-      "roles:view"
+      "users:view"
     ],
-    "tags": [
-      "new"
-    ]
+    "tags": []
   },
   {
     "id": 29,
-    "name": "User 29",
-    "email": "user29@example.com",
+    "name": "吴一一",
+    "email": "wuyiyi@example.com",
     "role": "admin",
-    "roleName": "Admin",
-    "status": "pending",
+    "roleName": "管理员",
+    "status": "active",
     "createdAt": "2025-09-30",
-    "lastLogin": "2025-10-02 09:35",
+    "lastLogin": "2025-10-30 05:59",
     "avatar": "",
-    "phone": "+1-555-01029",
-    "department": "Engineering",
+    "phone": "+86-138-0029-0029",
+    "department": "工程部",
+    "permissions": [
+      "users:view",
+      "roles:view",
+      "users:edit",
+      "users:delete"
+    ],
+    "tags": []
+  },
+  {
+    "id": 30,
+    "name": "郑二二",
+    "email": "zhengerer@example.com",
+    "role": "manager",
+    "roleName": "经理",
+    "status": "pending",
+    "createdAt": "2025-10-01",
+    "lastLogin": "2025-10-01 06:00",
+    "avatar": "",
+    "phone": "+86-138-0030-0030",
+    "department": "市场部",
     "permissions": [
       "users:view",
       "roles:view",
       "users:edit"
     ],
     "tags": []
-  },
-  {
-    "id": 30,
-    "name": "User 30",
-    "email": "user30@example.com",
-    "role": "manager",
-    "roleName": "Manager",
-    "status": "active",
-    "createdAt": "2025-09-01",
-    "lastLogin": "2025-10-03 00:30",
-    "avatar": "",
-    "phone": "+1-555-01030",
-    "department": "Support",
-    "permissions": [
-      "users:view",
-      "roles:view",
-      "users:edit"
-    ],
-    "tags": [
-      "beta"
-    ]
   }
 ]

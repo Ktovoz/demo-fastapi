@@ -13,18 +13,18 @@
       <div class="header-right">
         <a-input-search
           v-model:value="search"
-          placeholder="Search features or pages"
+          placeholder="搜索功能或页面"
           allow-clear
           class="header-search"
           @search="handleSearch"
         />
         <a-popover placement="bottomRight" trigger="click">
           <template #title>
-            <div class="popover-title">Notifications</div>
+            <div class="popover-title">通知</div>
           </template>
           <template #content>
             <div class="notification-list">
-              <div v-if="notifications.length === 0" class="empty">All caught up!</div>
+              <div v-if="notifications.length === 0" class="empty">暂无新通知!</div>
               <template v-else>
                 <div
                   v-for="item in notifications"
@@ -35,7 +35,7 @@
                   <div class="notification-title">{{ item.title }}</div>
                   <div class="notification-time">{{ item.time }}</div>
                 </div>
-                <a-button type="link" block @click="clearNotifications">Clear notifications</a-button>
+                <a-button type="link" block @click="clearNotifications">清除通知</a-button>
               </template>
             </div>
           </template>
@@ -48,8 +48,8 @@
         <a-dropdown trigger="click">
           <template #overlay>
             <a-menu @click="handleMenuClick">
-              <a-menu-item key="profile">Profile</a-menu-item>
-              <a-menu-item key="logout">Logout</a-menu-item>
+              <a-menu-item key="profile">个人资料</a-menu-item>
+              <a-menu-item key="logout">退出登录</a-menu-item>
             </a-menu>
           </template>
           <div class="user-info">
@@ -86,8 +86,8 @@ const headerClasses = computed(() => [
 
 const notifications = computed(() => systemStore.notifications)
 const unreadCount = computed(() => notifications.value.filter((item) => !item.read).length)
-const userName = computed(() => authStore.user?.name ?? 'User')
-const pageTitle = computed(() => route.meta?.title || 'Dashboard')
+const userName = computed(() => authStore.user?.name ?? '用户')
+const pageTitle = computed(() => route.meta?.title || '仪表盘')
 
 const handleMenuClick = ({ key }) => {
   if (key === 'logout') {

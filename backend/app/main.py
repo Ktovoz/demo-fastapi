@@ -145,16 +145,15 @@ async def health_check():
         db = SessionLocal()
         db.execute(text("SELECT 1"))
         db.close()
-        database_status = "healthy"
+        status = "ok"
     except Exception as e:
-        database_status = f"unhealthy: {str(e)}"
+        status = "degraded"
+        logger.error(f"数据库连接异常: {str(e)}")
     
     return {
-        "status": "healthy",
-        "message": "服务运行正常",
-        "version": settings.APP_VERSION,
-        "timestamp": datetime.utcnow().isoformat(),
-        "database_status": database_status
+        "status": status,
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "version": settings.APP_VERSION
     }
 
 if __name__ == "__main__":

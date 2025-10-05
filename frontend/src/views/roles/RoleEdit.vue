@@ -1,23 +1,23 @@
 <template>
-  <CardContainer title="Edit Role" bordered>
-    <Loading v-if="loading" overlay tip="Loading role" />
+  <CardContainer title="编辑角色" bordered>
+    <Loading v-if="loading" overlay tip="正在加载角色信息" />
     <template v-else>
       <a-form layout="vertical" @finish="handleSubmit" :model="form">
-        <a-form-item label="Role Name" name="displayName" :rules="[{ required: true, message: 'Role name is required' }]"><a-input v-model:value="form.displayName" /></a-form-item>
-        <a-form-item label="Description" name="description"><a-textarea v-model:value="form.description" rows="3" /></a-form-item>
-        <a-form-item label="Permissions">
+        <a-form-item label="角色名称" name="displayName" :rules="[{ required: true, message: '请输入角色名称' }]"><a-input v-model:value="form.displayName" /></a-form-item>
+        <a-form-item label="描述" name="description"><a-textarea v-model:value="form.description" rows="3" /></a-form-item>
+        <a-form-item label="权限">
           <PermissionTree :tree-data="treeData" v-model:checkedKeys="form.permissions" />
         </a-form-item>
-        <a-form-item label="Status">
+        <a-form-item label="状态">
           <a-radio-group v-model:value="form.status">
-            <a-radio value="active">Active</a-radio>
-            <a-radio value="pending">Pending</a-radio>
-            <a-radio value="inactive">Inactive</a-radio>
+            <a-radio value="active">活跃</a-radio>
+            <a-radio value="pending">待审核</a-radio>
+            <a-radio value="inactive">禁用</a-radio>
           </a-radio-group>
         </a-form-item>
         <a-space>
-          <a-button @click="goBack">Cancel</a-button>
-          <a-button type="primary" html-type="submit" :loading="saving">Save</a-button>
+          <a-button @click="goBack">取消</a-button>
+          <a-button type="primary" html-type="submit" :loading="saving">保存</a-button>
         </a-space>
       </a-form>
     </template>
@@ -49,28 +49,28 @@ const form = reactive({
 
 const treeData = [
   {
-    title: 'Users',
+    title: '用户管理',
     key: 'users',
     children: [
-      { title: 'View Users', key: 'users:view' },
-      { title: 'Edit Users', key: 'users:edit' },
-      { title: 'Delete Users', key: 'users:delete' }
+      { title: '查看用户', key: 'users:view' },
+      { title: '编辑用户', key: 'users:edit' },
+      { title: '删除用户', key: 'users:delete' }
     ]
   },
   {
-    title: 'Roles',
+    title: '角色管理',
     key: 'roles',
     children: [
-      { title: 'View Roles', key: 'roles:view' },
-      { title: 'Edit Roles', key: 'roles:edit' }
+      { title: '查看角色', key: 'roles:view' },
+      { title: '编辑角色', key: 'roles:edit' }
     ]
   },
   {
-    title: 'System',
+    title: '系统管理',
     key: 'system',
     children: [
-      { title: 'View Logs', key: 'logs:view' },
-      { title: 'Manage System', key: 'system:manage' }
+      { title: '查看日志', key: 'logs:view' },
+      { title: '管理系统', key: 'system:manage' }
     ]
   }
 ]
@@ -85,7 +85,7 @@ const loadRole = async () => {
       status: role.status ?? 'active'
     })
   } catch (error) {
-    message.error('Unable to load role')
+    message.error('无法加载角色信息')
   } finally {
     loading.value = false
   }
@@ -100,10 +100,10 @@ const handleSubmit = async () => {
       permissions: [...form.permissions],
       status: form.status
     })
-    message.success('Role updated')
+    message.success('角色更新成功')
     router.push('/roles/list')
   } catch (error) {
-    message.error('Failed to save role')
+    message.error('保存角色失败')
   } finally {
     saving.value = false
   }

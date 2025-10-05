@@ -45,7 +45,7 @@
       >
         <template #extra>
           <a-space>
-            <a-button @click="exportLogs">导出</a-button>
+            <a-button @click="exportLogs">导出日志</a-button>
           </a-space>
         </template>
       </SearchForm>

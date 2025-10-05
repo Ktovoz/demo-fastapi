@@ -1,47 +1,47 @@
 export const navigationTree = [
   {
     key: 'dashboard',
-    label: 'Dashboard',
+    label: '仪表盘',
     icon: 'DashboardOutlined',
     path: '/dashboard',
     permission: 'dashboard:view'
   },
   {
     key: 'users',
-    label: 'Users',
+    label: '用户管理',
     icon: 'TeamOutlined',
     path: '/users/list',
     permission: 'users:view'
   },
   {
     key: 'roles',
-    label: 'Roles',
+    label: '角色管理',
     icon: 'SafetyOutlined',
     path: '/roles/list',
     permission: 'roles:view'
   },
   {
     key: 'system',
-    label: 'System',
+    label: '系统管理',
     icon: 'SettingOutlined',
     children: [
       {
         key: 'system.overview',
-        label: 'Overview',
+        label: '系统概览',
         icon: 'DashboardOutlined',
         path: '/system/overview',
         permission: 'dashboard:view'
       },
       {
         key: 'system.logs',
-        label: 'Logs',
+        label: '操作日志',
         icon: 'FileSearchOutlined',
         path: '/system/logs',
         permission: 'logs:view'
       },
       {
         key: 'system.settings',
-        label: 'Settings',
+        label: '系统设置',
         icon: 'SettingOutlined',
         path: '/system/settings',
         permission: 'system:manage'
@@ -50,7 +50,7 @@ export const navigationTree = [
   },
   {
     key: 'profile',
-    label: 'Profile',
+    label: '个人资料',
     icon: 'ProfileOutlined',
     path: '/profile',
     permission: 'users:view'

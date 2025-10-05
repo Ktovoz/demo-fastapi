@@ -294,13 +294,23 @@ const handleCollapse = (value) => {
 
 .sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-item),
 .sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-submenu-title) {
-  padding-inline: 0 !important;
-  padding-block: 14px !important;
-  margin: 10px 12px;
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
+  padding: 0 !important;
+  margin: 6px 12px;
+  display: grid !important;
+  place-items: center;
   border-radius: 20px;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-item .anticon),
+.sidebar-menu :deep(.ant-menu-inline-collapsed .ant-menu-submenu-title .anticon) {
+  font-size: 18px !important;
+  margin: 0 !important;
+  display: grid !important;
+  place-items: center;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 

@@ -2,8 +2,8 @@ export const mockRoles = [
   {
     "id": 1,
     "name": "admin",
-    "displayName": "Administrator",
-    "description": "Full access to all resources",
+    "displayName": "系统管理员",
+    "description": "拥有系统所有资源的完整访问权限",
     "status": "active",
     "permissions": [
       "dashboard:view",
@@ -19,8 +19,8 @@ export const mockRoles = [
   {
     "id": 2,
     "name": "manager",
-    "displayName": "Team Manager",
-    "description": "Manage team members and review metrics",
+    "displayName": "团队经理",
+    "description": "管理团队成员并查看相关指标数据",
     "status": "active",
     "permissions": [
       "dashboard:view",
@@ -33,8 +33,8 @@ export const mockRoles = [
   {
     "id": 3,
     "name": "support",
-    "displayName": "Support Agent",
-    "description": "Resolve customer tickets and monitor incidents",
+    "displayName": "客服人员",
+    "description": "处理客户工单并监控系统事件",
     "status": "pending",
     "permissions": [
       "dashboard:view",
@@ -45,9 +45,9 @@ export const mockRoles = [
   },
   {
     "id": 4,
-    "name": "viewer",
-    "displayName": "Read Only",
-    "description": "Read-only access to reports and dashboards",
+    "name": "user",
+    "displayName": "普通用户",
+    "description": "只读权限，可查看报告和仪表盘",
     "status": "inactive",
     "permissions": [
       "dashboard:view"
