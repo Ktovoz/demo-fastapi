@@ -27,10 +27,10 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", "8000"))
     reload = os.getenv("DEBUG", "False").lower() == "true"
 
-    print(f"🚀 启动 FastAPI 服务器...")
-    print(f"📍 地址: http://{host}:{port}")
-    print(f"📖 API 文档: http://{host}:{port}/docs")
-    print(f"🔄 热重载: {'开启' if reload else '关闭'}")
+    print(f"启动 FastAPI 服务器...")
+    print(f"地址: http://{host}:{port}")
+    print(f"API 文档: http://{host}:{port}/docs")
+    print(f"热重载: {'开启' if reload else '关闭'}")
     print("-" * 50)
 
     # 启动服务器

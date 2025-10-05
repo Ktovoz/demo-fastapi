@@ -6,7 +6,8 @@ export const authApi = {
     if (isMockEnabled) {
       return mockApi.auth.login(payload)
     }
-    return apiRequest.post('/auth/login', payload)
+    // 使用 JSON 格式的登录接口，支持 email 字段
+    return apiRequest.post('/auth/login-json', payload)
   },
   register(payload) {
     if (isMockEnabled) {

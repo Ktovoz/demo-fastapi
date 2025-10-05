@@ -15,12 +15,32 @@ from .admin import router as admin_router
 from .system import router as system_router
 
 # 注册子路由
-router.include_router(auth_router, prefix="/auth", tags=["认证"])
-router.include_router(dashboard_router, prefix="/dashboard", tags=["仪表盘"])
-router.include_router(users_router, prefix="/users", tags=["用户管理"])
-router.include_router(roles_router, prefix="/roles", tags=["角色管理"])
-router.include_router(admin_router, prefix="/admin", tags=["运营中心"])
-router.include_router(system_router, prefix="/system", tags=["系统管理"])
+logger.info("🔧 正在注册子路由...")
+try:
+    router.include_router(auth_router, prefix="/auth", tags=["认证"])
+    logger.info("✅ 认证路由注册成功: /auth")
+
+    router.include_router(dashboard_router, prefix="/dashboard", tags=["仪表盘"])
+    logger.info("✅ 仪表盘路由注册成功: /dashboard")
+
+    router.include_router(users_router, prefix="/users", tags=["用户管理"])
+    logger.info("✅ 用户管理路由注册成功: /users")
+
+    router.include_router(roles_router, prefix="/roles", tags=["角色管理"])
+    logger.info("✅ 角色管理路由注册成功: /roles")
+
+    router.include_router(admin_router, prefix="/admin", tags=["运营中心"])
+    logger.info("✅ 运营中心路由注册成功: /admin")
+
+    router.include_router(system_router, prefix="/system", tags=["系统管理"])
+    logger.info("✅ 系统管理路由注册成功: /system")
+
+    # 打印所有子路由信息用于调试
+    logger.info("📋 所有子路由注册完成")
+
+except Exception as e:
+    logger.error(f"❌ 子路由注册失败: {str(e)}")
+    raise
 
 @router.get("/")
 async def api_info():

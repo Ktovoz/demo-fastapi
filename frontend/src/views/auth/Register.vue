@@ -37,8 +37,8 @@
     <template #alert>
       <a-alert
         type="info"
-        message="当前为 Mock 接口，便于快速理解注册流程"
-        description="提交后会提示注册成功并跳转至登录页，不会保存真实数据。"
+        message="注册后将自动获得基本查看权限"
+        description="新用户将获得仪表盘、用户列表、角色列表等基本查看权限，可立即体验系统功能。"
         show-icon
         class="form-alert"
       />

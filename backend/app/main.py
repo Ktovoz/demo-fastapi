@@ -96,12 +96,32 @@ async def log_requests(request: Request, call_next):
 
     logger.info(f"请求开始: {method} {url} | 客户端: {client_ip} | User-Agent: {user_agent}")
 
+    # 添加路径调试信息
+    path = request.url.path
+    logger.info(f"🔍 请求路径解析: path='{path}', url='{url}'")
+
+    # 检查可用路由
+    available_routes = []
+    for route in app.routes:
+        if hasattr(route, 'path') and hasattr(route, 'methods'):
+            available_routes.append(f"{list(route.methods)} {route.path}")
+
+    logger.info(f"📋 当前可用路由: {available_routes}")
+
     try:
         response = await call_next(request)
         process_time = time.time() - start_time
         status_code = response.status_code
 
         # 记录响应
+        if status_code == 404:
+            logger.warning(f"⚠️ 路由未找到: {method} {path}")
+            logger.debug(f"🔍 尝试匹配的路由:")
+            for route in app.routes:
+                if hasattr(route, 'path') and hasattr(route, 'methods'):
+                    if method in route.methods:
+                        logger.debug(f"  - {method} {route.path}")
+
         logger.info(f"请求完成: {method} {url} - {status_code} - {process_time:.3f}s")
 
         # 添加响应头
@@ -120,7 +140,22 @@ except ImportError:
     from routers import api
 
 # 注册路由
-app.include_router(api.router, prefix="/api", tags=["API"])
+logger.info("🔧 正在注册路由...")
+try:
+    app.include_router(api.router, prefix="/api", tags=["API"])
+    logger.info("✅ 路由注册成功: /api")
+
+    # 打印所有路由信息用于调试
+    routes_info = []
+    for route in app.routes:
+        if hasattr(route, 'path') and hasattr(route, 'methods'):
+            routes_info.append(f"{list(route.methods)} {route.path}")
+
+    logger.info(f"📋 已注册的路由列表: {routes_info}")
+
+except Exception as e:
+    logger.error(f"❌ 路由注册失败: {str(e)}")
+    raise
 
 # 根路径
 @app.get("/")
