@@ -54,6 +54,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 用户上下文中间件（必须在审计日志中间件之前）
+from .middleware import UserContextMiddleware, AuditLogMiddleware
+app.add_middleware(UserContextMiddleware)
+app.add_middleware(AuditLogMiddleware)
+
 # 全局异常处理
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):

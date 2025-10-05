@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
@@ -24,7 +24,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 @router.post("/login", response_model=BaseResponse)
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    request: Request = None
 ):
     """用户登录"""
     
@@ -67,9 +68,30 @@ async def login(
             "expiresIn": ACCESS_TOKEN_EXPIRE_MINUTES,
             "user": user_data
         }
-        
+
         logger.info(f"用户登录成功: {user.username}")
-        
+
+        # 手动记录登录操作日志（重要的安全事件）
+        try:
+            ip_address = request.client.host if request and hasattr(request, 'client') else "unknown"
+            user_agent = request.headers.get("user-agent", "") if request else ""
+
+            login_log = OperationLog(
+                user_id=user.id,
+                action="用户登录",
+                resource="auth",
+                description="用户登录成功",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                request_data={"username": form_data.username},
+                response_data={"login_success": True}
+            )
+            db.add(login_log)
+            db.commit()
+        except Exception as e:
+            logger.warning(f"记录登录日志失败: {str(e)}")
+            db.rollback()
+
         return BaseResponse(
             success=True,
             message="登录成功",
@@ -83,7 +105,8 @@ async def login(
 @router.post("/login-json", response_model=BaseResponse)
 async def login_json(
     login_data: LoginRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    request: Request = None
 ):
     """JSON格式用户登录"""
     
@@ -136,7 +159,28 @@ async def login_json(
         }
         
         logger.info(f"用户登录成功: {user.username}")
-        
+
+        # 手动记录登录操作日志（重要的安全事件）
+        try:
+            ip_address = request.client.host if request and hasattr(request, 'client') else "unknown"
+            user_agent = request.headers.get("user-agent", "") if request else ""
+
+            login_log = OperationLog(
+                user_id=user.id,
+                action="用户登录",
+                resource="auth",
+                description="用户登录成功(JSON)",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                request_data={"email": login_data.email},
+                response_data={"login_success": True}
+            )
+            db.add(login_log)
+            db.commit()
+        except Exception as e:
+            logger.warning(f"记录登录日志失败: {str(e)}")
+            db.rollback()
+
         return BaseResponse(
             success=True,
             message="登录成功",

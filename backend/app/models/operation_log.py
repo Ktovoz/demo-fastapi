@@ -21,7 +21,7 @@ class OperationLog(BaseModel):
         Index('idx_operation_log_created_at', 'created_at'),
     )
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, comment="用户ID")
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, comment="用户ID")
     action = Column(String(50), nullable=False, comment="操作类型")
     resource = Column(String(50), nullable=False, comment="操作资源")
     resource_id = Column(Integer, comment="资源ID")
