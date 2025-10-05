@@ -229,7 +229,7 @@ const fillDemoAccount = () => {
   form.email = 'admin@example.com'
   form.password = 'admin123'
   form.remember = true
-  message.success('已填充演示管理员账号')
+  message.success('已填充演示管理员账号 (admin / admin123)')
 }
 
 const goRegister = () => {

@@ -70,13 +70,16 @@
           <a-form-item
             label="工作邮箱"
             name="email"
-            :rules="[{ required: true, message: '请输入邮箱' }]"
+            :rules="[
+              { required: true, message: '请输入邮箱' },
+              { type: 'email', message: '请输入有效的邮箱地址' }
+            ]"
             class="form-item"
           >
             <a-input
               v-model:value="form.email"
               size="large"
-              placeholder="you@example.com"
+              placeholder="yourname@example.com"
               autocomplete="email"
               class="form-input"
             >
@@ -91,7 +94,10 @@
           <a-form-item
             label="设置密码"
             name="password"
-            :rules="[{ required: true, message: '请输入密码' }]"
+            :rules="[
+              { required: true, message: '请输入密码' },
+              { min: 6, message: '密码长度不能少于6位' }
+            ]"
             class="form-item"
           >
             <a-input-password
@@ -175,9 +181,10 @@ import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { UserOutlined, MailOutlined, LockOutlined, SafetyOutlined, LoadingOutlined } from '@ant-design/icons-vue'
 import AuthPage from '../../components/AuthPage.vue'
-import { authApi } from '../../api/auth'
+import { useAuthStore } from '../../store/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const loading = ref(false)
 const form = reactive({
   name: '',
@@ -192,7 +199,7 @@ const pageConfig = {
   title: '创建账号，开启协同治理新旅程',
   description: '注册演示环境，体验统一认证、权限控制与配置治理的完整闭环，快速掌握 Demo FastAPI 的最佳实践。',
   formTitle: '创建新账号',
-  formDescription: '完善基础资料，稍后可在个人中心补全部门、角色等信息。',
+  formDescription: '完善基础资料，稍后可在个人中心补全部门、角色等信息。请勿使用 admin@example.com（已占用）。',
   meta: '推荐使用企业邮箱注册',
   support: '',
   supportIcon: null
@@ -211,10 +218,17 @@ const validateConfirm = (_rule, value) => {
 const handleSubmit = async () => {
   loading.value = true
   try {
-    await authApi.register({ name: form.name, email: form.email, password: form.password })
-    message.success('账号已创建（演示环境）')
+    const registerData = {
+      name: form.name,
+      email: form.email,
+      password: form.password
+    }
+    console.log('准备发送注册数据:', registerData)
+    await authStore.register(registerData)
+    message.success('账号已创建，请登录')
     router.push('/auth/login')
   } catch (error) {
+    console.error('注册失败:', error)
     message.error(error?.message || '注册失败')
   } finally {
     loading.value = false
