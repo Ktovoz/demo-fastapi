@@ -17,19 +17,57 @@ logger = get_logger(__name__)
 class AuditLogMiddleware(BaseHTTPMiddleware):
     """审计日志中间件"""
 
-    # 不需要记录日志的路径
+    # 需要记录日志的关键操作路径
+    SENSITIVE_PATHS = [
+        "/auth/login",
+        "/auth/register",
+        "/auth/forgot-password",
+        "/users/create",
+        "/users/update",
+        "/users/delete",
+        "/roles/create",
+        "/roles/update",
+        "/roles/delete",
+        "/system/export",
+        "/system/import",
+        "/admin/delete",
+        "/admin/batch-action"
+    ]
+
+    # 需要跳过日志记录的路径（高频且无意义的操作）
     SKIP_PATHS = [
         "/health",
         "/docs",
         "/redoc",
         "/openapi.json",
         "/favicon.ico",
-        "/static"
+        "/static",
+        "/api/auth/login",  # 登录通过手动记录，不在这里记录
+        "/api/auth/register",
+        "/api/auth/forgot-password",
+        "/api/system/logs",     # 查看日志本身不记录
+        "/api/system/logs/summary",  # 日志概览不记录
+        "/api/dashboard",       # 查看仪表盘不记录
+        "/api/users",           # 用户列表查询不记录
+        "/api/roles",           # 角色列表查询不记录
+        "/api/admin/alerts",    # 警报查询不记录
+        "/api"                  # API根路径不记录
     ]
 
     # 不需要记录日志的文件类型
     SKIP_EXTENSIONS = [
         ".css", ".js", ".ico", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".woff", ".woff2"
+    ]
+
+    # 高频但无意义的操作
+    HIGH_FREQUENCY_OPS = [
+        ("GET", "/dashboard"),
+        ("GET", "/users"),
+        ("GET", "/roles"),
+        ("GET", "/system/logs"),
+        ("GET", "/api"),
+        ("GET", "/health"),
+        ("GET", "/admin/alerts")
     ]
 
     async def dispatch(self, request: Request, call_next):
@@ -148,6 +186,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
     def _should_skip_logging(self, request: Request) -> bool:
         """判断是否跳过日志记录"""
         path = request.url.path
+        method = request.method
 
         # 跳过特定路径
         if any(path.startswith(skip_path) for skip_path in self.SKIP_PATHS):
@@ -157,8 +196,52 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
         if any(path.endswith(ext) for ext in self.SKIP_EXTENSIONS):
             return True
 
+        # 跳过高频但无意义的操作
+        if (method, path) in self.HIGH_FREQUENCY_OPS:
+            return True
+
         # 跳过健康检查等系统接口
         if path in ["/", "/health"]:
+            return True
+
+        # 只记录敏感操作
+        if not self._is_sensitive_operation(method, path):
+            return True
+
+        return False
+
+    def _is_sensitive_operation(self, method: str, path: str) -> bool:
+        """判断是否为敏感操作"""
+        # 登录相关操作
+        if "login" in path or "register" in path or "forgot-password" in path:
+            return True
+
+        # 用户管理相关操作
+        if "/users/" in path and method in ["POST", "PUT", "PATCH", "DELETE"]:
+            return True
+
+        # 角色管理相关操作
+        if "/roles/" in path and method in ["POST", "PUT", "PATCH", "DELETE"]:
+            return True
+
+        # 系统设置相关操作
+        if "/system/settings" in path and method in ["PUT", "PATCH"]:
+            return True
+
+        # 导出导入操作
+        if "export" in path or "import" in path:
+            return True
+
+        # 删除操作
+        if method == "DELETE":
+            return True
+
+        # 批量操作
+        if "batch" in path or "bulk" in path:
+            return True
+
+        # 密码相关操作
+        if "password" in path or "reset" in path:
             return True
 
         return False
@@ -245,31 +328,67 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
 
     def _parse_action_and_resource(self, method: str, path: str) -> tuple[str, str]:
         """解析操作类型和资源"""
-        # 根据HTTP方法和路径确定操作类型
         path_parts = [part for part in path.split('/') if part]
 
         if not path_parts:
-            return method, "root"
+            return "系统访问", "system"
 
-        # 获取主要资源类型
-        resource = path_parts[0] if len(path_parts) > 0 else "unknown"
+        # 识别具体的用户敏感操作
+        if "login" in path:
+            return "用户登录", "auth"
+        elif "register" in path:
+            return "用户注册", "auth"
+        elif "forgot-password" in path:
+            return "找回密码", "auth"
+        elif "reset-password" in path or "change-password" in path:
+            return "修改密码", "auth"
 
-        # 根据方法和路径确定具体操作
-        if method == "GET":
-            if len(path_parts) > 1 and path_parts[-1].isdigit():
-                action = f"查看{resource}"
-            else:
-                action = f"获取{resource}列表"
-        elif method == "POST":
-            action = f"创建{resource}"
-        elif method == "PUT" or method == "PATCH":
-            action = f"更新{resource}"
-        elif method == "DELETE":
-            action = f"删除{resource}"
-        else:
-            action = f"{method} {resource}"
+        # 用户管理操作
+        if "users" in path:
+            if method == "POST":
+                return "创建用户", "users"
+            elif method in ["PUT", "PATCH"]:
+                return "更新用户信息", "users"
+            elif method == "DELETE":
+                return "删除用户", "users"
+            elif "batch" in path:
+                return "批量操作用户", "users"
 
-        return action, resource
+        # 角色管理操作
+        if "roles" in path:
+            if method == "POST":
+                return "创建角色", "roles"
+            elif method in ["PUT", "PATCH"]:
+                return "更新角色权限", "roles"
+            elif method == "DELETE":
+                return "删除角色", "roles"
+
+        # 系统管理操作
+        if "system" in path:
+            if "export" in path:
+                return "导出系统数据", "system"
+            elif "import" in path:
+                return "导入系统数据", "system"
+            elif "settings" in path and method in ["PUT", "PATCH"]:
+                return "修改系统设置", "system"
+            elif "backup" in path:
+                return "系统备份", "system"
+            elif "restore" in path:
+                return "系统恢复", "system"
+
+        # 删除操作（通用）
+        if method == "DELETE":
+            if len(path_parts) > 0:
+                resource = path_parts[0]
+                return f"删除{resource}", resource
+
+        # 批量操作
+        if "batch" in path or "bulk" in path:
+            return "批量操作", "system"
+
+        # 默认返回通用操作
+        resource = path_parts[0]
+        return f"{method}操作", resource
 
     def _generate_description(
         self,

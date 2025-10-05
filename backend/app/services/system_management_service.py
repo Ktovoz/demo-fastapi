@@ -4,7 +4,15 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 import json
 
+# 中国时区偏移量 (UTC+8)
+CHINA_TIME_OFFSET = timedelta(hours=8)
+
+def get_china_time(utc_time):
+    """将UTC时间转换为中国时间"""
+    return utc_time + CHINA_TIME_OFFSET
+
 from ..models.operation_log import OperationLog
+from ..models.user import User
 from ..utils.logger import get_logger
 from ..utils.exceptions import ValidationError, DatabaseError
 from ..utils.cache import cache
@@ -109,38 +117,55 @@ class SystemManagementService:
                     "requestId": f"req-{log.id}",
                     "ip": log.ip_address,
                     "userAgent": log.user_agent,
-                    "resourceId": log.resource_id
+                    "resourceId": log.resource_id,
+                    "userId": log.user_id,
+                    "resource": log.resource,
+                    "userEmail": None,
+                    "userName": None
                 }
+
+                # 获取用户信息
+                if log.user_id:
+                    try:
+                        user = db.query(User).filter(User.id == log.user_id).first()
+                        if user:
+                            context["userEmail"] = user.email
+                            context["userName"] = user.full_name or user.username
+                    except Exception as e:
+                        logger.debug(f"获取用户信息失败: {e}")
 
                 # 改进日志级别判断逻辑
                 action_upper = log.action.upper() if log.action else ""
-                if "ERROR" in action_upper:
+                if "ERROR" in action_upper or "失败" in log.action:
                     log_level = "ERROR"
-                elif "WARN" in action_upper:
+                elif "WARN" in action_upper or "警告" in log.action or "检测到" in log.action:
                     log_level = "WARN"
                 elif "DEBUG" in action_upper:
                     log_level = "DEBUG"
                 else:
                     log_level = "INFO"
-                
-                # 改进模块名提取逻辑
-                module = "system"
-                if log.action and " " in log.action:
-                    module_parts = log.action.split(" ", 1)
-                    if len(module_parts) >= 2:
-                        module = module_parts[0].lower()
-                    else:
-                        module = module_parts[0].lower()
-                elif log.action:
-                    module = log.action.lower()
-                
-                # 构建日志数据
+
+                # 改进模块名提取逻辑 - 从resource字段获取，更准确
+                module_mapping = {
+                    "auth": "认证系统",
+                    "users": "用户管理",
+                    "roles": "角色管理",
+                    "dashboard": "仪表盘",
+                    "admin": "运营中心",
+                    "system": "系统管理",
+                    "health": "健康检查"
+                }
+                module = module_mapping.get(log.resource, log.resource or "system")
+
+                # 构建日志数据 - 使用中国时区
+                china_time = get_china_time(log.created_at)
                 log_data = {
                     "id": f"LOG-{log.id}",
-                    "time": log.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    "time": china_time.strftime("%Y-%m-%d %H:%M:%S"),
                     "level": log_level,
                     "module": module,
-                    "message": f"{log.action} - {log.resource}" if log.resource else log.action,
+                    "message": log.description or log.action,  # 主要描述信息
+                    "action": log.action,  # 操作类型
                     "context": context
                 }
                 
@@ -250,35 +275,57 @@ class SystemManagementService:
             for log in recent_logs:
                 # 改进日志级别判断逻辑
                 action_upper = log.action.upper() if log.action else ""
-                if "ERROR" in action_upper:
+                if "ERROR" in action_upper or "失败" in log.action:
                     log_level = "ERROR"
-                elif "WARN" in action_upper:
+                elif "WARN" in action_upper or "警告" in log.action or "检测到" in log.action:
                     log_level = "WARN"
                 elif "DEBUG" in action_upper:
                     log_level = "DEBUG"
                 else:
                     log_level = "INFO"
-                
+
                 # 改进模块名提取逻辑
-                module = "system"
-                if log.action and " " in log.action:
-                    module_parts = log.action.split(" ", 1)
-                    if len(module_parts) >= 2:
-                        module = module_parts[0].lower()
-                    else:
-                        module = module_parts[0].lower()
-                elif log.action:
-                    module = log.action.lower()
-                
+                module_mapping = {
+                    "auth": "认证系统",
+                    "users": "用户管理",
+                    "roles": "角色管理",
+                    "dashboard": "仪表盘",
+                    "admin": "运营中心",
+                    "system": "系统管理",
+                    "health": "健康检查"
+                }
+                module = module_mapping.get(log.resource, log.resource or "system")
+
                 # 构建日志数据
+                context_summary = {
+                    "userId": log.user_id,
+                    "userEmail": None,
+                    "userName": None,
+                    "resource": log.resource
+                }
+
+                # 获取用户信息
+                if log.user_id:
+                    try:
+                        user = db.query(User).filter(User.id == log.user_id).first()
+                        if user:
+                            context_summary["userEmail"] = user.email
+                            context_summary["userName"] = user.full_name or user.username
+                    except Exception as e:
+                        logger.debug(f"获取用户信息失败: {e}")
+
+                # 构建日志数据 - 使用中国时区
+                china_time = get_china_time(log.created_at)
                 log_data = {
                     "id": f"LOG-{log.id}",
-                    "time": log.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    "time": china_time.strftime("%Y-%m-%d %H:%M:%S"),
                     "level": log_level,
                     "module": module,
-                    "message": f"{log.action} - {log.resource}" if log.resource else log.action
+                    "message": log.description or log.action,
+                    "action": log.action,
+                    "context": context_summary
                 }
-                
+
                 recent.append(log_data)
             
             # 如果没有足够的日志，添加少量示例数据
