@@ -183,7 +183,7 @@ const form = reactive({
 const checkHealth = async () => {
   try {
     // 使用完整的基础URL
-    const response = await fetch(`${window.APP_CONFIG?.API_BASE_URL || 'http://localhost:8000'}/health`)
+    const response = await fetch(`${window.APP_CONFIG?.API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'}/health`)
     const data = await response.json()
     return data
   } catch (error) {

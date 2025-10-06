@@ -25,6 +25,15 @@ export const API_BASE_URL = apiBaseUrl;
 console.log('🔧 API Config: 最终API_BASE_URL:', API_BASE_URL);
 console.log('🔧 API Config: URL协议检查:', API_BASE_URL.startsWith('https://') ? 'HTTPS' : 'HTTP');
 
+// 检查是否有其他地方覆盖了配置
+if (typeof window !== 'undefined') {
+  console.log('🔧 API Config: window.location:', window.location.href);
+  console.log('🔧 API Config: 检查环境变量覆盖:', {
+    VITE_API_BASE_URL: window.APP_CONFIG?.API_BASE_URL,
+    ENV_API_BASE_URL: import.meta.env?.VITE_API_BASE_URL
+  });
+}
+
 export const API_CONFIG = {
   baseURL: `${API_BASE_URL}/api`,  // 使用完整的基础URL
   timeout: 10000,

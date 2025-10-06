@@ -27,6 +27,12 @@ api.interceptors.request.use(
     console.log('🚀 Axios Request: 请求头:', config.headers);
     console.log('🚀 Axios Request: 请求数据:', config.data);
 
+    // 检查URL协议
+    const fullUrl = config.baseURL + config.url;
+    if (fullUrl.startsWith('http://')) {
+      console.warn('⚠️ 检测到HTTP请求，将导致混合内容错误:', fullUrl);
+    }
+
     const authStore = useAuthStore(pinia)
     if (authStore?.token) {
       config.headers = {
@@ -100,8 +106,18 @@ api.interceptors.response.use(
             refresh_token: authStore.refreshToken
           })
 
-          const { access_token } = refreshResponse.data
-          authStore.setToken(access_token)
+          console.log('🔄 刷新响应:', refreshResponse.data)
+          const responseData = refreshResponse.data.data || refreshResponse.data
+          const { access_token } = responseData
+          console.log('🔄 新的access_token:', access_token)
+
+          if (access_token) {
+            authStore.setToken(access_token)
+          } else {
+            console.log('❌ 刷新响应中没有access_token')
+            authStore.logout()
+            return Promise.reject(error)
+          }
 
           // 重新发送原请求
           error.config.headers.Authorization = `Bearer ${access_token}`
