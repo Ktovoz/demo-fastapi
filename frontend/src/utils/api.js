@@ -7,25 +7,25 @@ import { pinia } from "../store"
 const apiLogger = createApiLogger()
 
 // 延迟创建axios实例，确保配置已加载
-let api = null
+let axiosInstance = null
 
 const getApiInstance = () => {
-  if (!api) {
+  if (!axiosInstance) {
     console.log('🔧 Axios: 开始创建axios实例');
     console.log('🔧 Axios: 使用的API_CONFIG:', API_CONFIG);
-    
-    api = axios.create({
+
+    axiosInstance = axios.create({
       ...API_CONFIG
     })
-    
+
     console.log('🔧 Axios: axios实例创建完成');
-    console.log('🔧 Axios: axios实例baseURL:', api.defaults.baseURL);
-    console.log('🔧 Axios: baseURL协议检查:', api.defaults.baseURL?.startsWith('https://') ? 'HTTPS' : 'HTTP');
+    console.log('🔧 Axios: axios实例baseURL:', axiosInstance.defaults.baseURL);
+    console.log('🔧 Axios: baseURL协议检查:', axiosInstance.defaults.baseURL?.startsWith('https://') ? 'HTTPS' : 'HTTP');
   }
-  return api
+  return axiosInstance
 }
 
-api.interceptors.request.use(
+getApiInstance().interceptors.request.use(
   (config) => {
     console.log('🚀 Axios Request: 发送请求');
     console.log('🚀 Axios Request: 完整URL:', config.baseURL + config.url);
@@ -62,7 +62,7 @@ api.interceptors.request.use(
   }
 )
 
-api.interceptors.response.use(
+getApiInstance().interceptors.response.use(
   (response) => {
     console.log('✅ Axios Response: 收到响应');
     console.log('✅ Axios Response: 状态码:', response.status);
@@ -118,7 +118,7 @@ api.interceptors.response.use(
         error.config._retry = true
         try {
           console.log('🔄 尝试刷新令牌')
-          const refreshResponse = await api.post('/auth/refresh', {
+          const refreshResponse = await getApiInstance().post('/auth/refresh', {
             refresh_token: authStore.refreshToken
           })
 
@@ -137,7 +137,7 @@ api.interceptors.response.use(
 
           // 重新发送原请求
           error.config.headers.Authorization = `Bearer ${access_token}`
-          return api(error.config)
+          return getApiInstance()(error.config)
         } catch (refreshError) {
           console.log('❌ 刷新令牌失败，错误详情:', refreshError)
           console.log('❌ 可能原因：JWT密钥已更换，旧token失效')
