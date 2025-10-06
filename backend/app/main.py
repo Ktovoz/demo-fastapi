@@ -55,6 +55,7 @@ app = FastAPI(
 
 # CORS中间件
 logger.info(f"🔧 CORS配置: 允许的源 - {settings.BACKEND_CORS_ORIGINS}")
+logger.info(f"🔧 CORS配置: 当前DEBUG模式: {settings.DEBUG}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
@@ -62,6 +63,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+logger.info("✅ CORS中间件已配置")
 
 # 用户上下文中间件（必须在审计日志中间件之前）
 from .middleware import UserContextMiddleware, AuditLogMiddleware
