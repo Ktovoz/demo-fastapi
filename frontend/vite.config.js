@@ -1,9 +1,34 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import fs from 'fs'
+import path from 'path'
+
+// 插件：处理 config.js 中的环境变量（仅在preview模式下）
+function handleConfigPlugin() {
+  return {
+    name: 'handle-config-plugin',
+    configureServer(server) {
+      // 开发模式下不处理，直接使用代理
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use('/config.js', (req, res, next) => {
+        if (req.method === 'GET') {
+          const configPath = path.join(process.cwd(), 'public/config.js')
+          let content = fs.readFileSync(configPath, 'utf8')
+          content = content.replace('${VITE_API_BASE_URL}', process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com')
+          res.setHeader('Content-Type', 'application/javascript')
+          res.end(content)
+        } else {
+          next()
+        }
+      })
+    }
+  }
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), handleConfigPlugin()],
   build: {
     rollupOptions: {
       output: {
@@ -38,6 +63,11 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api')
+      },
+      '/health': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/health/, '/health')
       }
     }
   },
@@ -51,6 +81,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '/api')
+      },
+      '/health': {
+        target: process.env.VITE_API_BASE_URL || 'http://backend:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/health/, '/health')
       }
     }
   }
