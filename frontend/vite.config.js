@@ -111,11 +111,17 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: (() => {
-          let target = process.env.VITE_API_BASE_URL || 'http://backend:8000'
+          let target = process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'
+          // 强制使用HTTPS协议
+          if (target && target.startsWith('http://')) {
+            console.log('🔧 Vite Preview: 转换HTTP目标到HTTPS:', target)
+            target = target.replace('http://', 'https://')
+          }
           // 确保有协议前缀
           if (target && !target.startsWith('http://') && !target.startsWith('https://')) {
             target = 'https://' + target
           }
+          console.log('🔧 Vite Preview: 最终API代理目标:', target)
           return target
         })(),
         changeOrigin: true,
@@ -124,11 +130,17 @@ export default defineConfig({
       },
       '/health': {
         target: (() => {
-          let target = process.env.VITE_API_BASE_URL || 'http://backend:8000'
+          let target = process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'
+          // 强制使用HTTPS协议
+          if (target && target.startsWith('http://')) {
+            console.log('🔧 Vite Preview: 转换HTTP目标到HTTPS:', target)
+            target = target.replace('http://', 'https://')
+          }
           // 确保有协议前缀
           if (target && !target.startsWith('http://') && !target.startsWith('https://')) {
             target = 'https://' + target
           }
+          console.log('🔧 Vite Preview: 最终Health代理目标:', target)
           return target
         })(),
         changeOrigin: true,

@@ -14,8 +14,16 @@ const getApiInstance = () => {
     console.log('🔧 Axios: 开始创建axios实例');
     console.log('🔧 Axios: 使用的API_CONFIG:', API_CONFIG);
 
+    // 确保baseURL使用HTTPS协议
+    let baseURL = API_CONFIG.baseURL;
+    if (baseURL && baseURL.startsWith('http://')) {
+      console.warn('🔧 Axios: 检测到HTTP协议，强制转换为HTTPS');
+      baseURL = baseURL.replace('http://', 'https://');
+    }
+
     axiosInstance = axios.create({
-      ...API_CONFIG
+      ...API_CONFIG,
+      baseURL
     })
 
     console.log('🔧 Axios: axios实例创建完成');
@@ -28,6 +36,13 @@ const getApiInstance = () => {
 getApiInstance().interceptors.request.use(
   (config) => {
     console.log('🚀 Axios Request: 发送请求');
+
+    // 强制确保baseURL使用HTTPS
+    if (config.baseURL && config.baseURL.startsWith('http://')) {
+      console.warn('🚀 Axios Request: 强制转换baseURL从HTTP到HTTPS');
+      config.baseURL = config.baseURL.replace('http://', 'https://');
+    }
+
     console.log('🚀 Axios Request: 完整URL:', config.baseURL + config.url);
     console.log('🚀 Axios Request: 方法:', config.method?.toUpperCase());
     console.log('🚀 Axios Request: baseURL:', config.baseURL);
@@ -35,10 +50,12 @@ getApiInstance().interceptors.request.use(
     console.log('🚀 Axios Request: 请求头:', config.headers);
     console.log('🚀 Axios Request: 请求数据:', config.data);
 
-    // 检查URL协议
+    // 检查最终URL协议
     const fullUrl = config.baseURL + config.url;
     if (fullUrl.startsWith('http://')) {
-      console.warn('⚠️ 检测到HTTP请求，将导致混合内容错误:', fullUrl);
+      console.error('❌ 检测到HTTP请求，将导致混合内容错误:', fullUrl);
+    } else if (fullUrl.startsWith('https://')) {
+      console.log('✅ 请求使用HTTPS协议:', fullUrl);
     }
 
     const authStore = useAuthStore(pinia)
