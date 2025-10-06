@@ -10,7 +10,7 @@
     "dev:mock": "cross-env VITE_USE_MOCK=true vite",
     "dev:real": "cross-env VITE_USE_MOCK=false vite",
     "build:mock": "cross-env VITE_USE_MOCK=true vite build",
-    "build:real": "cross-env VITE_USE_MOCK=false vite build && node -e \"const fs = require('fs'); const content = fs.readFileSync('public/config.js', 'utf8'); const replaced = content.replace('\\${VITE_API_BASE_URL}', process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'); fs.writeFileSync('dist/config.js', replaced);\"",
+    "build:real": "cross-env VITE_USE_MOCK=false vite build",
     "preview:mock": "cross-env VITE_USE_MOCK=true vite preview",
     "preview:real": "cross-env VITE_USE_MOCK=false vite preview"
   },
