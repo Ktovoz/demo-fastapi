@@ -4,7 +4,7 @@ const config = window.APP_CONFIG || {};
 export const API_BASE_URL = config.API_BASE_URL || 'http://localhost:8000';
 
 export const API_CONFIG = {
-  baseURL: '/api',  // 使用相对路径，让Vite代理生效
+  baseURL: `${API_BASE_URL}/api`,  // 使用完整的基础URL
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
