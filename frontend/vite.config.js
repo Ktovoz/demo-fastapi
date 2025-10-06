@@ -44,7 +44,15 @@ export default defineConfig({
   preview: {
     port: 4173,
     host: '0.0.0.0',
-    allowedHosts: ['demo-fast.ktovoz.com', 'localhost', '127.0.0.1']
+    allowedHosts: ['demo-fast.ktovoz.com', 'localhost', '127.0.0.1'],
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_BASE_URL || 'http://backend:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
+      }
+    }
   }
 })
 
