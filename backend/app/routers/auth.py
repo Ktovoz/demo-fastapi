@@ -6,6 +6,7 @@ from typing import Dict, Any
 
 from ..core.database import get_db
 from ..models.user import User
+from ..models.operation_log import OperationLog
 from ..utils.security import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from ..utils.logger import get_logger
 from ..services.user_service import UserService, AuthService
@@ -13,6 +14,7 @@ from ..core.security import get_current_user
 from ..utils.exceptions import service_exception_handler
 from ..schemas.base import BaseResponse
 from ..schemas.auth import LoginRequest, RegisterRequest, ForgotPasswordRequest, AuthResponse
+from ..core.security import create_refresh_token, verify_token
 
 router = APIRouter()
 logger = get_logger(__name__)
@@ -54,6 +56,11 @@ async def login(
         )
         logger.info(f"✅ 访问令牌已创建: {access_token[:30]}..." if len(access_token) > 30 else f"令牌: {access_token}")
 
+        # 创建刷新令牌
+        logger.info(f"🔄 为用户 {user.username} (ID: {user.id}) 创建刷新令牌")
+        refresh_token = create_refresh_token(user.id)
+        logger.info(f"✅ 刷新令牌已创建: {refresh_token[:30]}..." if len(refresh_token) > 30 else f"令牌: {refresh_token}")
+
         # 构建响应数据
         user_data = {
             "id": f"USR-{user.id}",
@@ -68,6 +75,7 @@ async def login(
         
         response_data = {
             "token": access_token,
+            "refresh_token": refresh_token,
             "expiresIn": ACCESS_TOKEN_EXPIRE_MINUTES,
             "user": user_data
         }
@@ -143,6 +151,9 @@ async def login_json(
         access_token = create_access_token(
             data={"sub": user.username}, expires_delta=access_token_expires
         )
+
+        # 创建刷新令牌
+        refresh_token = create_refresh_token(user.id)
         
         # 构建响应数据
         user_data = {
@@ -157,6 +168,7 @@ async def login_json(
         
         response_data = {
             "token": access_token,
+            "refresh_token": refresh_token,
             "expiresIn": token_expire_minutes,
             "user": user_data
         }
@@ -280,5 +292,55 @@ async def forgot_password(
     except Exception as e:
         logger.error(f"找回密码失败: {str(e)}")
         raise service_exception_handler(e)
+
+@router.post("/refresh", response_model=BaseResponse)
+async def refresh_token(
+    refresh_data: dict,
+    db: Session = Depends(get_db)
+):
+    """刷新访问令牌"""
+    try:
+        refresh_token = refresh_data.get("refresh_token")
+        if not refresh_token:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="缺少刷新令牌"
+            )
+
+        logger.info(f"🔄 收到刷新令牌请求")
+        logger.info(f"🔑 刷新令牌前缀: {refresh_token[:30]}..." if len(refresh_token) > 30 else f"令牌: {refresh_token}")
+
+        # 验证刷新令牌
+        user = verify_token(refresh_token, db, "refresh")
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="无效的刷新令牌"
+            )
+
+        logger.info(f"✅ 刷新令牌验证成功，用户: {user.username}")
+
+        # 创建新的访问令牌
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        new_access_token = create_access_token(
+            data={"sub": str(user.id)}, expires_delta=access_token_expires
+        )
+
+        logger.info(f"✅ 新访问令牌已创建: {new_access_token[:30]}..." if len(new_access_token) > 30 else f"令牌: {new_access_token}")
+
+        return BaseResponse(
+            success=True,
+            message="令牌刷新成功",
+            data={"access_token": new_access_token}
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"刷新令牌失败: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="令牌刷新失败"
+        )
 
 from ..core.security import get_current_user

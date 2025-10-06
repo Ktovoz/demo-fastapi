@@ -37,6 +37,7 @@ const clearStoredSession = () => {
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: null,
+    refreshToken: null,
     user: null,
     loading: false,
     expiresAt: null,
@@ -53,6 +54,7 @@ export const useAuthStore = defineStore("auth", {
       const stored = readStoredSession()
       if (stored?.token && (!stored.expiresAt || stored.expiresAt > Date.now())) {
         this.token = stored.token
+        this.refreshToken = stored.refreshToken || null
         this.user = stored.user
         this.expiresAt = stored.expiresAt ?? null
         logger.info("Restored session from storage")
@@ -72,12 +74,13 @@ export const useAuthStore = defineStore("auth", {
 
         // 修复数据访问路径：后端返回的是 { success: true, data: { token, user, expiresIn } }
         const responseData = response.data.data || response.data
-        const { token, user, expiresIn } = responseData
+        const { token, refresh_token, user, expiresIn } = responseData
 
         this.token = token
+        this.refreshToken = refresh_token || null
         this.user = user
         this.expiresAt = expiresIn ? Date.now() + expiresIn * 60 * 1000 : null
-        writeStoredSession({ token: this.token, user: this.user, expiresAt: this.expiresAt })
+        writeStoredSession({ token: this.token, refreshToken: this.refreshToken, user: this.user, expiresAt: this.expiresAt })
         logger.info("User logged in", { email: user.email, userId: user.id })
       } catch (error) {
         logger.error("Login failed", error)
@@ -140,10 +143,21 @@ export const useAuthStore = defineStore("auth", {
 
     logout() {
       this.token = null
+      this.refreshToken = null
       this.user = null
       this.expiresAt = null
       clearStoredSession()
       logger.info("User logged out")
+    },
+
+    setToken(token) {
+      this.token = token
+      writeStoredSession({
+        token: this.token,
+        refreshToken: this.refreshToken,
+        user: this.user,
+        expiresAt: this.expiresAt
+      })
     },
 
     hasPermission(permission) {

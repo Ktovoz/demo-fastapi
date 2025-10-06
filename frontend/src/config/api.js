@@ -14,6 +14,12 @@ if (apiBaseUrl.includes('${VITE_API_BASE_URL}') || apiBaseUrl === '${VITE_API_BA
   apiBaseUrl = 'https://demo-fast-backend.ktovoz.com';
 }
 
+// 强制使用HTTPS协议
+if (apiBaseUrl.startsWith('http://')) {
+  console.log('🔧 API Config: 检测到HTTP协议，强制转换为HTTPS');
+  apiBaseUrl = apiBaseUrl.replace('http://', 'https://');
+}
+
 export const API_BASE_URL = apiBaseUrl;
 
 console.log('🔧 API Config: 最终API_BASE_URL:', API_BASE_URL);

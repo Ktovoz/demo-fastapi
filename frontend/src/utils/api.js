@@ -89,7 +89,31 @@ api.interceptors.response.use(
 
     if (status === 401) {
       const authStore = useAuthStore(pinia)
-      authStore.logout()
+      console.log('🔐 401错误: 检查是否需要刷新令牌')
+
+      // 尝试使用刷新令牌
+      if (authStore.refreshToken && !error.config._retry) {
+        error.config._retry = true
+        try {
+          console.log('🔄 尝试刷新令牌')
+          const refreshResponse = await api.post('/auth/refresh', {
+            refresh_token: authStore.refreshToken
+          })
+
+          const { access_token } = refreshResponse.data
+          authStore.setToken(access_token)
+
+          // 重新发送原请求
+          error.config.headers.Authorization = `Bearer ${access_token}`
+          return api(error.config)
+        } catch (refreshError) {
+          console.log('❌ 刷新令牌失败，退出登录')
+          authStore.logout()
+        }
+      } else {
+        console.log('🚪 无法刷新令牌或已重试，直接退出登录')
+        authStore.logout()
+      }
     }
 
     return Promise.reject(error)

@@ -134,7 +134,10 @@ def verify_token(token: str, db: Session, token_type: str = "access") -> Optiona
         return user
     except JWTError as e:
         logger.warning(f"JWT令牌验证失败: {e}")
+        logger.warning(f"失败原因: {type(e).__name__}")
         logger.warning(f"失败的令牌: {token[:30]}..." if len(token) > 30 else f"令牌: {token}")
+        logger.warning(f"使用的密钥算法: {settings.ALGORITHM}")
+        logger.warning(f"密钥前缀: {settings.SECRET_KEY[:10]}..." if len(settings.SECRET_KEY) > 10 else f"密钥: {settings.SECRET_KEY}")
         return None
     except Exception as e:
         logger.error(f"令牌验证过程出错: {e}")
