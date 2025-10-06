@@ -50,7 +50,7 @@ if (typeof window !== 'undefined') {
 }
 
 export const API_CONFIG = {
-  baseURL: `${API_BASE_URL}/api`,  // 使用完整的基础URL
+  baseURL: `${API_BASE_URL}/api/`,  // 使用完整的基础URL，确保末尾有斜杠
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

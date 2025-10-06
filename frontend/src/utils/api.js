@@ -21,12 +21,6 @@ const getApiInstance = () => {
       baseURL = baseURL.replace('http://', 'https://');
     }
 
-    // 确保baseURL末尾没有斜杠，避免URL拼接问题
-    if (baseURL && baseURL.endsWith('/')) {
-      console.warn('🔧 Axios: 检测到末尾斜杠，移除以避免URL拼接问题');
-      baseURL = baseURL.slice(0, -1);
-    }
-
     axiosInstance = axios.create({
       ...API_CONFIG,
       baseURL
@@ -49,7 +43,20 @@ getApiInstance().interceptors.request.use(
       config.baseURL = config.baseURL.replace('http://', 'https://');
     }
 
-    // 标准化URL格式：确保不以斜杠开头（避免双斜杠）
+    // 强制确保完整URL使用HTTPS（多重保险）
+    const tempFullUrl = config.baseURL + config.url;
+    if (tempFullUrl.startsWith('http://')) {
+      console.error('🚀 Axios Request: 检测到HTTP协议，强制转换完整URL:', tempFullUrl);
+      const httpsUrl = tempFullUrl.replace('http://', 'https://');
+      // 解析URL并分别设置baseURL和url
+      const urlParts = httpsUrl.match('(https://[^/]+)(/.*)');
+      if (urlParts) {
+        config.baseURL = urlParts[1] + '/';
+        config.url = urlParts[2].slice(1); // 移除开头的斜杠
+      }
+    }
+
+    // 标准化URL格式：确保不以斜杠开头（因为baseURL已经以斜杠结尾）
     if (config.url && config.url.startsWith('/')) {
       console.warn('🚀 Axios Request: 检测到URL以斜杠开头，移除以避免双斜杠:', config.url);
       config.url = config.url.slice(1);
@@ -59,6 +66,8 @@ getApiInstance().interceptors.request.use(
     console.log('🚀 Axios Request: 方法:', config.method?.toUpperCase());
     console.log('🚀 Axios Request: baseURL:', config.baseURL);
     console.log('🚀 Axios Request: 相对URL:', config.url);
+    console.log('🚀 Axios Request: baseURL末尾字符:', config.baseURL.slice(-1));
+    console.log('🚀 Axios Request: URL开头字符:', config.url.charAt(0));
     console.log('🚀 Axios Request: 请求头:', config.headers);
     console.log('🚀 Axios Request: 请求数据:', config.data);
 
