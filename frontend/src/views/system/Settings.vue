@@ -124,77 +124,6 @@
               </a-form-item>
             </section>
 
-            <!-- 系统管理功能（管理员及超级管理员） -->
-            <section v-if="authStore.user?.is_superuser || authStore.user?.roles?.includes('admin') || authStore.user?.email === 'admin@example.com'" class="settings-section">
-              <header>
-                <h3 style="color: #ff4d4f;">
-                  <WarningOutlined style="margin-right: 8px;" />
-                  系统管理
-                </h3>
-                <p>系统维护和初始化功能，仅超级管理员可访问。</p>
-              </header>
-
-              <a-alert
-                message="危险操作区域"
-                description="以下操作将影响整个系统，请谨慎操作"
-                type="warning"
-                show-icon
-                style="margin-bottom: 24px"
-              />
-
-              <a-row :gutter="16">
-                <a-col :xs="24" :md="12">
-                  <a-form-item label="系统状态">
-                    <a-spin :spinning="systemStore.systemStatus === null">
-                      <div v-if="systemStore.systemStatus" style="padding: 12px; background: #f5f5f5; border-radius: 6px; font-size: 13px;">
-                        <p><strong>数据库状态:</strong> {{ systemStore.systemStatus.database_status }}</p>
-                        <p><strong>用户总数:</strong> {{ systemStore.systemStatus.total_users }}</p>
-                        <p><strong>角色总数:</strong> {{ systemStore.systemStatus.total_roles }}</p>
-                        <p><strong>系统版本:</strong> {{ systemStore.systemStatus.version }}</p>
-                        <p><strong>初始化时间:</strong> {{ systemStore.systemStatus.initialized_at ? dayjs(systemStore.systemStatus.initialized_at).format('YYYY-MM-DD HH:mm:ss') : '未知' }}</p>
-                      </div>
-                      <a-button v-else type="link" @click="fetchSystemStatus">
-                        获取系统状态
-                      </a-button>
-                    </a-spin>
-                  </a-form-item>
-                </a-col>
-                <a-col :xs="24" :md="12">
-                  <a-form-item label="定时任务状态">
-                    <a-spin :spinning="systemStore.schedulerStatus === null">
-                      <div v-if="systemStore.schedulerStatus" style="padding: 12px; background: #f5f5f5; border-radius: 6px; font-size: 13px;">
-                        <p><strong>调度器状态:</strong> {{ systemStore.schedulerStatus.is_running ? '运行中' : '已停止' }}</p>
-                        <p><strong>下次执行时间:</strong> {{ systemStore.schedulerStatus.next_run ? dayjs(systemStore.schedulerStatus.next_run).format('YYYY-MM-DD HH:mm:ss') : '未知' }}</p>
-                        <p><strong>已注册任务:</strong> {{ systemStore.schedulerStatus.tasks?.join(', ') || '无' }}</p>
-                      </div>
-                      <a-button v-else type="link" @click="fetchSchedulerStatus">
-                        获取调度器状态
-                      </a-button>
-                    </a-spin>
-                  </a-form-item>
-                </a-col>
-              </a-row>
-
-              <a-form-item label="系统初始化">
-                <a-space direction="vertical" style="width: 100%">
-                  <a-button
-                    danger
-                    @click="showResetConfirm"
-                    :loading="systemStore.resetLoading"
-                    :disabled="systemStore.resetLoading"
-                  >
-                    <template #icon><ReloadOutlined /></template>
-                    重置系统到初始状态
-                  </a-button>
-                  <a-text type="secondary" style="font-size: 12px;">
-                    清除所有业务数据并重置系统到初始状态（仅保留基础角色和管理员账户）
-                    <br>
-                    系统会在每天0点自动执行此操作
-                  </a-text>
-                </a-space>
-              </a-form-item>
-            </section>
-
             <div class="settings-actions">
               <a-button @click="reset">还原</a-button>
               <a-button type="primary" html-type="submit" :loading="saving">保存设置</a-button>
@@ -229,25 +158,18 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { message, Modal } from 'ant-design-vue'
-import dayjs from 'dayjs'
+import { message } from 'ant-design-vue'
 import CardContainer from '../../components/layout/CardContainer.vue'
 import { useSystemStore } from '../../store/system'
-import { useAuthStore } from '../../store/auth'
-import { createLogger } from '../../utils/logger'
 import {
   BellOutlined,
   MailOutlined,
   MessageOutlined,
-  SettingOutlined,
-  WarningOutlined,
-  ReloadOutlined
+  SettingOutlined
 } from '@ant-design/icons-vue'
 
 const systemStore = useSystemStore()
-const authStore = useAuthStore()
 const saving = ref(false)
-const logger = createLogger('Settings')
 
 const form = reactive({
   appName: '',
@@ -305,71 +227,7 @@ const activeChannels = computed(() => {
   return channels.length ? channels : ['已全部关闭']
 })
 
-// 获取系统状态
-const fetchSystemStatus = async () => {
-  try {
-    await systemStore.fetchSystemStatus()
-    message.success('获取系统状态成功')
-  } catch (error) {
-    console.error('获取系统状态失败:', error)
-    message.error('获取系统状态失败: ' + (error.message || '请检查网络连接'))
-  }
-}
-
-// 获取调度器状态
-const fetchSchedulerStatus = async () => {
-  try {
-    await systemStore.fetchSchedulerStatus()
-    message.success('获取调度器状态成功')
-  } catch (error) {
-    console.error('获取调度器状态失败:', error)
-    message.error('获取调度器状态失败: ' + (error.message || '请检查网络连接'))
-  }
-}
-
-// 显示系统重置确认对话框
-const showResetConfirm = () => {
-  Modal.confirm({
-    title: '确认重置系统',
-    content: '此操作将清除所有业务数据并重置系统到初始状态，仅保留基础角色和管理员账户。此操作不可恢复，是否继续？',
-    okText: '确认重置',
-    cancelText: '取消',
-    okType: 'danger',
-    onOk: async () => {
-      try {
-        await systemStore.resetSystem()
-        message.success('系统重置成功')
-        // 重新获取系统状态
-        fetchSystemStatus()
-      } catch (error) {
-        message.error('系统重置失败')
-      }
-    }
-  })
-}
-
-onMounted(async () => {
-  loadSettings()
-
-  // 检查并修复admin权限
-  if (authStore.user?.email === 'admin@example.com' && !authStore.user?.is_superuser) {
-    try {
-      logger.info("检测到admin用户缺少superuser权限，尝试修复...")
-      await systemStore.fixAdminSuperuser()
-      // 重新获取用户信息
-      await authStore.restoreSession()
-      message.success("admin权限已修复")
-    } catch (error) {
-      logger.error("自动修复admin权限失败:", error)
-    }
-  }
-
-  // 如果是超级管理员或管理员，自动获取系统状态
-  if (authStore.user?.is_superuser || authStore.user?.email === 'admin@example.com') {
-    fetchSystemStatus()
-    fetchSchedulerStatus()
-  }
-})
+onMounted(loadSettings)
 </script>
 
 <style scoped>

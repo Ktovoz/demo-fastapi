@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Index
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 from .base import BaseModel
@@ -6,13 +6,6 @@ from .base import BaseModel
 class RolePermission(BaseModel):
     """角色权限关联表"""
     __tablename__ = "role_permissions"
-    
-    # 添加复合索引以优化查询
-    __table_args__ = (
-        Index('idx_role_permission_role_id', 'role_id'),
-        Index('idx_role_permission_permission_id', 'permission_id'),
-        Index('idx_role_permission_role_permission', 'role_id', 'permission_id', unique=True),
-    )
 
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False, comment="角色ID")
     permission_id = Column(Integer, ForeignKey("permissions.id"), nullable=False, comment="权限ID")

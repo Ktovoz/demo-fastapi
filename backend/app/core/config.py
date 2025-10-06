@@ -33,9 +33,6 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://localhost:5173",
         "http://127.0.0.1:3000",
-        "https://demo-fast.ktovoz.com",
-        "https://demo-fast-backend.ktovoz.com",
-        "*"  # 开发环境允许所有源，生产环境应该移除
     ]
 
     # 用户配置

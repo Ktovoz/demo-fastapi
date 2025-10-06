@@ -6,34 +6,18 @@ import { pinia } from "../store"
 
 const apiLogger = createApiLogger()
 
-console.log('🔧 Axios: 开始创建axios实例');
-console.log('🔧 Axios: 使用的API_CONFIG:', API_CONFIG);
-
 const api = axios.create({
   ...API_CONFIG
 })
 
-console.log('🔧 Axios: axios实例创建完成');
-console.log('🔧 Axios: axios实例baseURL:', api.defaults.baseURL);
-console.log('🔧 Axios: baseURL协议检查:', api.defaults.baseURL?.startsWith('https://') ? 'HTTPS' : 'HTTP');
-
 api.interceptors.request.use(
   (config) => {
-    console.log('🚀 Axios Request: 发送请求');
-    console.log('🚀 Axios Request: 完整URL:', config.baseURL + config.url);
-    console.log('🚀 Axios Request: 方法:', config.method?.toUpperCase());
-    console.log('🚀 Axios Request: baseURL:', config.baseURL);
-    console.log('🚀 Axios Request: 相对URL:', config.url);
-    console.log('🚀 Axios Request: 请求头:', config.headers);
-    console.log('🚀 Axios Request: 请求数据:', config.data);
-
     const authStore = useAuthStore(pinia)
     if (authStore?.token) {
       config.headers = {
         ...config.headers,
         Authorization: `Bearer ${authStore.token}`
       }
-      console.log('🚀 Axios Request: 已添加认证头');
     }
 
     const startTime = typeof performance !== "undefined" ? performance.now() : Date.now()
@@ -50,11 +34,6 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log('✅ Axios Response: 收到响应');
-    console.log('✅ Axios Response: 状态码:', response.status);
-    console.log('✅ Axios Response: 请求URL:', response.config?.baseURL + response.config?.url);
-    console.log('✅ Axios Response: 响应数据:', response.data);
-
     const endTime = typeof performance !== "undefined" ? performance.now() : Date.now()
     const duration = response.config?.metadata?.startTime
       ? (endTime - response.config.metadata.startTime).toFixed(0)
@@ -71,13 +50,6 @@ api.interceptors.response.use(
     return response
   },
   (error) => {
-    console.log('❌ Axios Error: 请求失败');
-    console.log('❌ Axios Error: 请求URL:', error.config?.baseURL + error.config?.url);
-    console.log('❌ Axios Error: 错误信息:', error.message);
-    console.log('❌ Axios Error: 状态码:', error.response?.status);
-    console.log('❌ Axios Error: 响应数据:', error.response?.data);
-    console.log('❌ Axios Error: 错误详情:', error);
-
     const endTime = typeof performance !== "undefined" ? performance.now() : Date.now()
     const start = error.config?.metadata?.startTime
     const duration = start ? (endTime - start).toFixed(0) : null
@@ -89,31 +61,7 @@ api.interceptors.response.use(
 
     if (status === 401) {
       const authStore = useAuthStore(pinia)
-      console.log('🔐 401错误: 检查是否需要刷新令牌')
-
-      // 尝试使用刷新令牌
-      if (authStore.refreshToken && !error.config._retry) {
-        error.config._retry = true
-        try {
-          console.log('🔄 尝试刷新令牌')
-          const refreshResponse = await api.post('/auth/refresh', {
-            refresh_token: authStore.refreshToken
-          })
-
-          const { access_token } = refreshResponse.data
-          authStore.setToken(access_token)
-
-          // 重新发送原请求
-          error.config.headers.Authorization = `Bearer ${access_token}`
-          return api(error.config)
-        } catch (refreshError) {
-          console.log('❌ 刷新令牌失败，退出登录')
-          authStore.logout()
-        }
-      } else {
-        console.log('🚪 无法刷新令牌或已重试，直接退出登录')
-        authStore.logout()
-      }
+      authStore.logout()
     }
 
     return Promise.reject(error)

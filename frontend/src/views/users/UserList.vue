@@ -160,11 +160,7 @@ const columns = [
   { title: "操作", key: "actions", slots: { customRender: "actions" }, width: 220 }
 ]
 
-const users = computed(() => {
-  console.log("🔍 Component Debug: list.value:", list.value)
-  console.log("🔍 Component Debug: users computed:", list.value)
-  return list.value
-})
+const users = computed(() => list.value)
 
 const rowSelection = computed(() => ({
   selectedRowKeys: selectedRowKeys.value,

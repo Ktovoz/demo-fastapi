@@ -99,7 +99,9 @@ class Logger {
         this.setupLocalStorage(storageKey, maxStorageSize)
       }
 
-  
+      // 初始化日志
+      this.info('📝 日志系统已初始化', { level, prefix: prefixName, enableConsole, enableStorage })
+
       this.isInitialized = true
 
       // 处理待处理的日志
@@ -129,6 +131,7 @@ class Logger {
   // 处理待处理的日志
   processPendingLogs() {
     if (this.pendingLogs.length > 0) {
+      this.info(`📝 处理 ${this.pendingLogs.length} 条待处理日志`)
       this.pendingLogs.forEach(({ method, args }) => {
         this.defaultLogger[method](...args)
       })
@@ -195,7 +198,8 @@ class Logger {
   clearStoredLogs(key = 'app_logs') {
     try {
       localStorage.removeItem(key)
-          } catch (error) {
+      this.info('🗑️ 本地日志已清除')
+    } catch (error) {
       console.error('清除本地存储日志失败:', error)
     }
   }
@@ -297,7 +301,45 @@ class Logger {
     }
   }
 
+  // 性能日志
+  time(label) {
+    if (!this.isInitialized) {
+      this.init()
+    }
+    console.time(`⏱️ ${label}`)
   }
+
+  timeEnd(label) {
+    if (!this.isInitialized) {
+      this.init()
+    }
+    console.timeEnd(`⏱️ ${label}`)
+  }
+
+  // 表格日志
+  table(data, columns) {
+    if (!this.isInitialized) {
+      this.init()
+    }
+    console.table(data, columns)
+  }
+
+  // 分组日志
+  group(label, collapsed = false) {
+    if (!this.isInitialized) {
+      this.init()
+    }
+    if (collapsed) {
+      console.groupCollapsed(`📁 ${label}`)
+    } else {
+      console.group(`📁 ${label}`)
+    }
+  }
+
+  groupEnd() {
+    console.groupEnd()
+  }
+}
 
 // 创建默认日志实例
 const logger = new Logger()
@@ -312,28 +354,49 @@ const logError = (...args) => logger.error(...args)
 // 创建组件日志器
 const createLogger = (name) => logger.getLogger(name)
 
+// 性能监控工具
+const createPerformanceLogger = (name) => {
+  const performanceLogger = logger.getLogger(`Performance-${name}`)
 
-// API 请求日志器（仅记录关键信息）
+  return {
+    startTimer: (operation) => {
+      const startTime = performance.now()
+      performanceLogger.debug(`⏱️ 开始计时: ${operation}`)
+      return {
+        end: () => {
+          const endTime = performance.now()
+          const duration = (endTime - startTime).toFixed(3)
+          performanceLogger.info(`⏱️ ${operation} 完成，耗时: ${duration}ms`)
+          return parseFloat(duration)
+        }
+      }
+    }
+  }
+}
+
+// API 请求日志器
 const createApiLogger = () => {
   const apiLogger = logger.getLogger('API')
 
   return {
     request: (method, url, data = null) => {
-      // 仅记录关键API请求
-      if (url.includes('/auth/login') || url.includes('/auth/register')) {
-        apiLogger.info(`用户认证请求: ${method.toUpperCase()} ${url}`)
+      apiLogger.info(`📤 发送请求: ${method.toUpperCase()} ${url}`)
+      if (data) {
+        apiLogger.debug('📦 请求数据:', data)
       }
     },
 
     response: (method, url, status, data = null, duration = null) => {
-      // 仅记录关键响应
-      if (url.includes('/auth/login') || url.includes('/auth/register')) {
-        apiLogger.info(`认证响应: ${method.toUpperCase()} ${url} | 状态码: ${status}`)
+      const durationText = duration ? ` | 耗时: ${duration}ms` : ''
+      apiLogger.info(`📥 收到响应: ${method.toUpperCase()} ${url} | 状态码: ${status}${durationText}`)
+      if (data) {
+        apiLogger.debug('📦 响应数据:', data)
       }
     },
 
     error: (method, url, error, duration = null) => {
-      apiLogger.error(`请求失败: ${method.toUpperCase()} ${url} | 错误: ${error}`)
+      const durationText = duration ? ` | 耗时: ${duration}ms` : ''
+      apiLogger.error(`❌ 请求失败: ${method.toUpperCase()} ${url} | 错误: ${error}${durationText}`)
     }
   }
 }
@@ -346,6 +409,7 @@ export {
   logWarn,
   logError,
   createLogger,
+  createPerformanceLogger,
   createApiLogger,
   LOG_LEVELS
 }

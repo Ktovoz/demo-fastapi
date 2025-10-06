@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, Integer, ForeignKey, JSON, Index
+from sqlalchemy import Column, String, Text, Integer, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from typing import TYPE_CHECKING
 
@@ -11,17 +11,8 @@ if TYPE_CHECKING:
 class OperationLog(BaseModel):
     """操作日志模型"""
     __tablename__ = "operation_logs"
-    
-    # 添加索引以优化查询
-    __table_args__ = (
-        Index('idx_operation_log_user_id', 'user_id'),
-        Index('idx_operation_log_action', 'action'),
-        Index('idx_operation_log_resource', 'resource'),
-        Index('idx_operation_log_ip_address', 'ip_address'),
-        Index('idx_operation_log_created_at', 'created_at'),
-    )
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, comment="用户ID")
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, comment="用户ID")
     action = Column(String(50), nullable=False, comment="操作类型")
     resource = Column(String(50), nullable=False, comment="操作资源")
     resource_id = Column(Integer, comment="资源ID")

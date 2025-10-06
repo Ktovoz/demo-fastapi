@@ -60,7 +60,9 @@ def setup_logger():
         encoding="utf-8"
     )
 
-    
+    logger.info(f"日志系统已初始化，日志级别: {LOG_LEVEL}")
+    logger.info(f"日志文件位置: {LOG_FILE}")
+
     return logger
 
 # 创建全局日志记录器
@@ -74,21 +76,25 @@ def get_logger(name: str = None):
 
 # 日志装饰器
 def log_function_call(func_name: str = None):
-    """记录关键函数调用的装饰器（仅记录重要操作）"""
+    """记录函数调用的装饰器"""
     def decorator(func):
         name = func_name or f"{func.__module__}.{func.__name__}"
 
         async def async_wrapper(*args, **kwargs):
+            logger.debug(f"🚀 开始执行函数: {name}")
             try:
                 result = await func(*args, **kwargs)
+                logger.debug(f"✅ 函数执行成功: {name}")
                 return result
             except Exception as e:
                 logger.error(f"❌ 函数执行失败: {name}, 错误: {str(e)}")
                 raise
 
         def sync_wrapper(*args, **kwargs):
+            logger.debug(f"🚀 开始执行函数: {name}")
             try:
                 result = func(*args, **kwargs)
+                logger.debug(f"✅ 函数执行成功: {name}")
                 return result
             except Exception as e:
                 logger.error(f"❌ 函数执行失败: {name}, 错误: {str(e)}")

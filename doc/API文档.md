@@ -1,4 +1,4 @@
-# API文档
+﻿# API文档
 
 ## 说明
 - 本文基于 2025-10-04 的前端实现整理，供后端开发对接参考。
@@ -9,7 +9,7 @@
 - 所有接口返回 `application/json`，Axios 直接消费响应体。
 - 列表型接口需返回 `{ "items": [], "total": 0, "page": 1, "pageSize": 10 }` 结构；`items` 内部字段见各小节。
 - 排序统一使用 `sorter` 对象，格式：`{"field": "time", "order": "descend"}`，`order` 取值 `ascend|descend`。
-- 前端会把未筛选的枚举传为 `"all"`，多选类筛选传空数组，后端需要兼容视为"忽略过滤"。
+- 前端会把未筛选的枚举传为 `"all"`，多选类筛选传空数组，后端需要兼容视为“忽略过滤”。
 - 失败响应至少返回 `message` 或 `detail` 字段，便于前端展示错误；401 状态会触发前端登出流程。
 
 ## 连通性/健康检查
@@ -61,18 +61,6 @@
 }
 ```
 - **说明**：`remember` 为布尔值，可用于延长会话；若返回 `expiresIn`（分钟），前端会计算绝对过期时间。
-
-### POST /auth/login-json
-- **用途**：JSON格式登录，支持记住我功能。
-- **请求体**：
-```json
-{
-  "email": "admin@example.com",
-  "password": "secret",
-  "remember": true
-}
-```
-- **响应体**：同 `/auth/login`
 
 ### POST /auth/register
 - **用途**：创建新账号。
@@ -197,94 +185,9 @@
 
 ---
 
-## 后台运营管理（/admin）
+## 后台运营中心（/admin）
 
-### GET /admin/overview
-- **用途**：获取运营总览数据。
-- **响应体关键字段**：
-  - `cards`: 数组。每项 `{ key: "users", title, value, unit?, change, changeType, description, icon, trendLabel }`
-    - `icon` 取值：`TeamOutlined|UserAddOutlined|RiseOutlined|DashboardOutlined`。
-  - `trend`: `{ date: "10-01", requests: 18200, activeUsers: 1200, errorRate: 0.5 }`
-  - `services`: 数组，每项 `{ key, name, owner, status, uptime, latency, change }`，`status` 取 `operational|degraded|down`。
-  - `shifts`: 数组，每项 `{ id, name, window, lead, readiness }`。
-
-### GET /admin/alerts
-- **用途**：获取告警列表。
-- **响应体**：
-```json
-[
-  {
-    "id": "alert-1",
-    "severity": "high",
-    "title": "API服务响应时间异常",
-    "message": "API服务平均响应时间超过500ms阈值",
-    "timestamp": "2025-10-04T10:30:00Z",
-    "owner": "技术团队",
-    "acknowledged": false
-  }
-]
-```
-
-### POST /admin/alerts/{alert_id}/acknowledge
-- **用途**：确认告警。
-- **响应体**：返回确认后的告警对象。
-
-### GET /admin/tasks
-- **用途**：获取任务列表。
-- **查询参数**：
-  - `page`（默认 1）、`pageSize`（默认 6）。
-  - `status`: `todo|in_progress|review|done|all`。
-  - `priority`: `low|medium|high|all`。
-  - `keyword`: 关键词搜索。
-  - `tags`: 标签筛选。
-  - `sorter`: JSON 字符串或对象，字段如 `{ "field": "due", "order": "ascend" }`。
-- **响应体**：
-```json
-{
-  "items": [
-    {
-      "id": "task-1",
-      "title": "优化API响应时间",
-      "assignee": "张三",
-      "due": "2025-10-06",
-      "priority": "high",
-      "status": "in_progress",
-      "tags": ["性能优化", "后端"],
-      "avatarColor": "#f50"
-    }
-  ],
-  "total": 8,
-  "page": 1,
-  "pageSize": 6
-}
-```
-
-### POST /admin/tasks
-- **用途**：创建任务。
-- **请求体**：`{ "title": string, "assignee": string, "priority": "low|medium|high", "status": "todo|in_progress|review|done", "tags": string[] }`
-- **响应体**：返回创建后的任务对象。
-
-### PATCH /admin/tasks/{task_id}
-- **用途**：更新任务。
-- **请求体**：可包含 `title`, `assignee`, `due`, `priority`, `status`, `tags` 等字段。
-- **响应体**：返回更新后的任务对象。
-
-### GET /admin/audit-timeline
-- **用途**：获取审计时间线。
-- **响应体**：
-```json
-[
-  {
-    "id": "audit-1",
-    "time": "2025-10-04 10:30:00",
-    "actor": "张三",
-    "action": "登录系统",
-    "target": "/auth/login",
-    "detail": "用户登录成功",
-    "status": "success"
-  }
-]
-```
+注：根据代码分析，项目中未实现运营中心相关接口（/admin/*），而是实现了系统管理相关接口（/system/*）。
 
 ---
 
@@ -395,14 +298,6 @@
   - [x] GET /roles —— 返回全部角色列表。
   - [x] GET /roles/{id} —— 提供编辑所需详情。
   - [x] PUT /roles/{id} —— 更新 displayName、description、permissions、status。
-- **后台运营管理**
-  - [x] GET /admin/overview —— 返回运营总览数据。
-  - [x] GET /admin/alerts —— 返回告警列表。
-  - [x] POST /admin/alerts/{alert_id}/acknowledge —— 确认告警。
-  - [x] GET /admin/tasks —— 返回任务列表。
-  - [x] POST /admin/tasks —— 创建任务。
-  - [x] PATCH /admin/tasks/{task_id} —— 更新任务。
-  - [x] GET /admin/audit-timeline —— 返回审计时间线。
 - **系统管理**
   - [x] GET /system/logs —— 分页返回日志列表及 context。
   - [x] GET /system/logs/summary —— 汇总 severity、topModules、recent、errorRatio。
@@ -412,3 +307,5 @@
   - [x] 统一错误响应 —— 返回 message/detail 字段，覆盖 4xx/5xx。
   - [x] 权限校验 —— 401/403 正确落地，触发前端登出或拒绝访问。
   - [x] GET /health —— 返回 status/timestamp/version，供探针和前端检测使用。
+
+注：根据代码分析，项目中未实现运营中心相关接口（/admin/*），而是实现了系统管理相关接口（/system/*）。

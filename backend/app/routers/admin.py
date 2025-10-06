@@ -585,64 +585,33 @@ async def update_task(
 async def get_audit_timeline(db: Session = Depends(get_db)):
     """获取审计时间线"""
     logger.info("获取审计时间线")
-
+    
     try:
-        # 首先尝试获取操作日志
+        # 获取操作日志
+        logs = db.query(OperationLog).order_by(OperationLog.created_at.desc()).limit(20).all()
+        
+        # 构建审计时间线数据
         timeline = []
-        try:
-            logger.debug("开始查询操作日志")
-            logs = db.query(OperationLog).order_by(OperationLog.created_at.desc()).limit(20).all()
-            logger.debug(f"查询到 {len(logs)} 条操作日志")
-
-            # 构建审计时间线数据
-            for i, log in enumerate(logs):
-                try:
-                    logger.debug(f"处理第 {i+1} 条日志，ID: {log.id}")
-
-                    # 安全地获取用户信息
-                    actor = "匿名用户"
-                    if log.user_id:
-                        if log.user:
-                            actor = log.user.full_name or f"用户{log.user_id}"
-                        else:
-                            actor = f"用户{log.user_id}"
-                            # 尝试从数据库重新获取用户信息
-                            try:
-                                user = db.query(User).filter(User.id == log.user_id).first()
-                                if user:
-                                    actor = user.full_name or f"用户{log.user_id}"
-                            except Exception as user_error:
-                                logger.warning(f"获取用户 {log.user_id} 信息失败: {str(user_error)}")
-
-                    # 确定操作状态（基于描述判断）
-                    status = "success"
-                    description = log.description or ""
-                    if "失败" in description or "错误" in description:
-                        status = "failed"
-                    elif "警告" in description or "超时" in description:
-                        status = "warning"
-
-                    # 构建审计项
-                    audit_item = {
-                        "id": f"audit-{log.id}",
-                        "time": log.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                        "actor": actor,
-                        "action": log.action or "未知操作",
-                        "target": log.resource or "未知资源",
-                        "detail": description or f"{log.action or '未知操作'} {log.resource or '未知资源'}",
-                        "status": status,
-                        "ip_address": log.ip_address or "未知"
-                    }
-
-                    timeline.append(audit_item)
-                    logger.debug(f"成功处理日志 {log.id}")
-
-                except Exception as log_error:
-                    logger.error(f"处理日志 {getattr(log, 'id', 'unknown')} 时出错: {str(log_error)}")
-                    continue
-
-        except Exception as db_error:
-            logger.warning(f"数据库查询失败，使用模拟数据: {str(db_error)}")
+        for log in logs:
+            # 确定操作状态
+            status = "success"
+            if "ERROR" in log.method.upper() or log.status_code >= 400:
+                status = "failed"
+            elif log.status_code >= 300:
+                status = "warning"
+            
+            # 构建审计项
+            audit_item = {
+                "id": f"audit-{log.id}",
+                "time": log.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "actor": log.user.full_name if log.user else "系统",
+                "action": log.method,
+                "target": log.path,
+                "detail": f"{log.method} {log.path} - {log.status_code}",
+                "status": status
+            }
+            
+            timeline.append(audit_item)
         
         # 如果没有足够的日志，添加一些模拟数据
         if len(timeline) < 10:
@@ -700,12 +669,10 @@ async def get_audit_timeline(db: Session = Depends(get_db)):
         
         logger.info(f"获取审计时间线成功: 共 {len(timeline)} 条记录")
         return timeline
-
+        
     except Exception as e:
-        import traceback
         logger.error(f"获取审计时间线失败: {str(e)}")
-        logger.error(f"详细错误信息: {traceback.format_exc()}")
         raise HTTPException(
             status_code=500,
-            detail=f"获取审计时间线失败: {str(e)}"
+            detail="获取审计时间线失败"
         )
