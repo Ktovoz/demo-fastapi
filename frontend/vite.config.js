@@ -33,7 +33,34 @@ function handleConfigPlugin() {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    {
+      name: 'handle-config-build',
+      generateBundle(options, bundle) {
+        // 处理 public/config.js 文件
+        const configPath = path.join(process.cwd(), 'public/config.js')
+
+        if (fs.existsSync(configPath)) {
+          let content = fs.readFileSync(configPath, 'utf8')
+          let apiBaseUrl = process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'
+          // 自动添加协议前缀
+          if (apiBaseUrl && !apiBaseUrl.startsWith('http://') && !apiBaseUrl.startsWith('https://')) {
+            apiBaseUrl = 'https://' + apiBaseUrl
+          }
+          content = content.replace(/\$\{VITE_API_BASE_URL\}/g, apiBaseUrl)
+
+          // 将处理后的内容添加到 bundle 中
+          this.emitFile({
+            type: 'asset',
+            fileName: 'config.js',
+            source: content
+          })
+        }
+      }
+    },
+    handleConfigPlugin()
+  ],
   build: {
     rollupOptions: {
       output: {
@@ -61,37 +88,6 @@ export default defineConfig({
       }
     }
   },
-  // 插件：处理 config.js 中的环境变量（构建时）
-  plugins: [
-    vue(),
-    {
-      name: 'handle-config-build',
-      generateBundle(options, bundle) {
-        // 处理 public/config.js 文件
-        const fs = require('fs')
-        const path = require('path')
-        const configPath = path.join(process.cwd(), 'public/config.js')
-
-        if (fs.existsSync(configPath)) {
-          let content = fs.readFileSync(configPath, 'utf8')
-          let apiBaseUrl = process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'
-          // 自动添加协议前缀
-          if (apiBaseUrl && !apiBaseUrl.startsWith('http://') && !apiBaseUrl.startsWith('https://')) {
-            apiBaseUrl = 'https://' + apiBaseUrl
-          }
-          content = content.replace(/\$\{VITE_API_BASE_URL\}/g, apiBaseUrl)
-
-          // 将处理后的内容添加到 bundle 中
-          this.emitFile({
-            type: 'asset',
-            fileName: 'config.js',
-            source: content
-          })
-        }
-      }
-    },
-    handleConfigPlugin()
-  ],
   server: {
     port: 3000,
     proxy: {
