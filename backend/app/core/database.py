@@ -17,7 +17,7 @@ engine = create_engine(
         "check_same_thread": False,  # SQLite特有配置
     } if settings.DATABASE_URL.startswith("sqlite") else {},
     poolclass=StaticPool if settings.DATABASE_URL.startswith("sqlite") else None,  # SQLite使用静态连接池
-    echo=settings.DEBUG  # 开发模式下打印SQL语句
+    echo=False  # 关闭SQL语句日志输出
 )
 
 # 创建会话工厂

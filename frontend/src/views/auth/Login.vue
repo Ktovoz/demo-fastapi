@@ -182,25 +182,18 @@ const form = reactive({
 // 健康检查函数
 const checkHealth = async () => {
   try {
-    // 使用完整的URL路径进行健康检查，因为/health不在/api路径下
-    const response = await fetch('http://localhost:8000/health')
+    // 使用完整的基础URL
+    const response = await fetch(`${window.APP_CONFIG?.API_BASE_URL || 'http://localhost:8000'}/health`)
     const data = await response.json()
-    console.log('健康检查成功:', data)
     return data
   } catch (error) {
-    console.error('健康检查失败:', error)
     return null
   }
 }
 
 // 组件挂载时执行健康检查
 onMounted(async () => {
-  const healthData = await checkHealth()
-  if (healthData) {
-    console.log('后端服务状态:', healthData.status)
-    console.log('服务版本:', healthData.version)
-    console.log('检查时间:', healthData.timestamp)
-  }
+  await checkHealth()
 })
 
 // 页面配置
@@ -229,7 +222,7 @@ const fillDemoAccount = () => {
   form.email = 'admin@example.com'
   form.password = 'admin123'
   form.remember = true
-  message.success('已填充演示管理员账号')
+  message.success('已填充演示管理员账号 (admin / admin123)')
 }
 
 const goRegister = () => {

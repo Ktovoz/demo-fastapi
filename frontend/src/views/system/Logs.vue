@@ -76,18 +76,34 @@
                   @change="handleTableChange"
                 >
                   <template #level="{ record }">
-                    <a-tag :color="levelColor(record.level)" :bordered="false">{{ record.level }}</a-tag>
+                    <a-tag :color="levelColor(record.level)" :bordered="false">
+                      <component :is="levelMap[record.level]?.icon" v-if="levelMap[record.level]?.icon" />
+                      {{ levelMap[record.level]?.label || record.level }}
+                    </a-tag>
                   </template>
-                  <template #context="{ record }">
-                    <div class="context-cell">
-                      <span>请求: {{ record.context.requestId }}</span>
-                      <span>IP: {{ record.context.ip }}</span>
+                  <template #user="{ record }">
+                    <div v-if="record.context.userEmail">
+                      <div class="user-email">{{ record.context.userEmail }}</div>
+                      <div class="user-name">{{ record.context.userName || '用户' }}</div>
                     </div>
+                    <span v-else class="anonymous-user">
+                      <a-tag color="default" size="small">匿名用户</a-tag>
+                    </span>
+                  </template>
+                  <template #ip="{ record }">
+                    <span class="ip-address">{{ record.context.ip }}</span>
                   </template>
                   <template #message="{ record }">
-                    <a-typography-paragraph class="log-message" :ellipsis="{ rows: 2 }">
-                      {{ record.message }}
-                    </a-typography-paragraph>
+                    <a-tooltip :title="record.message" placement="topLeft">
+                      <a-typography-paragraph
+                        class="log-message"
+                        :ellipsis="{ rows: 2 }"
+                        style="cursor: pointer;"
+                        @click="showLogDetail(record)"
+                      >
+                        {{ record.message }}
+                      </a-typography-paragraph>
+                    </a-tooltip>
                   </template>
                 </Table>
                 <div class="table-footer">
@@ -95,6 +111,10 @@
                     :total="logTotal"
                     v-model:current="logPagination.page"
                     v-model:page-size="logPagination.pageSize"
+                    :page-size-options="['10', '20', '50', '100']"
+                    :show-size-changer="true"
+                    :show-total="true"
+                    :show-quick-jumper="true"
                     @change="handlePageChange"
                   />
                 </div>
@@ -142,11 +162,17 @@
                 <div class="recent-item">
                   <div class="recent-item__meta">
                     <span class="recent-item__time">{{ item.time }}</span>
-                    <a-tag size="small" :color="levelColor(item.level)" :bordered="false">{{ item.level }}</a-tag>
+                    <a-tag size="small" :color="levelColor(item.level)" :bordered="false">
+                      <component :is="levelMap[item.level]?.icon" v-if="levelMap[item.level]?.icon" style="font-size: 12px; margin-right: 4px;" />
+                      {{ levelMap[item.level]?.label || item.level }}
+                    </a-tag>
                   </div>
                   <div class="recent-item__body">
-                    <strong>{{ item.module }}</strong>
-                    <p>{{ item.message }}</p>
+                    <div class="recent-item__header">
+                      <strong>{{ item.module }}</strong>
+                      <span class="recent-item__action">{{ item.action }}</span>
+                    </div>
+                    <p class="recent-item__description">{{ item.message }}</p>
                   </div>
                 </div>
               </a-timeline-item>
@@ -155,11 +181,69 @@
         </a-col>
       </a-row>
     </section>
+
+    <!-- 日志详情弹窗 -->
+    <a-modal
+      v-model:open="detailModalVisible"
+      title="日志详情"
+      width="700px"
+      :footer="null"
+      @cancel="closeLogDetail"
+    >
+      <div v-if="selectedLog" class="log-detail">
+        <a-descriptions :column="2" size="small" bordered>
+          <a-descriptions-item label="时间">
+            {{ selectedLog.time }}
+          </a-descriptions-item>
+          <a-descriptions-item label="级别">
+            <a-tag :color="levelColor(selectedLog.level)" :bordered="false">
+              <component :is="levelMap[selectedLog.level]?.icon" v-if="levelMap[selectedLog.level]?.icon" />
+              {{ levelMap[selectedLog.level]?.label || selectedLog.level }}
+            </a-tag>
+          </a-descriptions-item>
+          <a-descriptions-item label="用户">
+            <a-tag color="blue" size="small" v-if="selectedLog.context.userId">管理员</a-tag>
+            <a-tag color="default" size="small" v-else>匿名</a-tag>
+          </a-descriptions-item>
+          <a-descriptions-item label="模块">
+            {{ selectedLog.module }}
+          </a-descriptions-item>
+          <a-descriptions-item label="操作" :span="2">
+            {{ selectedLog.action }}
+          </a-descriptions-item>
+          <a-descriptions-item label="IP地址">
+            {{ selectedLog.context.ip }}
+          </a-descriptions-item>
+          <a-descriptions-item label="用户代理">
+            <a-tooltip :title="selectedLog.context.userAgent">
+              <span class="user-agent-text">{{ selectedLog.context.userAgent || 'N/A' }}</span>
+            </a-tooltip>
+          </a-descriptions-item>
+          <a-descriptions-item label="详情描述" :span="2">
+            {{ selectedLog.message }}
+          </a-descriptions-item>
+          <a-descriptions-item label="请求ID">
+            {{ selectedLog.context.requestId }}
+          </a-descriptions-item>
+          <a-descriptions-item label="资源">
+            {{ selectedLog.context.resource || 'N/A' }}
+          </a-descriptions-item>
+        </a-descriptions>
+
+        <!-- 请求数据 -->
+        <div v-if="selectedLog.context" class="detail-section">
+          <h4>请求数据</h4>
+          <a-typography-paragraph>
+            <pre>{{ formatJson(selectedLog.context) }}</pre>
+          </a-typography-paragraph>
+        </div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { message } from 'ant-design-vue'
 import SearchForm from '../../components/common/SearchForm.vue'
@@ -206,11 +290,71 @@ const searchItems = [
 ]
 
 const columns = [
-  { title: '时间', dataIndex: 'time', key: 'time', sorter: true },
-  { title: '级别', dataIndex: 'level', key: 'level', slots: { customRender: 'level' } },
-  { title: '模块', dataIndex: 'module', key: 'module' },
-  { title: '上下文', dataIndex: 'context', key: 'context', slots: { customRender: 'context' } },
-  { title: '消息', dataIndex: 'message', key: 'message', slots: { customRender: 'message' } }
+  {
+    title: '时间',
+    dataIndex: 'time',
+    key: 'time',
+    width: 140,
+    sorter: true,
+    ellipsis: true
+  },
+  {
+    title: '用户',
+    dataIndex: 'context',
+    key: 'user',
+    width: 150,
+    slots: { customRender: 'user' },
+    filters: [
+      { text: '管理员', value: 'admin' },
+      { text: '匿名', value: 'anonymous' }
+    ],
+    onFilter: (value, record) => {
+      return value === 'admin' ? record.context.userId : !record.context.userId
+    }
+  },
+  {
+    title: '级别',
+    dataIndex: 'level',
+    key: 'level',
+    width: 70,
+    slots: { customRender: 'level' },
+    filters: [
+      { text: '错误', value: 'ERROR' },
+      { text: '警告', value: 'WARN' },
+      { text: '信息', value: 'INFO' },
+      { text: '调试', value: 'DEBUG' }
+    ],
+    onFilter: (value, record) => record.level === value
+  },
+  {
+    title: '模块',
+    dataIndex: 'module',
+    key: 'module',
+    width: 120,
+    ellipsis: true,
+    filters: [
+      { text: '认证系统', value: '认证系统' },
+      { text: '用户管理', value: '用户管理' },
+      { text: '仪表盘', value: '仪表盘' },
+      { text: '系统管理', value: '系统管理' },
+      { text: '角色管理', value: '角色管理' }
+    ],
+    onFilter: (value, record) => record.module === value
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    key: 'action',
+    width: 160,
+    ellipsis: true
+  },
+  {
+    title: 'IP地址',
+    dataIndex: 'context',
+    key: 'ip',
+    width: 120,
+    slots: { customRender: 'ip' }
+  }
 ]
 
 const levelMap = {
@@ -248,25 +392,37 @@ const combinedLoading = computed(() => logLoading.value || logSummaryLoading.val
 const handleSearch = () => {
   systemStore.setLogFilters({ ...formValues })
   systemStore.setLogPagination({ page: 1 })
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const handleReset = () => {
   systemStore.resetLogFilters()
   Object.assign(formValues, { keyword: '', level: 'ALL' })
   systemStore.setLogPagination({ page: 1 })
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const handlePageChange = ({ page, pageSize }) => {
   systemStore.setLogPagination({ page, pageSize })
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const handleTableChange = (pagination, filters, sorter) => {
   const { order, field } = sorter
   systemStore.setLogSorter(order ? { field, order } : null)
-  systemStore.fetchLogs().catch(() => message.error('日志加载失败'))
+  systemStore.fetchLogs().catch((error) => {
+    console.error('日志加载失败:', error)
+    message.error(`日志加载失败: ${error.message || '网络错误'}`)
+  })
 }
 
 const exportLogs = () => {
@@ -297,7 +453,30 @@ const refreshAll = async () => {
     ])
     message.success('日志数据已刷新')
   } catch (error) {
-    message.error('刷新失败，请稍后重试')
+    console.error('刷新失败:', error)
+    message.error(`刷新失败: ${error.message || '请稍后重试'}`)
+  }
+}
+
+// 日志详情弹窗
+const detailModalVisible = ref(false)
+const selectedLog = ref(null)
+
+const showLogDetail = (record) => {
+  selectedLog.value = record
+  detailModalVisible.value = true
+}
+
+const closeLogDetail = () => {
+  detailModalVisible.value = false
+  selectedLog.value = null
+}
+
+const formatJson = (obj) => {
+  try {
+    return JSON.stringify(obj, null, 2)
+  } catch (e) {
+    return String(obj)
   }
 }
 
@@ -308,7 +487,8 @@ onMounted(async () => {
       systemStore.fetchLogs()
     ])
   } catch (error) {
-    message.error('加载系统日志失败')
+    console.error('加载系统日志失败:', error)
+    message.error(`加载系统日志失败: ${error.message || '请检查网络连接'}`)
   }
 })
 </script>
@@ -428,6 +608,34 @@ onMounted(async () => {
 
 .log-message {
   margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ip-address {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 12px;
+  color: #64748b;
+  background: rgba(100, 116, 139, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.user-name {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 1px;
+}
+
+.anonymous-user {
+  font-size: 12px;
+  color: #9ca3af;
 }
 
 .module-list {
@@ -465,13 +673,28 @@ onMounted(async () => {
   margin-top: 4px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
-.recent-item__body p {
+.recent-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recent-item__action {
+  font-size: 11px;
+  color: #64748b;
+  background: rgba(100, 116, 139, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.recent-item__description {
   margin: 0;
   font-size: 12px;
   color: #475569;
+  line-height: 1.3;
 }
 
 .empty-hint {
@@ -479,6 +702,45 @@ onMounted(async () => {
   text-align: center;
   color: #94a3b8;
   font-size: 13px;
+}
+
+.log-detail .detail-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.log-detail .detail-section h4 {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.log-detail .detail-section pre {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #374151;
+  overflow-x: auto;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.log-detail .user-agent-text {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 11px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 4px;
+  border-radius: 3px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 @media (max-width: 768px) {
