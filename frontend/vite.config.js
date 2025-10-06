@@ -37,25 +37,26 @@ export default defineConfig({
     vue(),
     {
       name: 'handle-config-build',
-      generateBundle(options, bundle) {
-        // 处理 public/config.js 文件
-        const configPath = path.join(process.cwd(), 'public/config.js')
+      writeBundle() {
+        // 构建完成后处理 dist/config.js 文件
+        const configPath = path.join(process.cwd(), 'dist/config.js')
 
         if (fs.existsSync(configPath)) {
           let content = fs.readFileSync(configPath, 'utf8')
           let apiBaseUrl = process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'
+
+          console.log('替换环境变量:', { VITE_API_BASE_URL: process.env.VITE_API_BASE_URL, apiBaseUrl })
+
           // 自动添加协议前缀
           if (apiBaseUrl && !apiBaseUrl.startsWith('http://') && !apiBaseUrl.startsWith('https://')) {
             apiBaseUrl = 'https://' + apiBaseUrl
           }
+
           content = content.replace(/\$\{VITE_API_BASE_URL\}/g, apiBaseUrl)
 
-          // 将处理后的内容添加到 bundle 中
-          this.emitFile({
-            type: 'asset',
-            fileName: 'config.js',
-            source: content
-          })
+          console.log('替换后的config.js内容:', content)
+
+          fs.writeFileSync(configPath, content, 'utf8')
         }
       }
     },

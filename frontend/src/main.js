@@ -24,7 +24,8 @@ logger.info("环境信息:", {
   mode: import.meta.env.MODE,
   dev: import.meta.env.DEV,
   prod: import.meta.env.PROD,
-  baseUrl: import.meta.env.BASE_URL
+  baseUrl: import.meta.env.BASE_URL,
+  appConfig: window.APP_CONFIG
 })
 
 logger.info("开始创建Vue应用实例")
