@@ -7,9 +7,10 @@ const config = window.APP_CONFIG || {};
 console.log('🔧 API Config: 解析后的config:', config);
 console.log('🔧 API Config: config.API_BASE_URL:', config.API_BASE_URL);
 
-export const API_BASE_URL = config.API_BASE_URL || 'http://localhost:8000';
+export const API_BASE_URL = config.API_BASE_URL || 'https://demo-fast-backend.ktovoz.com';
 
 console.log('🔧 API Config: 最终API_BASE_URL:', API_BASE_URL);
+console.log('🔧 API Config: URL协议检查:', API_BASE_URL.startsWith('https://') ? 'HTTPS' : 'HTTP');
 
 export const API_CONFIG = {
   baseURL: `${API_BASE_URL}/api`,  // 使用完整的基础URL

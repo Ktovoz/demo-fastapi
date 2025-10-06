@@ -15,6 +15,7 @@ const api = axios.create({
 
 console.log('🔧 Axios: axios实例创建完成');
 console.log('🔧 Axios: axios实例baseURL:', api.defaults.baseURL);
+console.log('🔧 Axios: baseURL协议检查:', api.defaults.baseURL?.startsWith('https://') ? 'HTTPS' : 'HTTP');
 
 api.interceptors.request.use(
   (config) => {

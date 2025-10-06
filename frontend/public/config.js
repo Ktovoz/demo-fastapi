@@ -3,7 +3,7 @@ console.log('🔧 Config.js: 开始加载配置文件');
 console.log('🔧 Config.js: 原始占位符内容', '${VITE_API_BASE_URL}');
 
 window.APP_CONFIG = {
-  API_BASE_URL: '${VITE_API_BASE_URL}' || 'http://localhost:8000'
+  API_BASE_URL: '${VITE_API_BASE_URL}' || 'https://demo-fast-backend.ktovoz.com'
 };
 
 console.log('🔧 Config.js: 配置加载完成', window.APP_CONFIG);
