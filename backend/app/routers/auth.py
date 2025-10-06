@@ -311,8 +311,10 @@ async def refresh_token(
         logger.info(f"🔑 刷新令牌前缀: {refresh_token[:30]}..." if len(refresh_token) > 30 else f"令牌: {refresh_token}")
 
         # 验证刷新令牌
+        logger.info(f"🔍 开始验证刷新令牌")
         user = verify_token(refresh_token, db, "refresh")
         if not user:
+            logger.warning(f"❌ 刷新令牌验证失败")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="无效的刷新令牌"
@@ -327,6 +329,14 @@ async def refresh_token(
         )
 
         logger.info(f"✅ 新访问令牌已创建: {new_access_token[:30]}..." if len(new_access_token) > 30 else f"令牌: {new_access_token}")
+        logger.info(f"✅ 新访问令牌验证测试: {new_access_token[:10]}...")
+
+        # 简单验证新令牌是否有效
+        try:
+            test_user = verify_token(new_access_token, db, "access")
+            logger.info(f"✅ 新访问令牌自验证成功: {test_user.username if test_user else 'None'}")
+        except Exception as e:
+            logger.error(f"❌ 新访问令牌自验证失败: {e}")
 
         return BaseResponse(
             success=True,

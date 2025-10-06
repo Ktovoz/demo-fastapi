@@ -96,9 +96,17 @@ api.interceptors.response.use(
     if (status === 401) {
       const authStore = useAuthStore(pinia)
       console.log('🔐 401错误: 检查是否需要刷新令牌')
+      console.log('🔐 当前token状态:', {
+        hasToken: !!authStore.token,
+        hasRefreshToken: !!authStore.refreshToken,
+        tokenPrefix: authStore.token ? authStore.token.substring(0, 20) + '...' : 'none',
+        refreshTokenPrefix: authStore.refreshToken ? authStore.refreshToken.substring(0, 20) + '...' : 'none',
+        isRetry: !!error.config._retry
+      })
 
       // 尝试使用刷新令牌
       if (authStore.refreshToken && !error.config._retry) {
+        console.log('🔄 检测到refreshToken，尝试刷新')
         error.config._retry = true
         try {
           console.log('🔄 尝试刷新令牌')
@@ -123,11 +131,17 @@ api.interceptors.response.use(
           error.config.headers.Authorization = `Bearer ${access_token}`
           return api(error.config)
         } catch (refreshError) {
-          console.log('❌ 刷新令牌失败，退出登录')
+          console.log('❌ 刷新令牌失败，错误详情:', refreshError)
+          console.log('❌ 可能原因：JWT密钥已更换，旧token失效')
           authStore.logout()
         }
       } else {
-        console.log('🚪 无法刷新令牌或已重试，直接退出登录')
+        if (!authStore.refreshToken) {
+          console.log('🚪 没有refreshToken，可能是旧版本登录')
+        } else {
+          console.log('🚪 已经重试过，避免无限循环')
+        }
+        console.log('🚪 清除本地存储，用户需要重新登录')
         authStore.logout()
       }
     }

@@ -4,6 +4,8 @@ import { createLogger } from "../utils/logger"
 
 const logger = createLogger("AuthStore")
 const STORAGE_KEY = "demo_fastapi_session"
+const TOKEN_VERSION_KEY = "demo_fastapi_token_version"
+const CURRENT_TOKEN_VERSION = "v2" // 更改JWT密钥时更新此版本
 
 const readStoredSession = () => {
   if (typeof window === "undefined") return null
@@ -51,6 +53,18 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async restoreSession() {
       if (this.initialized) return
+
+      // 检查token版本，如果版本不匹配，清除旧token
+      const storedVersion = localStorage.getItem(TOKEN_VERSION_KEY)
+      if (storedVersion !== CURRENT_TOKEN_VERSION) {
+        logger.warn(`Token version mismatch: stored=${storedVersion}, current=${CURRENT_TOKEN_VERSION}`)
+        logger.warn("JWT密钥已更新，清除旧token")
+        clearStoredSession()
+        localStorage.setItem(TOKEN_VERSION_KEY, CURRENT_TOKEN_VERSION)
+        this.initialized = true
+        return
+      }
+
       const stored = readStoredSession()
       if (stored?.token && (!stored.expiresAt || stored.expiresAt > Date.now())) {
         this.token = stored.token
@@ -81,6 +95,10 @@ export const useAuthStore = defineStore("auth", {
         this.user = user
         this.expiresAt = expiresIn ? Date.now() + expiresIn * 60 * 1000 : null
         writeStoredSession({ token: this.token, refreshToken: this.refreshToken, user: this.user, expiresAt: this.expiresAt })
+
+        // 设置token版本
+        localStorage.setItem(TOKEN_VERSION_KEY, CURRENT_TOKEN_VERSION)
+
         logger.info("User logged in", { email: user.email, userId: user.id })
       } catch (error) {
         logger.error("Login failed", error)
