@@ -82,13 +82,27 @@ export default defineConfig({
     allowedHosts: ['demo-fast.ktovoz.com', 'localhost', '127.0.0.1'],
     proxy: {
       '/api': {
-        target: process.env.VITE_API_BASE_URL || 'http://backend:8000',
+        target: (() => {
+          let target = process.env.VITE_API_BASE_URL || 'http://backend:8000'
+          // 确保有协议前缀
+          if (target && !target.startsWith('http://') && !target.startsWith('https://')) {
+            target = 'https://' + target
+          }
+          return target
+        })(),
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '/api')
       },
       '/health': {
-        target: process.env.VITE_API_BASE_URL || 'http://backend:8000',
+        target: (() => {
+          let target = process.env.VITE_API_BASE_URL || 'http://backend:8000'
+          // 确保有协议前缀
+          if (target && !target.startsWith('http://') && !target.startsWith('https://')) {
+            target = 'https://' + target
+          }
+          return target
+        })(),
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/health/, '/health')
