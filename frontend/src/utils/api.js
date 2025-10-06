@@ -14,11 +14,17 @@ const getApiInstance = () => {
     console.log('🔧 Axios: 开始创建axios实例');
     console.log('🔧 Axios: 使用的API_CONFIG:', API_CONFIG);
 
-    // 确保baseURL使用HTTPS协议
+    // 确保baseURL使用HTTPS协议且规范格式
     let baseURL = API_CONFIG.baseURL;
     if (baseURL && baseURL.startsWith('http://')) {
       console.warn('🔧 Axios: 检测到HTTP协议，强制转换为HTTPS');
       baseURL = baseURL.replace('http://', 'https://');
+    }
+
+    // 确保baseURL末尾没有斜杠，避免URL拼接问题
+    if (baseURL && baseURL.endsWith('/')) {
+      console.warn('🔧 Axios: 检测到末尾斜杠，移除以避免URL拼接问题');
+      baseURL = baseURL.slice(0, -1);
     }
 
     axiosInstance = axios.create({
@@ -41,6 +47,12 @@ getApiInstance().interceptors.request.use(
     if (config.baseURL && config.baseURL.startsWith('http://')) {
       console.warn('🚀 Axios Request: 强制转换baseURL从HTTP到HTTPS');
       config.baseURL = config.baseURL.replace('http://', 'https://');
+    }
+
+    // 标准化URL格式：确保不以斜杠开头（避免双斜杠）
+    if (config.url && config.url.startsWith('/')) {
+      console.warn('🚀 Axios Request: 检测到URL以斜杠开头，移除以避免双斜杠:', config.url);
+      config.url = config.url.slice(1);
     }
 
     console.log('🚀 Axios Request: 完整URL:', config.baseURL + config.url);

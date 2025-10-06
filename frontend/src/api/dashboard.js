@@ -6,12 +6,12 @@ export const dashboardApi = {
     if (isMockEnabled) {
       return mockApi.dashboard.fetchOverview()
     }
-    return apiRequest.get('/dashboard/overview')
+    return apiRequest.get('dashboard/overview')
   },
   fetchMetrics() {
     if (isMockEnabled) {
       return mockApi.dashboard.fetchMetrics()
     }
-    return apiRequest.get('/dashboard/metrics')
+    return apiRequest.get('dashboard/metrics')
   }
 }

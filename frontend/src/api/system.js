@@ -6,43 +6,43 @@ export const systemApi = {
     if (isMockEnabled) {
       return mockApi.system.fetchLogs(params)
     }
-    return apiRequest.get('/system/logs', { params })
+    return apiRequest.get('system/logs', { params })
   },
   fetchLogSummary() {
     if (isMockEnabled) {
       return mockApi.system.fetchLogSummary()
     }
-    return apiRequest.get('/system/logs/summary')
+    return apiRequest.get('system/logs/summary')
   },
   fetchSettings() {
     if (isMockEnabled) {
       return mockApi.system.fetchSettings()
     }
-    return apiRequest.get('/system/settings')
+    return apiRequest.get('system/settings')
   },
   updateSettings(payload) {
     if (isMockEnabled) {
       return mockApi.system.updateSettings(payload)
     }
-    return apiRequest.put('/system/settings', payload)
+    return apiRequest.put('system/settings', payload)
   },
   getSystemStatus() {
     if (isMockEnabled) {
       return mockApi.system.getSystemStatus()
     }
-    return apiRequest.get('/system/system/status')
+    return apiRequest.get('system/system/status')
   },
   resetSystem() {
     if (isMockEnabled) {
       return mockApi.system.resetSystem()
     }
-    return apiRequest.post('/system/system/reset')
+    return apiRequest.post('system/system/reset')
   },
   getSchedulerStatus() {
     if (isMockEnabled) {
       return mockApi.system.getSchedulerStatus()
     }
-    return apiRequest.get('/scheduler/status')
+    return apiRequest.get('scheduler/status')
   },
   fixAdminSuperuser() {
     if (isMockEnabled) {
@@ -59,6 +59,6 @@ export const systemApi = {
         }
       })
     }
-    return apiRequest.post('/system/system/fix-admin')
+    return apiRequest.post('system/system/fix-admin')
   }
 }
