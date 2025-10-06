@@ -70,7 +70,7 @@ api.interceptors.response.use(
 
     return response
   },
-  (error) => {
+  async (error) => {
     console.log('❌ Axios Error: 请求失败');
     console.log('❌ Axios Error: 请求URL:', error.config?.baseURL + error.config?.url);
     console.log('❌ Axios Error: 错误信息:', error.message);
