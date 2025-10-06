@@ -1,21 +1,29 @@
-﻿import axios from "axios"
-import { API_CONFIG } from "../config/api"
+import axios from "axios"
+import { API_CONFIG, ensureConfigLoaded } from "../config/api"
 import { createApiLogger } from "./logger"
 import { useAuthStore } from "../store/auth"
 import { pinia } from "../store"
 
 const apiLogger = createApiLogger()
 
-console.log('🔧 Axios: 开始创建axios实例');
-console.log('🔧 Axios: 使用的API_CONFIG:', API_CONFIG);
+// 延迟创建axios实例，确保配置已加载
+let api = null
 
-const api = axios.create({
-  ...API_CONFIG
-})
-
-console.log('🔧 Axios: axios实例创建完成');
-console.log('🔧 Axios: axios实例baseURL:', api.defaults.baseURL);
-console.log('🔧 Axios: baseURL协议检查:', api.defaults.baseURL?.startsWith('https://') ? 'HTTPS' : 'HTTP');
+const getApiInstance = () => {
+  if (!api) {
+    console.log('🔧 Axios: 开始创建axios实例');
+    console.log('🔧 Axios: 使用的API_CONFIG:', API_CONFIG);
+    
+    api = axios.create({
+      ...API_CONFIG
+    })
+    
+    console.log('🔧 Axios: axios实例创建完成');
+    console.log('🔧 Axios: axios实例baseURL:', api.defaults.baseURL);
+    console.log('🔧 Axios: baseURL协议检查:', api.defaults.baseURL?.startsWith('https://') ? 'HTTPS' : 'HTTP');
+  }
+  return api
+}
 
 api.interceptors.request.use(
   (config) => {
@@ -150,12 +158,31 @@ api.interceptors.response.use(
   }
 )
 
+// 确保配置加载的API请求函数
 export const apiRequest = {
-  get: (url, config) => api.get(url, config),
-  post: (url, data, config) => api.post(url, data, config),
-  put: (url, data, config) => api.put(url, data, config),
-  delete: (url, config) => api.delete(url, config),
-  patch: (url, data, config) => api.patch(url, data, config)
+  get: async (url, config) => {
+    await ensureConfigLoaded();
+    return getApiInstance().get(url, config);
+  },
+  post: async (url, data, config) => {
+    await ensureConfigLoaded();
+    return getApiInstance().post(url, data, config);
+  },
+  put: async (url, data, config) => {
+    await ensureConfigLoaded();
+    return getApiInstance().put(url, data, config);
+  },
+  delete: async (url, config) => {
+    await ensureConfigLoaded();
+    return getApiInstance().delete(url, config);
+  },
+  patch: async (url, data, config) => {
+    await ensureConfigLoaded();
+    return getApiInstance().patch(url, data, config);
+  }
 }
 
-export { api }
+// 导出api实例
+export const api = {
+  ...apiRequest
+}

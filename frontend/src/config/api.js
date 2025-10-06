@@ -14,10 +14,25 @@ if (apiBaseUrl.includes('${VITE_API_BASE_URL}') || apiBaseUrl === '${VITE_API_BA
   apiBaseUrl = 'https://demo-fast-backend.ktovoz.com';
 }
 
-// 强制使用HTTPS协议
+// 强制使用HTTPS协议 - 增强检查
 if (apiBaseUrl.startsWith('http://')) {
   console.log('🔧 API Config: 检测到HTTP协议，强制转换为HTTPS');
   apiBaseUrl = apiBaseUrl.replace('http://', 'https://');
+}
+
+// 再次检查确保使用HTTPS
+if (!apiBaseUrl.startsWith('https://')) {
+  console.log('🔧 API Config: 缺少协议前缀，添加HTTPS');
+  apiBaseUrl = 'https://' + apiBaseUrl;
+}
+
+// 确保与前端页面使用相同的域名协议
+if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+  // 如果前端使用HTTPS，确保后端也使用HTTPS
+  if (apiBaseUrl.startsWith('http://')) {
+    console.log('🔧 API Config: 前端使用HTTPS，强制后端也使用HTTPS');
+    apiBaseUrl = apiBaseUrl.replace('http://', 'https://');
+  }
 }
 
 export const API_BASE_URL = apiBaseUrl;
@@ -43,3 +58,19 @@ export const API_CONFIG = {
 };
 
 console.log('🔧 API Config: 最终API_CONFIG:', API_CONFIG);
+
+// 配置加载完成检查
+export const ensureConfigLoaded = () => {
+  return new Promise((resolve) => {
+    const checkConfig = () => {
+      if (window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL) {
+        console.log('🔧 API Config: 配置已加载完成');
+        resolve(true);
+      } else {
+        console.log('🔧 API Config: 等待配置加载...');
+        setTimeout(checkConfig, 100);
+      }
+    };
+    checkConfig();
+  });
+};
