@@ -182,8 +182,8 @@ const form = reactive({
 // 健康检查函数
 const checkHealth = async () => {
   try {
-    // 使用相对路径，让Vite代理处理
-    const response = await fetch('/health')
+    // 使用完整的基础URL
+    const response = await fetch(`${window.APP_CONFIG?.API_BASE_URL || 'http://localhost:8000'}/health`)
     const data = await response.json()
     return data
   } catch (error) {
