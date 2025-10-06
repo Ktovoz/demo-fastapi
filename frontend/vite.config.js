@@ -15,7 +15,12 @@ function handleConfigPlugin() {
         if (req.method === 'GET') {
           const configPath = path.join(process.cwd(), 'public/config.js')
           let content = fs.readFileSync(configPath, 'utf8')
-          content = content.replace('${VITE_API_BASE_URL}', process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com')
+          let apiBaseUrl = process.env.VITE_API_BASE_URL || 'https://demo-fast-backend.ktovoz.com'
+          // 自动添加协议前缀
+          if (apiBaseUrl && !apiBaseUrl.startsWith('http://') && !apiBaseUrl.startsWith('https://')) {
+            apiBaseUrl = 'https://' + apiBaseUrl
+          }
+          content = content.replace('${VITE_API_BASE_URL}', apiBaseUrl)
           res.setHeader('Content-Type', 'application/javascript')
           res.end(content)
         } else {
