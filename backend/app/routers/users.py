@@ -13,6 +13,7 @@ router = APIRouter()
 logger = get_logger(__name__)
 
 @router.get("/", response_model=PaginatedResponse)
+@router.get("", response_model=PaginatedResponse)  # 同时支持不带斜杠
 async def get_users(
     page: int = Query(1, ge=1, description="页码"),
     pageSize: int = Query(10, ge=1, le=100, description="每页数量"),

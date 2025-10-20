@@ -8,42 +8,42 @@ export const userApi = {
       return mockApi.users.fetchUsers(params)
     }
     console.log("Fetching users from API with params:", params)
-    return apiRequest.get("users", { params })
+    return apiRequest.get("users/", { params })  // 添加斜杠
   },
   fetchUser(id) {
     if (isMockEnabled) {
       return mockApi.users.fetchUser(id)
     }
-    return apiRequest.get(`users/${id}`)
+    return apiRequest.get(`users/${id}/`)
   },
   createUser(payload) {
     if (isMockEnabled) {
       return mockApi.users.createUser(payload)
     }
-    return apiRequest.post("users", payload)
+    return apiRequest.post("users/", payload)
   },
   updateUser(id, payload) {
     if (isMockEnabled) {
       return mockApi.users.updateUser(id, payload)
     }
-    return apiRequest.put(`users/${id}`, payload)
+    return apiRequest.put(`users/${id}/`, payload)
   },
   deleteUser(id) {
     if (isMockEnabled) {
       return mockApi.users.deleteUsers([id])
     }
-    return apiRequest.delete(`users/${id}`)
+    return apiRequest.delete(`users/${id}/`)
   },
   deleteUsers(ids = []) {
     if (isMockEnabled) {
       return mockApi.users.deleteUsers(ids)
     }
-    return apiRequest.post("users/bulk-delete", { ids })
+    return apiRequest.post("users/bulk-delete/", { ids })
   },
   toggleUserStatus(id) {
     if (isMockEnabled) {
       return mockApi.users.toggleUserStatus(id)
     }
-    return apiRequest.patch(`users/${id}/status`)
+    return apiRequest.patch(`users/${id}/status/`)
   }
 }

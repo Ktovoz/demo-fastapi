@@ -115,13 +115,24 @@ getApiInstance().interceptors.response.use(
     console.log('✅ Response Debug: 协议:', protocol);
     console.log('✅ Response Debug: 状态码:', response.status);
     console.log('✅ Response Debug: 请求URL:', fullUrl);
-    console.log('✅ Response Debug: 响应数据:', response.data);
+    console.log('✅ Response Debug: 响应URL:', response.request?.responseURL);
+    console.log('✅ Response Debug: 响应头:', response.headers);
+    console.log('✅ Response Debug: 最终URL:', response.request?.responseURL || fullUrl);
 
-    // 验证响应是否来自HTTPS请求
-    if (protocol === 'HTTPS') {
-      console.log('✅ Security Check: 请求使用HTTPS协议 ✓');
+    // 检查是否有重定向
+    if (response.request?.responseURL && response.request?.responseURL !== fullUrl) {
+      console.warn('🔄 检测到重定向:');
+      console.warn('🔄 原始URL:', fullUrl);
+      console.warn('🔄 重定向到:', response.request?.responseURL);
+    }
+
+    // 验证最终URL的协议
+    const finalUrl = response.request?.responseURL || fullUrl;
+    if (finalUrl?.startsWith('https://')) {
+      console.log('✅ Security Check: 最终请求使用HTTPS协议 ✓');
     } else {
-      console.error('🚨 Security Alert: 请求使用HTTP协议，存在安全风险！');
+      console.error('🚨 Security Alert: 最终请求使用HTTP协议，存在安全风险！');
+      console.error('🚨 最终URL:', finalUrl);
     }
 
     const endTime = typeof performance !== "undefined" ? performance.now() : Date.now()
