@@ -62,10 +62,20 @@ getApiInstance().interceptors.request.use(
       }
     }
 
-    // 标准化URL格式：确保不以斜杠开头（因为baseURL已经以斜杠结尾）
-    if (config.url && config.url.startsWith('/')) {
-      console.warn('🚀 Axios Request: 检测到URL以斜杠开头，移除以避免双斜杠:', config.url);
-      config.url = config.url.slice(1);
+    // 全局URL标准化处理
+    if (config.url) {
+      // 规则1: 确保不以斜杠开头（避免双斜杠）
+      if (config.url.startsWith('/')) {
+        console.warn('🚀 Axios Request: 检测到URL以斜杠开头，移除以避免双斜杠:', config.url);
+        config.url = config.url.slice(1);
+      }
+
+      // 规则2: 对于API路径，确保不以斜杠结尾（避免307重定向）
+      if (config.url.endsWith('/') && !config.url.includes('?')) {
+        // 移除末尾斜杠，但保留查询参数
+        console.warn('🚀 Axios Request: 检测到URL以斜杠结尾，移除以避免307重定向:', config.url);
+        config.url = config.url.slice(0, -1);
+      }
     }
 
     console.log('🚀 Axios Request: 完整URL:', config.baseURL + config.url);

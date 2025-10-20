@@ -51,6 +51,7 @@ async def get_users(
         raise service_exception_handler(e)
 
 @router.get("/{user_id}", response_model=BaseResponse)
+@router.get("/{user_id}/", response_model=BaseResponse)  # 支持带斜杠
 async def get_user_detail(
     user_id: str,
     db: Session = Depends(get_db)
@@ -100,6 +101,7 @@ async def create_user(
         raise service_exception_handler(e)
 
 @router.put("/{user_id}", response_model=BaseResponse)
+@router.put("/{user_id}/", response_model=BaseResponse)  # 支持带斜杠
 async def update_user(
     user_id: str,
     user_data: UserUpdate,
@@ -123,6 +125,7 @@ async def update_user(
         raise service_exception_handler(e)
 
 @router.patch("/{user_id}/status", response_model=BaseResponse)
+@router.patch("/{user_id}/status/", response_model=BaseResponse)  # 支持带斜杠
 async def update_user_status(
     user_id: str,
     status_data: Dict[str, Any],
@@ -145,6 +148,7 @@ async def update_user_status(
         raise service_exception_handler(e)
 
 @router.delete("/{user_id}", response_model=BaseResponse)
+@router.delete("/{user_id}/", response_model=BaseResponse)  # 支持带斜杠
 async def delete_user(
     user_id: str,
     db: Session = Depends(get_db)
@@ -166,6 +170,7 @@ async def delete_user(
         raise service_exception_handler(e)
 
 @router.post("/bulk-delete", response_model=BaseResponse)
+@router.post("/bulk-delete/", response_model=BaseResponse)  # 支持带斜杠
 async def bulk_delete_users(
     delete_data: Dict[str, Any],
     db: Session = Depends(get_db)

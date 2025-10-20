@@ -13,6 +13,7 @@ router = APIRouter()
 logger = get_logger(__name__)
 
 @router.get("/", response_model=BaseResponse)
+@router.get("", response_model=BaseResponse)  # 支持不带斜杠
 async def get_roles(db: Session = Depends(get_db)):
     """获取角色列表"""
     logger.info("获取角色列表")
@@ -31,6 +32,7 @@ async def get_roles(db: Session = Depends(get_db)):
         raise service_exception_handler(e)
 
 @router.get("/{role_id}", response_model=BaseResponse)
+@router.get("/{role_id}/", response_model=BaseResponse)  # 支持带斜杠
 async def get_role_detail(
     role_id: str,
     db: Session = Depends(get_db)

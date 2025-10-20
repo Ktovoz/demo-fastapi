@@ -65,8 +65,9 @@ app.add_middleware(
 )
 logger.info("✅ CORS中间件已配置")
 
-# 用户上下文中间件（必须在审计日志中间件之前）
-from .middleware import UserContextMiddleware, AuditLogMiddleware
+# 全局斜杠处理中间件（最先执行，确保路径规范化）
+from .middleware import TrailingSlashMiddleware, UserContextMiddleware, AuditLogMiddleware
+app.add_middleware(TrailingSlashMiddleware)
 app.add_middleware(UserContextMiddleware)
 app.add_middleware(AuditLogMiddleware)
 
