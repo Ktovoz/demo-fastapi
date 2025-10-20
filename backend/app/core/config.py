@@ -3,6 +3,18 @@ from typing import Optional, List
 import secrets
 import os
 
+
+def get_default_cors_origins() -> List[str]:
+    """获取默认的CORS允许源列表"""
+    return [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+        "https://demo-fast.ktovoz.com",
+        "https://demo-fast-backend.ktovoz.com",
+        "*"  # 开发环境允许所有源，生产环境应该移除
+    ]
+
 class Settings(BaseSettings):
     # 应用基础配置
     APP_NAME: str = "后台管理Demo系统"
@@ -28,15 +40,14 @@ class Settings(BaseSettings):
     LOG_ROTATION: str = "10 MB"
     LOG_RETENTION: str = "7 days"
 
-    # CORS配置
-    BACKEND_CORS_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "https://demo-fast.ktovoz.com",
-        "https://demo-fast-backend.ktovoz.com",
-        "*"  # 开发环境允许所有源，生产环境应该移除
-    ]
+    # CORS配置 - 声明类型但不设置默认值
+    BACKEND_CORS_ORIGINS: List[str]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # 如果没有通过环境变量或参数设置，则使用默认值
+        if not hasattr(self, 'BACKEND_CORS_ORIGINS') or not self.BACKEND_CORS_ORIGINS:
+            self.BACKEND_CORS_ORIGINS = get_default_cors_origins()
 
     # 用户配置
     DEFAULT_ADMIN_USERNAME: str = "admin"
