@@ -176,13 +176,17 @@ async def log_requests(request: Request, call_next):
         raise
 
 # 导入路由
-from .routers import api
+from .routers import api, logs
 
 # 注册路由
 logger.info("🔧 正在注册路由...")
 try:
     app.include_router(api.router, prefix="/api", tags=["API"])
     logger.info("✅ 路由注册成功: /api")
+
+    # 添加日志管理路由
+    app.include_router(logs.router, prefix="/api")
+    logger.info("✅ 日志管理路由注册成功: /api/logs")
 
     # 打印所有路由信息用于调试
     routes_info = []
