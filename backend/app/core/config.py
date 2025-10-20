@@ -6,14 +6,24 @@ import os
 
 def get_default_cors_origins() -> List[str]:
     """获取默认的CORS允许源列表"""
-    return [
+    # 开发环境
+    dev_origins = [
         "http://localhost:3000",
         "http://localhost:5173",
         "http://127.0.0.1:3000",
-        "https://demo-fast.ktovoz.com",
-        "https://demo-fast-backend.ktovoz.com",
-        "*"  # 开发环境允许所有源，生产环境应该移除
+        "https://demo-fast.ktovoz.com",  # 生产前端域名（开发时也需要）
+        "*"  # 仅开发环境使用
     ]
+
+    # 生产环境 - 只允许特定域名
+    prod_origins = [
+        "https://demo-fast.ktovoz.com"  # 只允许前端域名
+    ]
+
+    # 根据环境返回不同的CORS配置
+    import os
+    is_dev = os.getenv("DEBUG", "False").lower() == "true"
+    return dev_origins if is_dev else prod_origins
 
 class Settings(BaseSettings):
     # 应用基础配置
