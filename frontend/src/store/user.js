@@ -1,6 +1,7 @@
 ﻿import { defineStore } from "pinia"
 import { userApi } from "../api/user"
 import { createLogger } from "../utils/logger"
+import { ensureConfigLoaded } from "../config/api"
 
 const logger = createLogger("UserStore")
 
@@ -32,6 +33,10 @@ export const useUserStore = defineStore("user", {
     async fetchUsers(extra = {}) {
       this.loading = true
       try {
+        // 确保API配置已完全加载，和登录请求使用相同的机制
+        await ensureConfigLoaded()
+        logger.debug("API配置已加载完成，开始请求用户数据")
+
         const params = {
           ...this.filters,
           ...this.pagination,
@@ -90,6 +95,7 @@ export const useUserStore = defineStore("user", {
 
     async fetchUserDetail(id) {
       try {
+        await ensureConfigLoaded()
         const response = await userApi.fetchUser(id)
         logger.debug("User detail API response:", response)
 
@@ -106,6 +112,7 @@ export const useUserStore = defineStore("user", {
 
     async updateUser(id, payload) {
       try {
+        await ensureConfigLoaded()
         const response = await userApi.updateUser(id, payload)
         logger.debug("Update user API response:", response)
 
@@ -123,6 +130,7 @@ export const useUserStore = defineStore("user", {
 
     async toggleUserStatus(id) {
       try {
+        await ensureConfigLoaded()
         const response = await userApi.toggleUserStatus(id)
         logger.debug("Toggle user status API response:", response)
 
@@ -142,6 +150,7 @@ export const useUserStore = defineStore("user", {
 
     async deleteUsers(ids = []) {
       try {
+        await ensureConfigLoaded()
         await userApi.deleteUsers(ids)
         this.selectedRowKeys = []
         logger.info("Users deleted", { ids })
@@ -154,6 +163,7 @@ export const useUserStore = defineStore("user", {
 
     async createUser(payload) {
       try {
+        await ensureConfigLoaded()
         const response = await userApi.createUser(payload)
         logger.debug("Create user API response:", response)
 

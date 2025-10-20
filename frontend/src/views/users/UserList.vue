@@ -250,7 +250,9 @@ const deleteSelected = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // 延迟一小段时间确保配置完全加载，类似登录请求的时机
+  await new Promise(resolve => setTimeout(resolve, 200))
   userStore.fetchUsers()
 })
 </script>

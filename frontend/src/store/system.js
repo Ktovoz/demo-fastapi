@@ -1,6 +1,7 @@
 ﻿import { defineStore } from "pinia"
 import { systemApi } from "../api/system"
 import { createLogger } from "../utils/logger"
+import { ensureConfigLoaded } from "../config/api"
 
 const logger = createLogger("SystemStore")
 
@@ -61,6 +62,7 @@ export const useSystemStore = defineStore("system", {
 
     async fetchSettings() {
       try {
+        await ensureConfigLoaded()
         const response = await systemApi.fetchSettings()
         this.settings = response.data
         logger.info("Loaded system settings")
@@ -85,6 +87,7 @@ export const useSystemStore = defineStore("system", {
     async fetchLogs(extra = {}) {
       this.logLoading = true
       try {
+        await ensureConfigLoaded()
         const params = {
           ...this.logFilters,
           ...this.logPagination,
@@ -142,6 +145,7 @@ export const useSystemStore = defineStore("system", {
 
     async fetchSystemStatus() {
       try {
+        await ensureConfigLoaded()
         const response = await systemApi.getSystemStatus()
         this.systemStatus = response.data
         logger.info("获取系统状态成功")

@@ -59,18 +59,42 @@ export const API_CONFIG = {
 
 console.log('🔧 API Config: 最终API_CONFIG:', API_CONFIG);
 
-// 配置加载完成检查
+// 配置加载完成检查 - 增强版本，确保配置正确且使用HTTPS
 export const ensureConfigLoaded = () => {
   return new Promise((resolve) => {
+    let attempts = 0;
+    const maxAttempts = 50; // 最多等待5秒
+
     const checkConfig = () => {
+      attempts++;
+
       if (window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL) {
         console.log('🔧 API Config: 配置已加载完成');
+        console.log('🔧 API Config: API_BASE_URL:', window.APP_CONFIG.API_BASE_URL);
+
+        // 验证配置是否使用HTTPS
+        if (window.APP_CONFIG.API_BASE_URL.startsWith('http://')) {
+          console.warn('⚠️ API Config: 检测到HTTP配置，强制转换为HTTPS');
+          window.APP_CONFIG.API_BASE_URL = window.APP_CONFIG.API_BASE_URL.replace('http://', 'https://');
+          console.log('✅ API Config: 已转换为HTTPS:', window.APP_CONFIG.API_BASE_URL);
+        }
+
+        console.log('✅ API Config: 配置验证完成，使用HTTPS协议');
+        resolve(true);
+      } else if (attempts >= maxAttempts) {
+        console.error('❌ API Config: 配置加载超时，使用默认HTTPS配置');
+        // 设置默认HTTPS配置
+        window.APP_CONFIG = {
+          API_BASE_URL: 'https://demo-fast-backend.ktovoz.com'
+        };
+        console.log('🔧 API Config: 已设置默认HTTPS配置:', window.APP_CONFIG);
         resolve(true);
       } else {
-        console.log('🔧 API Config: 等待配置加载...');
+        console.log(`🔧 API Config: 等待配置加载... (${attempts}/${maxAttempts})`);
         setTimeout(checkConfig, 100);
       }
     };
+
     checkConfig();
   });
 };

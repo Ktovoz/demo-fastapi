@@ -1,6 +1,7 @@
 ﻿import { defineStore } from 'pinia'
 import { adminApi } from '../api/admin'
 import { createLogger } from '../utils/logger'
+import { ensureConfigLoaded } from '../config/api'
 
 const logger = createLogger('AdminStore')
 
@@ -35,6 +36,7 @@ export const useAdminStore = defineStore('admin', {
     async fetchOverview() {
       this.overviewLoading = true
       try {
+        await ensureConfigLoaded()
         const response = await adminApi.fetchOverview()
         this.overview = response.data
         logger.info('Loaded admin overview')

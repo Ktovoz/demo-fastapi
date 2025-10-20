@@ -1,6 +1,7 @@
 ﻿import { defineStore } from "pinia"
 import { roleApi } from "../api/role"
 import { createLogger } from "../utils/logger"
+import { ensureConfigLoaded } from "../config/api"
 
 const logger = createLogger("RoleStore")
 
@@ -14,6 +15,7 @@ export const useRoleStore = defineStore("role", {
     async fetchRoles() {
       this.loading = true
       try {
+        await ensureConfigLoaded()
         logger.debug("Fetching roles...")
         const response = await roleApi.fetchRoles()
         logger.debug("Roles API response:", response)
@@ -43,6 +45,7 @@ export const useRoleStore = defineStore("role", {
     async fetchRoleDetail(id) {
       this.loading = true
       try {
+        await ensureConfigLoaded()
         const response = await roleApi.fetchRole(id)
         logger.debug("Role detail API response:", response)
 
@@ -62,6 +65,7 @@ export const useRoleStore = defineStore("role", {
     async updateRole(id, payload) {
       this.loading = true
       try {
+        await ensureConfigLoaded()
         const response = await roleApi.updateRole(id, payload)
         logger.debug("Update role API response:", response)
 

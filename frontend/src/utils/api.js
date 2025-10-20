@@ -36,18 +36,24 @@ const getApiInstance = () => {
 getApiInstance().interceptors.request.use(
   (config) => {
     console.log('🚀 Axios Request: 发送请求');
+    console.log('🚀 Request Debug: 当前window.APP_CONFIG:', window.APP_CONFIG?.API_BASE_URL);
+    console.log('🚀 Request Debug: 请求前baseURL:', config.baseURL);
+    console.log('🚀 Request Debug: 请求前URL:', config.url);
 
     // 强制确保baseURL使用HTTPS
     if (config.baseURL && config.baseURL.startsWith('http://')) {
-      console.warn('🚀 Axios Request: 强制转换baseURL从HTTP到HTTPS');
+      console.warn('🚨 Axios Request: 检测到HTTP baseURL，强制转换为HTTPS');
+      console.warn('🚨 原始baseURL:', config.baseURL);
       config.baseURL = config.baseURL.replace('http://', 'https://');
+      console.warn('✅ 转换后baseURL:', config.baseURL);
     }
 
     // 强制确保完整URL使用HTTPS（多重保险）
     const tempFullUrl = config.baseURL + config.url;
     if (tempFullUrl.startsWith('http://')) {
-      console.error('🚀 Axios Request: 检测到HTTP协议，强制转换完整URL:', tempFullUrl);
+      console.error('🚨 Axios Request: 检测到HTTP完整URL，强制转换:', tempFullUrl);
       const httpsUrl = tempFullUrl.replace('http://', 'https://');
+      console.log('✅ 转换后URL:', httpsUrl);
       // 解析URL并分别设置baseURL和url
       const urlParts = httpsUrl.match('(https://[^/]+)(/.*)');
       if (urlParts) {
@@ -102,10 +108,21 @@ getApiInstance().interceptors.request.use(
 
 getApiInstance().interceptors.response.use(
   (response) => {
+    const fullUrl = response.config?.baseURL + response.config?.url;
+    const protocol = fullUrl?.startsWith('https://') ? 'HTTPS' : 'HTTP';
+
     console.log('✅ Axios Response: 收到响应');
-    console.log('✅ Axios Response: 状态码:', response.status);
-    console.log('✅ Axios Response: 请求URL:', response.config?.baseURL + response.config?.url);
-    console.log('✅ Axios Response: 响应数据:', response.data);
+    console.log('✅ Response Debug: 协议:', protocol);
+    console.log('✅ Response Debug: 状态码:', response.status);
+    console.log('✅ Response Debug: 请求URL:', fullUrl);
+    console.log('✅ Response Debug: 响应数据:', response.data);
+
+    // 验证响应是否来自HTTPS请求
+    if (protocol === 'HTTPS') {
+      console.log('✅ Security Check: 请求使用HTTPS协议 ✓');
+    } else {
+      console.error('🚨 Security Alert: 请求使用HTTP协议，存在安全风险！');
+    }
 
     const endTime = typeof performance !== "undefined" ? performance.now() : Date.now()
     const duration = response.config?.metadata?.startTime
@@ -123,12 +140,23 @@ getApiInstance().interceptors.response.use(
     return response
   },
   async (error) => {
+    const failedUrl = error.config?.baseURL + error.config?.url;
+    const protocol = failedUrl?.startsWith('https://') ? 'HTTPS' : 'HTTP';
+
     console.log('❌ Axios Error: 请求失败');
-    console.log('❌ Axios Error: 请求URL:', error.config?.baseURL + error.config?.url);
-    console.log('❌ Axios Error: 错误信息:', error.message);
-    console.log('❌ Axios Error: 状态码:', error.response?.status);
-    console.log('❌ Axios Error: 响应数据:', error.response?.data);
-    console.log('❌ Axios Error: 错误详情:', error);
+    console.log('❌ Error Debug: 协议:', protocol);
+    console.log('❌ Error Debug: 请求URL:', failedUrl);
+    console.log('❌ Error Debug: 错误信息:', error.message);
+    console.log('❌ Error Debug: 状态码:', error.response?.status);
+    console.log('❌ Error Debug: 响应数据:', error.response?.data);
+    console.log('❌ Error Debug: 错误详情:', error);
+
+    // 特别检查混合内容错误
+    if (error.message.includes('Mixed Content') || error.message.includes('ERR_NETWORK')) {
+      console.error('🚨 混合内容错误检测！这通常是因为HTTPS页面请求HTTP API导致的。');
+      console.error('🚨 Failed URL:', failedUrl);
+      console.error('🚨 建议检查：1. API配置是否正确使用HTTPS 2. 环境变量是否正确设置');
+    }
 
     const endTime = typeof performance !== "undefined" ? performance.now() : Date.now()
     const start = error.config?.metadata?.startTime
