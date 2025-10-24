@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from typing import Optional, Dict, Any
+from loguru import logger
 
 class ServiceError(Exception):
     """服务层异常基类"""
@@ -35,24 +36,42 @@ class DatabaseError(ServiceError):
     def __init__(self, message: str, details: Dict[str, Any] = None):
         super().__init__(message, "DATABASE_ERROR", details)
 
-def service_exception_handler(exc: ServiceError) -> HTTPException:
+def service_exception_handler(exc: Exception) -> HTTPException:
     """将服务层异常转换为HTTP异常"""
+    logger.debug(f"处理异常: {type(exc).__name__}: {str(exc)}")
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    
-    if isinstance(exc, ValidationError):
-        status_code = status.HTTP_400_BAD_REQUEST
-    elif isinstance(exc, NotFoundError):
-        status_code = status.HTTP_404_NOT_FOUND
-    elif isinstance(exc, ConflictError):
-        status_code = status.HTTP_409_CONFLICT
-    elif isinstance(exc, DatabaseError):
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    
-    return HTTPException(
-        status_code=status_code,
-        detail={
-            "message": exc.message,
-            "error_code": exc.error_code,
-            "details": exc.details
-        }
-    )
+
+    # 处理自定义ServiceError异常
+    if isinstance(exc, ServiceError):
+        if isinstance(exc, ValidationError):
+            status_code = status.HTTP_400_BAD_REQUEST
+        elif isinstance(exc, NotFoundError):
+            status_code = status.HTTP_404_NOT_FOUND
+        elif isinstance(exc, ConflictError):
+            status_code = status.HTTP_409_CONFLICT
+        elif isinstance(exc, DatabaseError):
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+        return HTTPException(
+            status_code=status_code,
+            detail={
+                "message": exc.message,
+                "error_code": exc.error_code,
+                "details": exc.details
+            }
+        )
+
+    # 处理HTTPException异常
+    elif isinstance(exc, HTTPException):
+        return exc
+
+    # 处理其他未知异常
+    else:
+        return HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={
+                "message": str(exc),
+                "error_code": "INTERNAL_SERVER_ERROR",
+                "details": {}
+            }
+        )
