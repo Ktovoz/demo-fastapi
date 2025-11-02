@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import Dict, Any
@@ -20,98 +20,7 @@ router = APIRouter()
 logger = get_logger(__name__)
 
 # OAuth2 scheme
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
-
-
-@router.post("/login", response_model=BaseResponse)
-async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db),
-    request: Request = None
-):
-    """用户登录"""
-    
-    try:
-        # 验证用户凭据
-        user = AuthService.verify_user_credentials(db, form_data.username, form_data.password)
-        if not user:
-            logger.warning(f"登录失败: 用户名或密码错误 - {form_data.username}")
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="用户名或密码错误",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        
-        # 更新最后登录时间
-        UserService.update_last_login(db, user)
-        
-        # 获取用户角色和权限
-        user_roles, user_permissions = UserService.get_user_roles_and_permissions(db, user)
-
-        # 创建访问令牌
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        logger.info(f"🏗️ 为用户 {user.username} (ID: {user.id}) 创建访问令牌")
-        access_token = create_access_token(
-            data={"sub": str(user.id)}, expires_delta=access_token_expires
-        )
-        logger.info(f"✅ 访问令牌已创建: {access_token[:30]}..." if len(access_token) > 30 else f"令牌: {access_token}")
-
-        # 创建刷新令牌
-        logger.info(f"🔄 为用户 {user.username} (ID: {user.id}) 创建刷新令牌")
-        refresh_token = create_refresh_token(user.id)
-        logger.info(f"✅ 刷新令牌已创建: {refresh_token[:30]}..." if len(refresh_token) > 30 else f"令牌: {refresh_token}")
-
-        # 构建响应数据
-        user_data = {
-            "id": f"USR-{user.id}",
-            "name": user.full_name or user.username,
-            "email": user.email,
-            "role": user_roles[0] if user_roles else "user",  # 主要角色
-            "permissions": user_permissions,
-            "avatar": user.avatar,
-            "is_superuser": user.is_superuser,  # 添加超级用户标识
-            "lastLogin": user.last_login.isoformat() + "Z" if user.last_login else None
-        }
-        
-        response_data = {
-            "token": access_token,
-            "refresh_token": refresh_token,
-            "expiresIn": ACCESS_TOKEN_EXPIRE_MINUTES,
-            "user": user_data
-        }
-
-        logger.info(f"用户登录成功: {user.username}")
-
-        # 手动记录登录操作日志（重要的安全事件）
-        try:
-            ip_address = request.client.host if request and hasattr(request, 'client') else "unknown"
-            user_agent = request.headers.get("user-agent", "") if request else ""
-
-            login_log = OperationLog(
-                user_id=user.id,
-                action="用户登录",
-                resource="auth",
-                description="用户登录成功",
-                ip_address=ip_address,
-                user_agent=user_agent,
-                request_data={"username": form_data.username},
-                response_data={"login_success": True}
-            )
-            db.add(login_log)
-            db.commit()
-        except Exception as e:
-            logger.warning(f"记录登录日志失败: {str(e)}")
-            db.rollback()
-
-        return BaseResponse(
-            success=True,
-            message="登录成功",
-            data=response_data
-        )
-        
-    except Exception as e:
-        logger.error(f"用户登录失败: {str(e)}")
-        raise service_exception_handler(e)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login-json")
 
 @router.post("/login-json", response_model=BaseResponse)
 async def login_json(
@@ -352,5 +261,3 @@ async def refresh_token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="令牌刷新失败"
         )
-
-from ..core.security import get_current_user

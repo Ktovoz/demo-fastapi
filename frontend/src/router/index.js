@@ -19,7 +19,7 @@ const loadView = (path) => {
 const routes = [
   {
     path: "/",
-    redirect: "/dashboard"
+    redirect: "/users/list"
   },
   {
     path: "/auth/login",
@@ -43,19 +43,6 @@ const routes = [
     path: "/",
     component: MainLayout,
     children: [
-      {
-        path: "dashboard",
-        name: "Dashboard",
-        component: loadView("../views/dashboard/Index.vue"),
-        meta: {
-          title: "仪表盘",
-          description: "关键指标与近期活动",
-          breadcrumb: [{ label: "仪表盘" }],
-          menuKey: "dashboard",
-          permission: "dashboard:view",
-          hideHeader: true
-        }
-      },
       {
         path: "users",
         redirect: "/users/list"
@@ -142,53 +129,6 @@ const routes = [
           ],
           menuKey: "roles",
           permission: "roles:edit"
-        }
-      },
-      {
-        path: "system",
-        redirect: "/system/overview"
-      },
-      {
-        path: "system/overview",
-        name: "SystemOverview",
-        component: loadView("../views/system/AdminOverview.vue"),
-        meta: {
-          title: "系统概览",
-          description: "管理平台运营控制中心",
-          breadcrumb: [
-            { label: "系统管理", to: "/system/overview" },
-            { label: "概览" }
-          ],
-          menuKey: "system.overview",
-          permission: "dashboard:view"
-        }
-      },
-      {
-        path: "system/logs",
-        name: "SystemLogs",
-        component: loadView("../views/system/Logs.vue"),
-        meta: {
-          title: "系统日志",
-          breadcrumb: [
-            { label: "系统管理", to: "/system/overview" },
-            { label: "日志" }
-          ],
-          menuKey: "system.logs",
-          permission: "logs:view"
-        }
-      },
-      {
-        path: "system/settings",
-        name: "SystemSettings",
-        component: loadView("../views/system/Settings.vue"),
-        meta: {
-          title: "系统设置",
-          breadcrumb: [
-            { label: "系统管理", to: "/system/overview" },
-            { label: "设置" }
-          ],
-          menuKey: "system.settings",
-          permission: "system:manage"
         }
       },
       {

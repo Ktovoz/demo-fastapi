@@ -10,7 +10,7 @@ from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login-json")
 
 def require_permissions(required_permissions: List[str]):
     """权限校验装饰器工厂"""

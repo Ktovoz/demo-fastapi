@@ -22,7 +22,7 @@ class UserContextMiddleware(BaseHTTPMiddleware):
         "/openapi.json",
         "/favicon.ico",
         "/static",
-        "/api/auth/login",
+        "/api/auth/login-json",
         "/api/auth/register",
         "/api/auth/forgot-password"
     ]

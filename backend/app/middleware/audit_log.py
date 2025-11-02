@@ -19,7 +19,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
 
     # 需要记录日志的关键操作路径
     SENSITIVE_PATHS = [
-        "/auth/login",
+        "/auth/login-json",
         "/auth/register",
         "/auth/forgot-password",
         "/users/create",
@@ -38,7 +38,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
         "/openapi.json",
         "/favicon.ico",
         "/static",
-        "/api/auth/login",  # 登录通过手动记录，不在这里记录
+        "/api/auth/login-json",  # 登录通过手动记录，不在这里记录
         "/api/auth/register",
         "/api/auth/forgot-password",
         "/api/users",           # 用户列表查询不记录
@@ -234,7 +234,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
     def _is_sensitive_path(self, path: str) -> bool:
         """判断是否为敏感路径（不记录详细数据）"""
         sensitive_paths = [
-            "/auth/login",
+            "/auth/login-json",
             "/auth/register",
             "/auth/refresh",
             "/auth/forgot-password",
