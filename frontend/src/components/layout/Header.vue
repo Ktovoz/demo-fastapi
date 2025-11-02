@@ -65,29 +65,19 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BellOutlined, UserOutlined } from '@ant-design/icons-vue'
-import { useSystemStore } from '../../store/system'
 import { useAuthStore } from '../../store/auth'
 
-const systemStore = useSystemStore()
 const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
 
 const search = ref('')
-
-const headerTheme = computed(() => (systemStore.theme === 'dark' ? 'dark' : 'light'))
-const headerClasses = computed(() => [
-  'layout-header',
-  headerTheme.value === 'dark' ? 'layout-header--dark' : 'layout-header--light'
-])
-
-const notifications = computed(() => systemStore.notifications)
-const unreadCount = computed(() => notifications.value.filter((item) => !item.read).length)
+const notifications = ref([])
 const userName = computed(() => authStore.user?.name ?? '用户')
-const pageTitle = computed(() => route.meta?.title || '仪表盘')
+const pageTitle = computed(() => route.meta?.title || '用户管理')
 
 const handleMenuClick = ({ key }) => {
   if (key === 'logout') {
@@ -105,7 +95,7 @@ const handleSearch = (value) => {
 }
 
 const clearNotifications = () => {
-  systemStore.clearNotifications()
+  notifications.value = []
 }
 </script>
 

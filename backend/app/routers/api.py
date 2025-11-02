@@ -10,7 +10,6 @@ logger = get_logger(__name__)
 from .auth import router as auth_router
 from .users import router as users_router
 from .roles import router as roles_router
-from .system import router as system_router
 
 # 注册子路由
 logger.info("🔧 正在注册子路由...")
@@ -23,9 +22,6 @@ try:
 
     router.include_router(roles_router, prefix="/roles", tags=["角色管理"])
     logger.info("✅ 角色管理路由注册成功: /roles")
-
-    router.include_router(system_router, prefix="/system", tags=["系统管理"])
-    logger.info("✅ 系统管理路由注册成功: /system")
 
     # 打印所有子路由信息用于调试
     logger.info("📋 所有子路由注册完成")

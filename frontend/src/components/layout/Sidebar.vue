@@ -38,7 +38,6 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined
 } from '@ant-design/icons-vue'
-import { useSystemStore } from '../../store/system'
 import { useAuthStore } from '../../store/auth'
 import { navigationTree, findNavigationNode, findNavigationByPath } from '../../config/navigation'
 
@@ -51,17 +50,16 @@ const iconRegistry = {
   FileSearchOutlined
 }
 
-const systemStore = useSystemStore()
 const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
 
-const menuCollapsed = computed(() => systemStore.menuCollapsed)
-const menuTheme = computed(() => (systemStore.theme === 'dark' ? 'dark' : 'light'))
+const menuCollapsed = ref(false)
+const menuTheme = ref('light')
 const sidebarClasses = computed(() => [
   'layout-sider',
   menuCollapsed.value ? 'layout-sider--collapsed' : 'layout-sider--expanded',
-  menuTheme.value === 'dark' ? 'layout-sider--dark' : 'layout-sider--light'
+  'layout-sider--light'
 ])
 
 const hasPermission = (item) => {

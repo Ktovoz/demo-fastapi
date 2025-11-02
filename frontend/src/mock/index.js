@@ -1,9 +1,6 @@
 import { authMockApi } from './api/auth'
 import { userMockApi } from './api/users'
 import { roleMockApi } from './api/roles'
-import { dashboardMockApi } from './api/dashboard'
-import { systemMockApi } from './api/system'
-import { adminMockApi } from './api/admin'
 
 const mockFlagRaw = import.meta.env.VITE_USE_MOCK
 const normalizedFlag = typeof mockFlagRaw === 'string'
@@ -24,10 +21,7 @@ if (import.meta.env.DEV) {
 export const mockApi = {
   auth: authMockApi,
   users: userMockApi,
-  roles: roleMockApi,
-  dashboard: dashboardMockApi,
-  system: systemMockApi,
-  admin: adminMockApi
+  roles: roleMockApi
 }
 
 export const callMock = (namespace, method, ...args) => {

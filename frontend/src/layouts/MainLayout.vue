@@ -26,17 +26,14 @@ import Header from '../components/layout/Header.vue'
 import Sidebar from '../components/layout/Sidebar.vue'
 import Footer from '../components/layout/Footer.vue'
 import PageContainer from '../components/layout/PageContainer.vue'
-import { useSystemStore } from '../store/system'
-
 const route = useRoute()
-const systemStore = useSystemStore()
 
 const pageTitle = computed(() => route.meta?.title ?? '')
 const pageDescription = computed(() => route.meta?.description ?? '')
 const breadcrumbs = computed(() => route.meta?.breadcrumb ?? [])
 const hideHeader = computed(() => Boolean(route.meta?.hideHeader))
-const theme = computed(() => systemStore.theme)
-const menuCollapsed = computed(() => systemStore.menuCollapsed)
+const theme = computed(() => 'light')
+const menuCollapsed = computed(() => false)
 </script>
 
 <style scoped>
