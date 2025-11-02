@@ -178,5 +178,5 @@ async def cleanup_old_logs():
 # 注册默认任务
 def setup_default_tasks():
     """设置默认的定时任务"""
-    scheduler.add_task("daily_system_reset", daily_system_reset)
-    scheduler.add_task("cleanup_old_logs", cleanup_old_logs)
+    # 已清除所有定时任务
+    pass

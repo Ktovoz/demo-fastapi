@@ -96,9 +96,12 @@ def init_default_data(db: Session):
             ),
         ]
         
+        # 使用 merge 替代 add，避免重复插入已存在的权限
         for permission in permissions:
-            db.add(permission)
-        
+            existing = db.query(Permission).filter(Permission.name == permission.name).first()
+            if not existing:
+                db.add(permission)
+
         db.commit()
         
         # 创建默认角色
@@ -134,11 +137,16 @@ def init_default_data(db: Session):
         logger.info("正在为管理员角色分配权限...")
         for permission in permissions:
             from ..models.role_permission import RolePermission
-            role_permission = RolePermission(
-                role_id=admin_role.id,
-                permission_id=permission.id
-            )
-            db.add(role_permission)
+            existing = db.query(RolePermission).filter(
+                RolePermission.role_id == admin_role.id,
+                RolePermission.permission_id == permission.id
+            ).first()
+            if not existing:
+                role_permission = RolePermission(
+                    role_id=admin_role.id,
+                    permission_id=permission.id
+                )
+                db.add(role_permission)
 
         # 为普通用户角色分配基本权限
         logger.info("正在为普通用户角色分配基本权限...")
@@ -153,20 +161,30 @@ def init_default_data(db: Session):
             if permission.name in basic_permission_names:
                 basic_permissions.append(permission)
                 from ..models.role_permission import RolePermission
-                role_permission = RolePermission(
-                    role_id=user_role.id,
-                    permission_id=permission.id
-                )
-                db.add(role_permission)
+                existing = db.query(RolePermission).filter(
+                    RolePermission.role_id == user_role.id,
+                    RolePermission.permission_id == permission.id
+                ).first()
+                if not existing:
+                    role_permission = RolePermission(
+                        role_id=user_role.id,
+                        permission_id=permission.id
+                    )
+                    db.add(role_permission)
 
         # 为管理员用户分配管理员角色
         logger.info("正在为管理员用户分配角色...")
         from ..models.user_role import UserRole
-        user_role_assignment = UserRole(
-            user_id=admin_user.id,
-            role_id=admin_role.id
-        )
-        db.add(user_role_assignment)
+        existing = db.query(UserRole).filter(
+            UserRole.user_id == admin_user.id,
+            UserRole.role_id == admin_role.id
+        ).first()
+        if not existing:
+            user_role_assignment = UserRole(
+                user_id=admin_user.id,
+                role_id=admin_role.id
+            )
+            db.add(user_role_assignment)
 
         # 创建示例操作日志
         logger.info("正在创建示例操作日志...")
