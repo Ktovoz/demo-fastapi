@@ -3,14 +3,10 @@
     :class="sidebarClasses"
     :collapsed="menuCollapsed"
     collapsible
-    :trigger="null"
-    @collapse="handleCollapse"
+  >
   >
     <div class="logo">
       <span class="logo__text">Demo</span>
-      <a-button type="text" class="logo__toggle" @click="toggleSidebar">
-        <component :is="menuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined" />
-      </a-button>
     </div>
     <a-menu
       class="sidebar-menu"
@@ -35,9 +31,6 @@ import {
   SettingOutlined,
   ProfileOutlined,
   FileSearchOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined
-} from '@ant-design/icons-vue'
 import { useAuthStore } from '../../store/auth'
 import { navigationTree, findNavigationNode, findNavigationByPath } from '../../config/navigation'
 
@@ -127,20 +120,6 @@ watch(menuCollapsed, (collapsed) => {
   openKeys.value = collapsed ? [] : derivedOpenKeys.value
 })
 
-const toggleSidebar = () => {
-  const next = !menuCollapsed.value
-  if (typeof systemStore.setMenuCollapsed === 'function') {
-    systemStore.setMenuCollapsed(next)
-  } else {
-    systemStore.menuCollapsed = next
-  }
-}
-
-const handleSelect = ({ key }) => {
-  const node = findNavigationNode((item) => item.key === key, navigationTree)
-  const path = node?.item?.path
-  if (path) {
-    router.push(path)
   }
 }
 
@@ -148,14 +127,7 @@ const handleOpenChange = (keys) => {
   openKeys.value = keys
 }
 
-const handleCollapse = (value) => {
-  if (typeof systemStore.setMenuCollapsed === 'function') {
-    systemStore.setMenuCollapsed(value)
-  } else {
-    systemStore.menuCollapsed = value
-  }
 }
-</script>
 
 <style scoped>
 .layout-sider {
@@ -311,42 +283,6 @@ const handleCollapse = (value) => {
   height: 100% !important;
 }
 
-
-.logo__toggle {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  color: #1d4ed8;
-  border: 1px solid rgba(37, 99, 235, 0.18);
-  background: rgba(59, 130, 246, 0.08);
-  transition: all 0.2s ease;
-}
-
-.logo__toggle :deep(.anticon) {
-  font-size: 18px;
-}
-
-.logo__toggle:hover {
-  color: #2563eb;
-  background: rgba(59, 130, 246, 0.16);
-  border-color: rgba(59, 130, 246, 0.25);
-}
-
-.layout-sider--collapsed .logo {
-  justify-content: center;
-  padding: 6px;
-}
-
-.layout-sider--collapsed .logo__text {
-  display: none;
-}
-
-.layout-sider--collapsed .logo__toggle {
-  width: 36px;
-  height: 36px;
-}
 
 .sidebar-menu {
   width: 100%;

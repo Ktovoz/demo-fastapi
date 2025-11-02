@@ -4,7 +4,14 @@
       "Bash(curl:*)",
       "Bash(python:*)",
       "Bash(cat:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(pwsh /tmp/fix_redirect.ps1)",
+      "Bash(node /tmp/fix_redirect.js)",
+      "Bash(/tmp/sidebar_part1.txt)",
+      "Bash(/tmp/sidebar_part2.txt)",
+      "Bash(/tmp/sidebar_part3.txt)",
+      "Bash(/tmp/sidebar_part4.txt)",
+      "Bash(/tmp/sidebar_part5.txt)"
     ],
     "deny": [],
     "ask": []
