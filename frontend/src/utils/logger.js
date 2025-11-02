@@ -333,7 +333,16 @@ const createApiLogger = () => {
     },
 
     error: (method, url, error, duration = null) => {
-      apiLogger.error(`请求失败: ${method.toUpperCase()} ${url} | 错误: ${error}`)
+      // 将错误对象转换为可读字符串
+      const errorMessage = error?.response?.data?.detail || error?.response?.data?.message || error?.message || error || '未知错误'
+      const formattedError = typeof errorMessage === 'object' ? JSON.stringify(errorMessage) : String(errorMessage)
+      apiLogger.error(`请求失败: ${method.toUpperCase()} ${url} | 错误: ${formattedError}`)
+
+      // 如果有详细错误信息，也记录下来
+      if (error?.response?.data) {
+        const detailData = typeof error.response.data === 'object' ? JSON.stringify(error.response.data) : error.response.data
+        apiLogger.error(`详细错误信息: ${detailData}`)
+      }
     }
   }
 }

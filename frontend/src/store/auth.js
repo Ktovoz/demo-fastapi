@@ -102,8 +102,28 @@ export const useAuthStore = defineStore("auth", {
         logger.info("User logged in", { email: user.email, userId: user.id })
       } catch (error) {
         logger.error("Login failed", error)
-        // 提取更详细的错误信息
-        const errorMessage = error.response?.data?.detail || error.message || '登录失败'
+        // 提取更详细的错误信息，确保是字符串格式
+        let errorMessage = error.response?.data?.detail || error.response?.data?.message || error.message || '登录失败'
+
+        // 如果错误信息是对象（如验证错误数组），则转换为可读字符串
+        if (typeof errorMessage === 'object' && errorMessage !== null) {
+          if (Array.isArray(errorMessage)) {
+            // 对于验证错误数组，提取所有错误信息
+            errorMessage = errorMessage.map(err => {
+              if (typeof err === 'object') {
+                return err.msg || err.message || JSON.stringify(err)
+              }
+              return String(err)
+            }).join('; ')
+          } else {
+            // 对于其他对象，转换为JSON字符串
+            errorMessage = JSON.stringify(errorMessage)
+          }
+        }
+
+        // 确保错误信息是字符串
+        errorMessage = String(errorMessage)
+
         logger.error("详细错误信息:", {
           status: error.response?.status,
           data: error.response?.data,
@@ -136,8 +156,28 @@ export const useAuthStore = defineStore("auth", {
         return responseData
       } catch (error) {
         logger.error("Register failed", error)
-        // 提取更详细的错误信息
-        const errorMessage = error.response?.data?.detail || error.message || '注册失败'
+        // 提取更详细的错误信息，确保是字符串格式
+        let errorMessage = error.response?.data?.detail || error.response?.data?.message || error.message || '注册失败'
+
+        // 如果错误信息是对象（如验证错误数组），则转换为可读字符串
+        if (typeof errorMessage === 'object' && errorMessage !== null) {
+          if (Array.isArray(errorMessage)) {
+            // 对于验证错误数组，提取所有错误信息
+            errorMessage = errorMessage.map(err => {
+              if (typeof err === 'object') {
+                return err.msg || err.message || JSON.stringify(err)
+              }
+              return String(err)
+            }).join('; ')
+          } else {
+            // 对于其他对象，转换为JSON字符串
+            errorMessage = JSON.stringify(errorMessage)
+          }
+        }
+
+        // 确保错误信息是字符串
+        errorMessage = String(errorMessage)
+
         logger.error("详细错误信息:", {
           status: error.response?.status,
           data: error.response?.data,

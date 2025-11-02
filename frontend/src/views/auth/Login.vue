@@ -214,7 +214,26 @@ const handleSubmit = async () => {
     const redirect = route.query.redirect || '/dashboard'
     router.push(String(redirect))
   } catch (error) {
-    message.error(error?.message || '登录失败')
+    // 确保错误信息是字符串格式
+    let errorMessage = '登录失败'
+
+    if (error instanceof Error) {
+      errorMessage = error.message
+    } else if (typeof error === 'string') {
+      errorMessage = error
+    } else if (error?.response?.data?.detail) {
+      errorMessage = typeof error.response.data.detail === 'object'
+        ? JSON.stringify(error.response.data.detail)
+        : String(error.response.data.detail)
+    } else if (error?.response?.data?.message) {
+      errorMessage = String(error.response.data.message)
+    } else if (error?.message) {
+      errorMessage = String(error.message)
+    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = JSON.stringify(error)
+    }
+
+    message.error(errorMessage || '登录失败')
   }
 }
 

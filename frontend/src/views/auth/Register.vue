@@ -229,7 +229,26 @@ const handleSubmit = async () => {
     router.push('/auth/login')
   } catch (error) {
     console.error('注册失败:', error)
-    message.error(error?.message || '注册失败')
+    // 确保错误信息是字符串格式
+    let errorMessage = '注册失败'
+
+    if (error instanceof Error) {
+      errorMessage = error.message
+    } else if (typeof error === 'string') {
+      errorMessage = error
+    } else if (error?.response?.data?.detail) {
+      errorMessage = typeof error.response.data.detail === 'object'
+        ? JSON.stringify(error.response.data.detail)
+        : String(error.response.data.detail)
+    } else if (error?.response?.data?.message) {
+      errorMessage = String(error.response.data.message)
+    } else if (error?.message) {
+      errorMessage = String(error.message)
+    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = JSON.stringify(error)
+    }
+
+    message.error(errorMessage || '注册失败')
   } finally {
     loading.value = false
   }
