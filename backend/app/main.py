@@ -7,7 +7,6 @@ from datetime import datetime
 from .core.config import settings
 from .core.database import init_db
 from .utils.logger import get_logger
-from .utils.scheduler import scheduler, setup_default_tasks
 
 logger = get_logger(__name__)
 
@@ -22,11 +21,6 @@ async def lifespan(app: FastAPI):
         init_db()
         logger.info("数据库初始化完成")
 
-        # 设置并启动定时任务
-        setup_default_tasks()
-        await scheduler.start()
-        logger.info("定时任务调度器已启动")
-
         # 应用启动完成
         logger.info(f"{settings.APP_NAME} v{settings.APP_VERSION} 启动成功")
         logger.info(f"服务运行在: http://{settings.HOST}:{settings.PORT}")
@@ -39,8 +33,6 @@ async def lifespan(app: FastAPI):
     yield
 
     # 关闭时执行
-    logger.info("正在关闭定时任务调度器...")
-    await scheduler.stop()
     logger.info("后台管理系统正在关闭...")
 
 # 创建FastAPI应用
@@ -147,10 +139,6 @@ async def log_requests(request: Request, call_next):
         process_time = time.time() - start_time
         status_code = response.status_code
 
-        # 记录性能数据
-        from .utils.performance import performance_monitor
-        performance_monitor.record_request(path, method, process_time, status_code)
-
         # 记录响应
         if status_code == 404:
             logger.warning(f"⚠️ 路由未找到: {method} {path}")
@@ -169,25 +157,16 @@ async def log_requests(request: Request, call_next):
     except Exception as e:
         process_time = time.time() - start_time
         logger.error(f"请求失败: {method} {url} | 错误: {str(e)} | 耗时: {process_time:.3f}s")
-        
-        # 记录性能数据（失败的请求）
-        from .utils.performance import performance_monitor
-        performance_monitor.record_request(path, method, process_time, 500)
-        
         raise
 
 # 导入路由
-from .routers import api, logs
+from .routers import api
 
 # 注册路由
 logger.info("🔧 正在注册路由...")
 try:
     app.include_router(api.router, prefix="/api", tags=["API"])
     logger.info("✅ 路由注册成功: /api")
-
-    # 添加日志管理路由
-    app.include_router(logs.router, prefix="/api")
-    logger.info("✅ 日志管理路由注册成功: /api/logs")
 
     # 打印所有路由信息用于调试
     routes_info = []
@@ -235,22 +214,6 @@ async def health_check():
         "version": settings.APP_VERSION
     }
 
-# 调度器状态
-@app.get("/api/scheduler/status", response_model=dict)
-async def scheduler_status():
-    """获取调度器状态"""
-    try:
-        status = scheduler.get_status()
-        return {
-            "success": True,
-            "data": status
-        }
-    except Exception as e:
-        logger.error(f"获取调度器状态失败: {str(e)}")
-        return {
-            "success": False,
-            "message": f"获取调度器状态失败: {str(e)}"
-        }
 
 if __name__ == "__main__":
     import uvicorn

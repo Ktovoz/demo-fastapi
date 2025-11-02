@@ -8,10 +8,8 @@ logger = get_logger(__name__)
 
 # 导入子路由
 from .auth import router as auth_router
-from .dashboard import router as dashboard_router
 from .users import router as users_router
 from .roles import router as roles_router
-from .admin import router as admin_router
 from .system import router as system_router
 
 # 注册子路由
@@ -20,17 +18,11 @@ try:
     router.include_router(auth_router, prefix="/auth", tags=["认证"])
     logger.info("✅ 认证路由注册成功: /auth")
 
-    router.include_router(dashboard_router, prefix="/dashboard", tags=["仪表盘"])
-    logger.info("✅ 仪表盘路由注册成功: /dashboard")
-
     router.include_router(users_router, prefix="/users", tags=["用户管理"])
     logger.info("✅ 用户管理路由注册成功: /users")
 
     router.include_router(roles_router, prefix="/roles", tags=["角色管理"])
     logger.info("✅ 角色管理路由注册成功: /roles")
-
-    router.include_router(admin_router, prefix="/admin", tags=["运营中心"])
-    logger.info("✅ 运营中心路由注册成功: /admin")
 
     router.include_router(system_router, prefix="/system", tags=["系统管理"])
     logger.info("✅ 系统管理路由注册成功: /system")

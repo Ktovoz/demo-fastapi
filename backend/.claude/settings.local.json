@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree /d/code/demo-fastapi/backend -I '__pycache__|*.pyc|.pytest_cache' -L 3)",
+      "Bash(cat /d/code/demo-fastapi/backend/app/main.py)",
+      "Bash(cat /d/code/demo-fastapi/backend/run.py)",
+      "Bash(cat /d/code/demo-fastapi/backend/app/core/config.py)",
+      "Bash(cat /d/code/demo-fastapi/backend/app/routers/api.py)",
+      "Bash(cat /d/code/demo-fastapi/backend/app/routers/roles.py)",
+      "Bash(cat /d/code/demo-fastapi/backend/app/routers/system.py)",
+      "Bash(del \"D:\\code\\demo-fastapi\\backend\\app\\routers\\admin.py\")",
+      "Bash(del \"D:\\code\\demo-fastapi\\backend\\app\\routers\\dashboard.py\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -27,11 +27,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
         "/users/delete",
         "/roles/create",
         "/roles/update",
-        "/roles/delete",
-        "/system/export",
-        "/system/import",
-        "/admin/delete",
-        "/admin/batch-action"
+        "/roles/delete"
     ]
 
     # 需要跳过日志记录的路径（高频且无意义的操作）
@@ -45,12 +41,8 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
         "/api/auth/login",  # 登录通过手动记录，不在这里记录
         "/api/auth/register",
         "/api/auth/forgot-password",
-        "/api/system/logs",     # 查看日志本身不记录
-        "/api/system/logs/summary",  # 日志概览不记录
-        "/api/dashboard",       # 查看仪表盘不记录
         "/api/users",           # 用户列表查询不记录
         "/api/roles",           # 角色列表查询不记录
-        "/api/admin/alerts",    # 警报查询不记录
         "/api"                  # API根路径不记录
     ]
 
@@ -61,13 +53,10 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
 
     # 高频但无意义的操作
     HIGH_FREQUENCY_OPS = [
-        ("GET", "/dashboard"),
         ("GET", "/users"),
         ("GET", "/roles"),
-        ("GET", "/system/logs"),
         ("GET", "/api"),
-        ("GET", "/health"),
-        ("GET", "/admin/alerts")
+        ("GET", "/health")
     ]
 
     async def dispatch(self, request: Request, call_next):
@@ -224,10 +213,6 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
         if "/roles/" in path and method in ["POST", "PUT", "PATCH", "DELETE"]:
             return True
 
-        # 系统设置相关操作
-        if "/system/settings" in path and method in ["PUT", "PATCH"]:
-            return True
-
         # 导出导入操作
         if "export" in path or "import" in path:
             return True
@@ -369,8 +354,6 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
                 return "导出系统数据", "system"
             elif "import" in path:
                 return "导入系统数据", "system"
-            elif "settings" in path and method in ["PUT", "PATCH"]:
-                return "修改系统设置", "system"
             elif "backup" in path:
                 return "系统备份", "system"
             elif "restore" in path:
