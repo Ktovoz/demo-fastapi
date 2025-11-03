@@ -211,7 +211,7 @@ const pageConfig = {
 const handleSubmit = async () => {
   try {
     await authStore.login(form)
-    const redirect = route.query.redirect || '/users/list'
+    const redirect = route.query.redirect || '/'
     router.push(String(redirect))
   } catch (error) {
     // 确保错误信息是字符串格式
