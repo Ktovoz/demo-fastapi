@@ -4,7 +4,6 @@
     :collapsed="menuCollapsed"
     collapsible
   >
-  >
     <div class="logo">
       <span class="logo__text">Demo</span>
     </div>
@@ -30,7 +29,8 @@ import {
   SafetyOutlined,
   SettingOutlined,
   ProfileOutlined,
-  FileSearchOutlined,
+  FileSearchOutlined
+} from '@ant-design/icons-vue'
 import { useAuthStore } from '../../store/auth'
 import { navigationTree, findNavigationNode, findNavigationByPath } from '../../config/navigation'
 
@@ -120,14 +120,17 @@ watch(menuCollapsed, (collapsed) => {
   openKeys.value = collapsed ? [] : derivedOpenKeys.value
 })
 
-  }
-}
-
 const handleOpenChange = (keys) => {
   openKeys.value = keys
 }
 
+const handleSelect = ({ key }) => {
+  const navigation = findNavigationNode((item) => item.key === key, navigationTree)
+  if (navigation?.item?.path) {
+    router.push(navigation.item.path)
+  }
 }
+</script>
 
 <style scoped>
 .layout-sider {
